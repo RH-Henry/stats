@@ -5,99 +5,95 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Questionnaire Puissance</title>
 <style>
-:root {
+:root{
   --text:#e8edf5; --muted:#8fa0b5; --line:rgba(255,255,255,.09);
   --accent:#66c0f4; --accent2:#1a9fff; --good:#67df8d; --bad:#ff6a76;
   --bg1:#0b1016; --bg2:#111923; --bg3:#0e141c; --shadow:0 18px 45px rgba(0,0,0,.38);
 }
-* { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-html,body {
-  margin:0; padding:0; min-height:100%;
-  background:radial-gradient(circle at top, rgba(102,192,244,.12), transparent 35%), linear-gradient(180deg,var(--bg1),var(--bg2) 26%,var(--bg3) 100%);
-  color:var(--text); font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{
+  margin:0;padding:0;min-height:100%;
+  background:radial-gradient(circle at top, rgba(102,192,244,.12), transparent 35%),linear-gradient(180deg,var(--bg1),var(--bg2) 26%,var(--bg3) 100%);
+  color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
 }
-.app { max-width:980px; margin:0 auto; padding:14px 14px 24px; }
-.topbar {
-  display:flex; align-items:center; gap:10px; margin-bottom:12px;
+.app{max-width:980px;margin:0 auto;padding:14px 14px 24px}
+.topbar{
+  display:flex;align-items:center;gap:10px;margin-bottom:12px;
   background:linear-gradient(180deg, rgba(102,192,244,.08), rgba(255,255,255,.02));
-  border:1px solid var(--line); border-radius:22px; padding:14px; box-shadow:var(--shadow);
+  border:1px solid var(--line);border-radius:22px;padding:14px;box-shadow:var(--shadow)
 }
-.title { font-size:clamp(24px, 5vw, 36px); font-weight:900; margin:0; }
-.meta { margin-left:auto; display:flex; align-items:center; gap:10px; min-width:160px; }
-.badge { padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid var(--line); font-size:13px; }
-.progress { flex:1; height:10px; background:rgba(255,255,255,.06); border-radius:999px; overflow:hidden; border:1px solid rgba(255,255,255,.06); }
-.progress > div { height:100%; width:0; background:linear-gradient(90deg,var(--accent),var(--accent2)); transition:width .25s ease; }
-
-.panel {
+.title{font-size:clamp(24px,5vw,36px);font-weight:900;margin:0}
+.meta{margin-left:auto;display:flex;align-items:center;gap:10px;min-width:160px}
+.badge{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid var(--line);font-size:13px}
+.progress{flex:1;height:10px;background:rgba(255,255,255,.06);border-radius:999px;overflow:hidden;border:1px solid rgba(255,255,255,.06)}
+.progress>div{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .25s ease}
+.panel{
   min-height:calc(100vh - 150px);
   background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
-  border:1px solid var(--line); border-radius:26px; box-shadow:var(--shadow); overflow:hidden;
+  border:1px solid var(--line);border-radius:26px;box-shadow:var(--shadow);overflow:hidden
 }
-.view { padding:20px 16px 18px; }
-.qtop { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
-.counter { font-size:14px; color:var(--muted); font-weight:700; }
-.qtext { font-size:clamp(24px, 5.2vw, 40px); line-height:1.18; font-weight:900; margin:8px 0 24px; text-wrap:balance; }
-.answers { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; margin-top:28px; }
-.choice {
-  min-height:100px; border-radius:22px; border:1px solid var(--line);
+.view{padding:20px 16px 18px}
+.hidden{display:none !important}
+.qtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.counter{font-size:14px;color:var(--muted);font-weight:700}
+.qtext{font-size:clamp(24px,5.2vw,40px);line-height:1.18;font-weight:900;margin:8px 0 24px;text-wrap:balance}
+.answers{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:28px}
+.choice{
+  min-height:100px;border-radius:22px;border:1px solid var(--line);
   background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; cursor:pointer;
-  transition:transform .12s ease,border-color .12s ease,background .12s ease, box-shadow .12s ease;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;
+  transition:transform .12s ease,border-color .12s ease,background .12s ease,box-shadow .12s ease;
 }
-.choice.selected {
+.choice.selected{
   border-color:rgba(102,192,244,.62);
   background:linear-gradient(180deg, rgba(102,192,244,.18), rgba(102,192,244,.06));
-  box-shadow:inset 0 0 0 1px rgba(102,192,244,.18), 0 0 0 4px rgba(102,192,244,.08);
+  box-shadow:inset 0 0 0 1px rgba(102,192,244,.18), 0 0 0 4px rgba(102,192,244,.08)
 }
-.dot { border-radius:50%; display:grid; place-items:center; font-weight:900; color:white; text-shadow:0 1px 1px rgba(0,0,0,.35); }
-.d1 { width:26px; height:26px; background:linear-gradient(180deg,#ff7c7c,#d94c4c); }
-.d2 { width:36px; height:36px; background:linear-gradient(180deg,#ffc17a,#e88d3d); }
-.d3 { width:48px; height:48px; background:linear-gradient(180deg,#aab6c2,#7d8a97); }
-.d4 { width:60px; height:60px; background:linear-gradient(180deg,#98ea8b,#52b45e); }
-.d5 { width:72px; height:72px; background:linear-gradient(180deg,#66e8af,#18b36d); }
-.mark { font-size:13px; font-weight:800; color:#d4e3f3; }
-.nav { display:flex; gap:10px; margin-top:22px; }
-.navbtn, .finishbtn { flex:1; border:0; border-radius:18px; padding:15px 16px; font-size:16px; font-weight:800; cursor:pointer; }
-.prev { background:rgba(255,255,255,.06); color:#d9e5f2; border:1px solid var(--line); }
-.next, .finishbtn { background:linear-gradient(180deg,#1fa4ff,#147fd0); color:white; box-shadow:0 12px 30px rgba(20,127,208,.28); }
-.hidden { display:none !important; }
-.scorebox {
-  display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; margin-bottom:16px; padding:14px 16px;
-  border-radius:20px; background:rgba(255,255,255,.035); border:1px solid var(--line);
+.dot{border-radius:50%;display:grid;place-items:center;font-weight:900;color:white;text-shadow:0 1px 1px rgba(0,0,0,.35)}
+.d1{width:26px;height:26px;background:linear-gradient(180deg,#ff7c7c,#d94c4c)}
+.d2{width:36px;height:36px;background:linear-gradient(180deg,#ffc17a,#e88d3d)}
+.d3{width:48px;height:48px;background:linear-gradient(180deg,#aab6c2,#7d8a97)}
+.d4{width:60px;height:60px;background:linear-gradient(180deg,#98ea8b,#52b45e)}
+.d5{width:72px;height:72px;background:linear-gradient(180deg,#66e8af,#18b36d)}
+.mark{font-size:13px;font-weight:800;color:#d4e3f3}
+.nav{display:flex;gap:10px;margin-top:22px}
+.navbtn,.finishbtn{flex:1;border:0;border-radius:18px;padding:15px 16px;font-size:16px;font-weight:800;cursor:pointer}
+.prev{background:rgba(255,255,255,.06);color:#d9e5f2;border:1px solid var(--line)}
+.next,.finishbtn{background:linear-gradient(180deg,#1fa4ff,#147fd0);color:white;box-shadow:0 12px 30px rgba(20,127,208,.28)}
+.scorebox{
+  display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin-bottom:16px;padding:14px 16px;
+  border-radius:20px;background:rgba(255,255,255,.035);border:1px solid var(--line)
 }
-.scorelabel { font-size:15px; font-weight:800; }
-.scorevalue { font-size:clamp(28px,8vw,54px); font-weight:900; }
-.scorevalue small { font-size:.38em; color:var(--muted); font-weight:700; }
-.block { background:rgba(255,255,255,.03); border:1px solid var(--line); border-radius:22px; padding:14px; margin-bottom:14px; }
-.sectiontitle { font-size:18px; font-weight:900; margin:0 0 12px; }
-.radarsCol { display:grid; grid-template-columns:1fr; gap:14px; }
-.radarcard { background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015)); border:1px solid var(--line); border-radius:22px; padding:16px; }
-.radarname { font-size:18px; font-weight:900; margin:0 0 10px; color:#e8f3ff; }
-.radarcanvas { display:block; width:100%; height:auto; margin:0 auto; }
-.groups { display:grid; gap:14px; }
-.group { background:rgba(255,255,255,.02); border:1px solid var(--line); border-radius:18px; padding:12px; }
-.group h3 { margin:0 0 10px; font-size:16px; font-weight:900; }
-.stat { padding:8px 0; }
-.statline { display:flex; justify-content:space-between; gap:10px; margin-bottom:6px; font-size:14px; }
-.bar { height:12px; border-radius:999px; overflow:hidden; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.05); }
-.fill { height:100%; width:0; background:linear-gradient(90deg,#66c0f4,#8de1ff); }
-.dual { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-.col { border-radius:18px; padding:14px; }
-.col.good { background:rgba(103,223,141,.09); border:1px solid rgba(103,223,141,.22); }
-.col.bad { background:rgba(255,106,118,.09); border:1px solid rgba(255,106,118,.22); }
-.col h3 { margin:0 0 10px; font-size:17px; font-weight:900; }
-.col.good h3 { color:#b8ffd0; }
-.col.bad h3 { color:#ffb1bb; }
-.col ul { margin:0; padding-left:20px; }
-.col li { margin:8px 0; line-height:1.45; }
-.footerbtns { display:flex; gap:10px; margin-top:18px; }
-@media (max-width:760px) { .dual { grid-template-columns:1fr; } }
-@media (max-width:640px) {
-  .topbar { display:block; }
-  .meta { margin-left:0; margin-top:10px; }
-  .answers { gap:8px; }
-  .choice { min-height:88px; }
-  .d1 { width:22px; height:22px; } .d2 { width:30px; height:30px; } .d3 { width:40px; height:40px; } .d4 { width:50px; height:50px; } .d5 { width:60px; height:60px; }
+.scorelabel{font-size:15px;font-weight:800}
+.scorevalue{font-size:clamp(28px,8vw,54px);font-weight:900}
+.scorevalue small{font-size:.38em;color:var(--muted);font-weight:700}
+.block{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:22px;padding:14px;margin-bottom:14px}
+.sectiontitle{font-size:18px;font-weight:900;margin:0 0 12px}
+.radarsCol{display:grid;grid-template-columns:1fr;gap:14px}
+.radarcard{background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));border:1px solid var(--line);border-radius:22px;padding:16px}
+.radarname{font-size:18px;font-weight:900;margin:0 0 10px;color:#e8f3ff}
+.radarcanvas{display:block;width:100%;height:auto;margin:0 auto}
+.groups{display:grid;gap:14px}
+.group{background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:18px;padding:12px}
+.group h3{margin:0 0 10px;font-size:16px;font-weight:900}
+.stat{padding:8px 0}
+.statline{display:flex;justify-content:space-between;gap:10px;margin-bottom:6px;font-size:14px}
+.bar{height:12px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.05)}
+.fill{height:100%;width:0;background:linear-gradient(90deg,#66c0f4,#8de1ff)}
+.dual{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.col{border-radius:18px;padding:14px}
+.col.good{background:rgba(103,223,141,.09);border:1px solid rgba(103,223,141,.22)}
+.col.bad{background:rgba(255,106,118,.09);border:1px solid rgba(255,106,118,.22)}
+.col h3{margin:0 0 10px;font-size:17px;font-weight:900}
+.col.good h3{color:#b8ffd0}
+.col.bad h3{color:#ffb1bb}
+.col ul{margin:0;padding-left:20px}
+.col li{margin:8px 0;line-height:1.45}
+.footerbtns{display:flex;gap:10px;margin-top:18px}
+@media (max-width:760px){.dual{grid-template-columns:1fr}}
+@media (max-width:640px){
+  .topbar{display:block}.meta{margin-left:0;margin-top:10px}.answers{gap:8px}.choice{min-height:88px}
+  .d1{width:22px;height:22px}.d2{width:30px;height:30px}.d3{width:40px;height:40px}.d4{width:50px;height:50px}.d5{width:60px;height:60px}
 }
 </style>
 </head>
@@ -106,7 +102,7 @@ html,body {
   <div class="topbar">
     <h1 class="title">Questionnaire Puissance</h1>
     <div class="meta">
-      <div class="badge" id="progressText">1 / 23</div>
+      <div class="badge" id="progressText"></div>
       <div class="progress"><div id="progressBar"></div></div>
     </div>
   </div>
@@ -116,14 +112,14 @@ html,body {
       <div class="qtext" id="qtext"></div>
       <div class="answers" id="answers"></div>
       <div class="nav">
-        <button type="button" class="navbtn prev" id="prevBtn">Précédent</button>
-        <button type="button" class="navbtn next" id="nextBtn">Suivant</button>
+        <button type="button" class="navbtn prev" onclick="goPrev()" id="prevBtn">Précédent</button>
+        <button type="button" class="navbtn next" onclick="goNext()" id="nextBtn">Suivant</button>
       </div>
     </section>
     <section class="view hidden" id="resultsView">
       <div class="scorebox">
         <div class="scorelabel">Total stat</div>
-        <div class="scorevalue" id="totalScore">0 <small>/ 1700</small></div>
+        <div class="scorevalue" id="totalScore"></div>
       </div>
       <div class="block">
         <h2 class="sectiontitle">Radars par catégorie</h2>
@@ -146,25 +142,25 @@ html,body {
         </div>
       </div>
       <div class="footerbtns">
-        <button type="button" class="navbtn prev" id="backBtn">Retour</button>
-        <button type="button" class="finishbtn" id="restartBtn">Recommencer</button>
+        <button type="button" class="navbtn prev" onclick="backToQuestions()">Retour</button>
+        <button type="button" class="finishbtn" onclick="window.location.reload()">Recommencer</button>
       </div>
     </section>
   </div>
 </div>
 
 <script>
-(() => {
-const QUESTIONS = [{"question": "Combien pèses tu de 1 à 5 (1 = léger, 5 = lourd)", "stats": {"Attaque": 15.0, "Vitesse": -25.0, "Urbanisme": 6.0, "Charisme": -1.0, "Argent": 15.0, "Sociabilité": 5.0, "PV": 25.0, "Résistance": 30.0, "Poids": 100.0, "Efficacité énergétique": -42.0, "Vitesse de récupération (sommeil)": -15.0, "Mouchoirs": 10.0, "altruisme": -2.0, "Confiance": 5.0}, "leftPhrase": "", "rightPhrase": ""}, {"question": "Cours-tu quand tu es en retard?", "stats": {"Attaque": 2.0, "Vitesse": 48.0, "Urbanisme": 15.0, "Charisme": -50.0, "Argent": -25.0, "Sociabilité": 10.0, "Constance": -15.0, "Poids": -30.0, "Efficacité énergétique": -20.0, "Vitesse de récupération (sommeil)": -20.0, "Mouchoirs": 15.0, "Puissance cognitive": -5.0, "altruisme": 20.0, "Sécurité": -20.0, "Confiance": -3.0}, "leftPhrase": "", "rightPhrase": ""}, {"question": "Es-tu souvent en retard?", "stats": {"Attaque": 15.0, "Vitesse": -25.0, "Urbanisme": 1.0, "Charisme": -29.0, "Argent": -21.0, "Sociabilité": -1.0, "Constance": -35.0, "Efficacité énergétique": 10.0, "Vitesse de récupération (sommeil)": -1.0, "Puissance cognitive": -15.0, "altruisme": -20.0, "Sécurité": -20.0, "Confiance": 10.0}, "leftPhrase": "", "rightPhrase": ""}, {"question": "Écris-tu souvent \"bonne/joyeuse anniversaire\"?", "stats": {"Attaque": 10.0, "Charisme": -20.0, "Argent": 5.0, "Sociabilité": 30.0, "Constance": -10.0, "Poids": 5.0, "Efficacité énergétique": -10.0, "Vitesse de récupération (sommeil)": -5.0, "Puissance cognitive": -10.0, "altruisme": -10.0, "Sécurité": -10.0, "Confiance": 15.0}, "leftPhrase": "", "rightPhrase": ""}, {"question": "Tes horaires de repas sont-ils réguliers?", "stats": {"Attaque": 15.0, "Vitesse": 15.0, "Urbanisme": 2.0, "Charisme": 35.0, "Argent": 20.0, "Sociabilité": 30.0, "Constance": 30.0, "PV": 35.0, "Résistance": 36.0, "Poids": 33.0, "Efficacité énergétique": -20.0, "Vitesse de récupération (sommeil)": -20.0, "Mouchoirs": 2.0, "Puissance cognitive": 45.0, "Sécurité": 25.0, "Confiance": 5.0}, "leftPhrase": "", "rightPhrase": ""}, {"question": "Vas-tu à tous les cours", "stats": {"Attaque": -15.0, "Vitesse": 10.0, "Urbanisme": 1.0, "Charisme": 5.0, "Argent": 15.0, "Sociabilité": 5.0, "Constance": 30.0, "Vitesse de récupération (sommeil)": 35.0, "Mouchoirs": -15.0, "Puissance cognitive": 25.0, "Sécurité": 23.0, "Confiance": 1.0}, "leftPhrase": "", "rightPhrase": ""}, {"question": "Connais-tu tes tables de multiplication", "stats": {"Attaque": 15.0, "Vitesse": 15.0, "Urbanisme": -5.0, "Charisme": 15.0, "Argent": 10.0, "Sociabilité": 1.0, "Résistance": -10.0, "Poids": 5.0, "Efficacité énergétique": 20.0, "Vitesse de récupération (sommeil)": 5.0, "Puissance cognitive": 11.0, "Confiance": -5.0}, "leftPhrase": "", "rightPhrase": ""}, {"question": "Tes horaires de sommeil sont-ils réguliers", "stats": {"Attaque": 15.0, "Vitesse": 20.0, "Charisme": 15.0, "Argent": 15.0, "Sociabilité": -10.0, "Constance": 15.0, "PV": 20.0, "Résistance": 9.0, "Poids": 5.0, "Efficacité énergétique": 22.0, "Vitesse de récupération (sommeil)": 15.0, "Puissance cognitive": 15.0, "Sécurité": 10.0, "Confiance": 5.0}, "leftPhrase": "", "rightPhrase": ""}, {"question": "Dors-tu autant que tu le devrais la nuit", "stats": {"Attaque": 20.0, "Vitesse": 30.0, "Charisme": 20.0, "Argent": 10.0, "Sociabilité": -20.0, "Constance": 5.0, "PV": 15.0, "Résistance": 8.0, "Poids": 1.0, "Efficacité énergétique": 30.0, "Vitesse de récupération (sommeil)": -25.0, "Mouchoirs": 10.0, "Puissance cognitive": 30.0, "Sécurité": 10.0, "Confiance": 10.0}, "leftPhrase": "", "rightPhrase": ""}, {"question": "Vas-tu sur les réseaux sociaux avant de dormir", "stats": {"Charisme": -15.0, "Argent": -15.0, "Sociabilité": -7.0, "Constance": 9.0, "PV": -7.0, "Résistance": -45.0, "Poids": -19.0, "Efficacité énergétique": -10.0, "Vitesse de récupération (sommeil)": -10.0, "Mouchoirs": -5.0, "Puissance cognitive": -40.0, "Sécurité": -20.0, "Confiance": -15.0}, "leftPhrase": "", "rightPhrase": ""}, {"question": "Portes-tu souvent les mêmes vêtements?", "stats": {"Vitesse": 6.0, "Charisme": -5.0, "Argent": -10.0, "Sociabilité": -10.0, "Constance": 15.0, "Résistance": 5.0, "Efficacité énergétique": 30.0, "Mouchoirs": 10.0, "Puissance cognitive": 15.0, "Confiance": 5.0}, "leftPhrase": "", "rightPhrase": ""}, {"question": "Prends-tu beaucoup de photos?", "stats": {"Vitesse": 10.0, "Urbanisme": 15.0, "Charisme": -8.0, "Argent": 5.0, "Sociabilité": -5.0, "PV": 10.0, "Poids": -10.0, "Efficacité énergétique": -6.0, "Mouchoirs": 5.0, "Puissance cognitive": 15.0, "altruisme": 15.0, "Sécurité": -20.0, "Confiance": 3.0}, "leftPhrase": "", "rightPhrase": ""}, {"question": "Es-tu de droite", "stats": {"Attaque": 15.0, "Vitesse": 1.0, "Urbanisme": -15.0, "Charisme": 2.0, "Argent": 20.0, "Sociabilité": -1.0, "PV": 15.0, "Résistance": -2.0, "Poids": 5.0, "Efficacité énergétique": -20.0, "Mouchoirs": 15.0, "Puissance cognitive": -1.0, "altruisme": -10.0, "Sécurité": 6.0, "Confiance": 2.0}, "leftPhrase": "", "rightPhrase": ""}, {"question": "As-tu des allergies?", "stats": {"Attaque": -15.0, "Vitesse": -5.0, "Urbanisme": 5.0, "Charisme": -15.0, "Argent": -10.0, "Sociabilité": -2.0, "Constance": -1.0, "PV": -10.0, "Résistance": -10.0, "Poids": -5.0, "Mouchoirs": 15.0, "Puissance cognitive": 10.0, "altruisme": 10.0, "Sécurité": -20.0, "Confiance": -10.0}, "leftPhrase": "", "rightPhrase": ""}, {"question": "As-tu un animal?", "stats": {"Attaque": 20.0, "Vitesse": -5.0, "Urbanisme": 2.0, "Charisme": 20.0, "Argent": 15.0, "Sociabilité": 25.0, "Constance": 20.0, "PV": -15.0, "Résistance": 10.0, "Poids": -5.0, "Vitesse de récupération (sommeil)": 10.0, "Mouchoirs": -5.0, "Puissance cognitive": -5.0, "altruisme": 30.0, "Sécurité": 20.0, "Confiance": 3.0}, "leftPhrase": "", "rightPhrase": ""}, {"question": "Te perds-tu souvent", "stats": {"Attaque": -5.0, "Vitesse": -30.0, "Urbanisme": 30.0, "Charisme": -40.0, "Sociabilité": 5.0, "Constance": -5.0, "Efficacité énergétique": -50.0, "Mouchoirs": 2.0, "Puissance cognitive": -40.0, "altruisme": 15.0, "Sécurité": -45.0, "Confiance": 15.0}, "leftPhrase": "", "rightPhrase": ""}, {"question": "Préfères-tu manger avec des gens", "stats": {"Vitesse": -15.0, "Urbanisme": 15.0, "Charisme": 13.0, "Argent": -10.0, "Sociabilité": 30.0, "Constance": -5.0, "PV": 10.0, "Résistance": 15.0, "Poids": 16.0, "Efficacité énergétique": -10.0, "Mouchoirs": -5.0, "Puissance cognitive": 5.0, "altruisme": -10.0, "Sécurité": 15.0, "Confiance": -10.0}, "leftPhrase": "", "rightPhrase": ""}, {"question": "Fais-tu régulièrement du sport", "stats": {"Attaque": 60.0, "Vitesse": 40.0, "Urbanisme": 15.0, "Charisme": 30.0, "Argent": 10.0, "Sociabilité": 17.0, "Constance": 12.0, "PV": 2.0, "Résistance": 15.0, "Poids": 15.0, "Efficacité énergétique": 10.0, "Vitesse de récupération (sommeil)": 12.0, "Mouchoirs": 5.0, "Puissance cognitive": -15.0, "altruisme": -15.0, "Sécurité": 5.0, "Confiance": 6.0}, "leftPhrase": "", "rightPhrase": ""}, {"question": "Traverses-tu toujours au passage piéton quand le feu est vert", "stats": {"Attaque": -30.0, "Vitesse": -25.0, "Urbanisme": 15.0, "Charisme": -20.0, "Argent": -30.0, "Sociabilité": 25.0, "Constance": 15.0, "PV": 10.0, "Résistance": -5.0, "Poids": -2.0, "Efficacité énergétique": -10.0, "Vitesse de récupération (sommeil)": 3.0, "Mouchoirs": -1.0, "Puissance cognitive": 20.0, "altruisme": 10.0, "Sécurité": 30.0, "Confiance": -10.0}, "leftPhrase": "", "rightPhrase": ""}, {"question": "Utilises-tu souvent des sites de streaming douteux", "stats": {"Attaque": 5.0, "Vitesse": 5.0, "Urbanisme": 10.0, "Charisme": -20.0, "Argent": -15.0, "Sociabilité": -15.0, "Résistance": 9.0, "Poids": 5.0, "Efficacité énergétique": -5.0, "Mouchoirs": -5.0, "Puissance cognitive": 5.0, "Sécurité": -27.0, "Confiance": 5.0}, "leftPhrase": "", "rightPhrase": ""}, {"question": "À quelle fréquence partages-tu tes scores sur Strava?", "stats": {"Attaque": 4.0, "Vitesse": 10.0, "Urbanisme": 5.0, "Charisme": -15.0, "Argent": 15.0, "Sociabilité": -20.0, "Constance": 20.0, "Résistance": 2.0, "Poids": -15.0, "Efficacité énergétique": -15.0, "Vitesse de récupération (sommeil)": 4.0, "Mouchoirs": -2.0, "Puissance cognitive": -15.0, "altruisme": -10.0, "Sécurité": -30.0, "Confiance": 50.0}, "leftPhrase": "", "rightPhrase": ""}, {"question": "Comment évalues tu ta situation amoureuse", "stats": {"Attaque": -10.0, "Vitesse": -7.0, "Urbanisme": 3.0, "Argent": -5.0, "Sociabilité": 10.0, "Constance": 5.0, "PV": 11.0, "Résistance": 6.0, "Poids": 8.0, "Efficacité énergétique": -4.0, "Vitesse de récupération (sommeil)": 4.0, "Mouchoirs": 3.0, "Puissance cognitive": 1.0, "altruisme": 3.0, "Sécurité": 9.0, "Confiance": 30.0}, "leftPhrase": "", "rightPhrase": ""}, {"question": "As-tu beaucoup de notifications indésirables", "stats": {"Attaque": -15.0, "Vitesse": -5.0, "Charisme": -10.0, "Argent": -5.0, "Sociabilité": -5.0, "Constance": -10.0, "PV": -1.0, "Résistance": 5.0, "Poids": 2.0, "Efficacité énergétique": -10.0, "Vitesse de récupération (sommeil)": -2.0, "Mouchoirs": 1.0, "Puissance cognitive": -23.0, "altruisme": 5.0, "Sécurité": -40.0, "Confiance": -9.0}, "leftPhrase": "", "rightPhrase": ""}];
-const STATS = ["Attaque", "Vitesse", "Urbanisme", "Charisme", "Argent", "Sociabilité", "Constance", "PV", "Résistance", "Poids", "Efficacité énergétique", "Vitesse de récupération (sommeil)", "Mouchoirs", "Puissance cognitive", "altruisme", "Sécurité", "Confiance"];
-const MAX_PER_STAT = {"Attaque": 301.0, "Vitesse": 352.0, "Urbanisme": 160.0, "Charisme": 403.0, "Argent": 301.0, "Sociabilité": 289.0, "Constance": 257.0, "PV": 186.0, "Résistance": 222.0, "Poids": 286.0, "Efficacité énergétique": 354.0, "Vitesse de récupération (sommeil)": 186.0, "Mouchoirs": 131.0, "Puissance cognitive": 366.0, "altruisme": 185.0, "Sécurité": 405.0, "Confiance": 232.0};
+const QUESTIONS = [{"question": "À quel point es-tu lourd selon toi?", "stats": {"Attaque": 15.0, "Vitesse": -25.0, "Urbanisme": 6.0, "Charisme": -1.0, "Argent": 15.0, "Sociabilité": 5.0, "PV": 25.0, "Résistance": 30.0, "Poids": 100.0, "Efficacité énergétique": -42.0, "Vitesse de récupération (sommeil)": -15.0, "Mouchoirs": 10.0, "altruisme": -2.0, "Confiance": -5.0, "Courage": 10.0, "Influence": 5.0, "Angoisse": -30.0}, "leftPhrase": "Tu devrais maigrir", "rightPhrase": "Tu devrais grossir"}, {"question": "Cours-tu quand tu es en retard?", "stats": {"Attaque": 2.0, "Vitesse": 48.0, "Urbanisme": 15.0, "Charisme": -50.0, "Argent": -25.0, "Sociabilité": 10.0, "Constance": -15.0, "Poids": -30.0, "Efficacité énergétique": -20.0, "Vitesse de récupération (sommeil)": -20.0, "Mouchoirs": 15.0, "Puissance cognitive": -5.0, "altruisme": 20.0, "Sécurité": -20.0, "Confiance": -3.0, "Courage": 20.0, "Influence": -10.0, "Angoisse": 10.0}, "leftPhrase": "Tu devrais moins te presser dans la vie", "rightPhrase": "Tu devrais accélérer"}, {"question": "Es-tu souvent en retard?", "stats": {"Attaque": 15.0, "Vitesse": -25.0, "Urbanisme": 1.0, "Charisme": -29.0, "Argent": -21.0, "Sociabilité": -1.0, "Constance": -35.0, "Efficacité énergétique": 10.0, "Vitesse de récupération (sommeil)": -1.0, "Puissance cognitive": -15.0, "altruisme": -20.0, "Sécurité": -20.0, "Confiance": 10.0, "Courage": 10.0, "Influence": -20.0, "Angoisse": -20.0}, "leftPhrase": "Tu devrais être plus souvent être à l'heure", "rightPhrase": "Tu devrais être plus souvent en retard"}, {"question": "Écris-tu souvent \"bonne/joyeuse anniversaire\"?", "stats": {"Attaque": 10.0, "Charisme": -20.0, "Argent": 5.0, "Sociabilité": 30.0, "Constance": -10.0, "Poids": 5.0, "Efficacité énergétique": -10.0, "Vitesse de récupération (sommeil)": -5.0, "Puissance cognitive": -10.0, "altruisme": -10.0, "Sécurité": -10.0, "Confiance": 15.0, "Courage": 5.0, "Influence": -10.0, "Angoisse": -5.0}, "leftPhrase": "Soigne ton orthographe", "rightPhrase": "Tu peux te permettre d'être plus négligeant sur ton orthographe"}, {"question": "Tes horaires de repas sont elles régulières?", "stats": {"Attaque": 15.0, "Vitesse": 15.0, "Urbanisme": 2.0, "Charisme": 35.0, "Argent": 20.0, "Sociabilité": 30.0, "Constance": 30.0, "PV": 35.0, "Résistance": 36.0, "Poids": 33.0, "Efficacité énergétique": -20.0, "Vitesse de récupération (sommeil)": -20.0, "Mouchoirs": 2.0, "Puissance cognitive": 45.0, "Sécurité": 25.0, "Confiance": 5.0, "Courage": -20.0, "Angoisse": 20.0}, "leftPhrase": "Mange à des horaires moins régulières", "rightPhrase": "Mange plus souvent aux mêmes horaires"}, {"question": "Vas-tu à tous les cours?", "stats": {"Attaque": -15.0, "Vitesse": 10.0, "Urbanisme": 1.0, "Charisme": 5.0, "Argent": 15.0, "Sociabilité": 5.0, "Constance": 30.0, "Vitesse de récupération (sommeil)": 35.0, "Mouchoirs": -15.0, "Puissance cognitive": 25.0, "Sécurité": 23.0, "Confiance": 1.0, "Courage": 15.0, "Angoisse": 5.0}, "leftPhrase": "Détend-toi, pas besoin d'assister à tous les cours", "rightPhrase": "Les cours sont importants, tu devrais y assister plus souvent"}, {"question": "Connais-tu tes tables de multiplication?", "stats": {"Attaque": 15.0, "Vitesse": 15.0, "Urbanisme": -5.0, "Charisme": 15.0, "Argent": 10.0, "Sociabilité": 1.0, "Résistance": -10.0, "Poids": 5.0, "Efficacité énergétique": 20.0, "Vitesse de récupération (sommeil)": 5.0, "Puissance cognitive": 11.0, "Confiance": -5.0, "Courage": -20.0, "Influence": 5.0, "Angoisse": -15.0}, "leftPhrase": "Pas besoin de faire genre que tu sais tout, oublie les tables de multiplication", "rightPhrase": "Certaines choses sont importantes dans la vie, apprends les tables de multiplication !!"}, {"question": "Tes horaires de sommeil sont-elles régulières?", "stats": {"Attaque": 15.0, "Vitesse": 20.0, "Charisme": 15.0, "Argent": 15.0, "Sociabilité": -10.0, "Constance": 15.0, "PV": 20.0, "Résistance": 9.0, "Poids": 5.0, "Efficacité énergétique": 22.0, "Vitesse de récupération (sommeil)": 15.0, "Puissance cognitive": 15.0, "Sécurité": 10.0, "Confiance": 5.0, "Angoisse": -30.0}, "leftPhrase": "Dors à des horaires différentes plus souvent.", "rightPhrase": "Couche toi plus souvent à la même heure."}, {"question": "Dors-tu autant que tu le devrais la nuit?", "stats": {"Attaque": 20.0, "Vitesse": 30.0, "Charisme": 20.0, "Argent": 10.0, "Sociabilité": -20.0, "Constance": 5.0, "PV": 15.0, "Résistance": 8.0, "Poids": 1.0, "Efficacité énergétique": 30.0, "Vitesse de récupération (sommeil)": -25.0, "Mouchoirs": 10.0, "Puissance cognitive": 30.0, "Sécurité": 10.0, "Confiance": 10.0, "Influence": -10.0, "Angoisse": -25.0}, "leftPhrase": "Dors moins", "rightPhrase": "Dors plus"}, {"question": "Vas-tu sur les réseaux sociaux avant de dormir?", "stats": {"Charisme": -15.0, "Argent": -15.0, "Sociabilité": -7.0, "Constance": 9.0, "PV": -7.0, "Résistance": -45.0, "Poids": -19.0, "Efficacité énergétique": -10.0, "Vitesse de récupération (sommeil)": -10.0, "Mouchoirs": -5.0, "Puissance cognitive": -40.0, "Sécurité": -20.0, "Confiance": -15.0, "Courage": -30.0, "Influence": -15.0, "Angoisse": 35.0}, "leftPhrase": "Couche toi sans scroller des jours", "rightPhrase": "Scrolle scrolle scrolle."}, {"question": "Portes-tu souvent les mêmes vêtements?", "stats": {"Vitesse": 6.0, "Charisme": -5.0, "Argent": -10.0, "Sociabilité": -10.0, "Constance": 15.0, "Résistance": 5.0, "Efficacité énergétique": 30.0, "Mouchoirs": 10.0, "Puissance cognitive": 15.0, "Confiance": 5.0, "Courage": 5.0, "Influence": 10.0, "Angoisse": -10.0}, "leftPhrase": "Porte plus souvent des vêtements différents pour le flow", "rightPhrase": "Porte plus souvent les mêmes vêtements c'est plus pratique"}, {"question": "Prends-tu beaucoup de photos?", "stats": {"Vitesse": 10.0, "Urbanisme": 15.0, "Charisme": -8.0, "Argent": 5.0, "Sociabilité": -5.0, "PV": 10.0, "Poids": -10.0, "Efficacité énergétique": -6.0, "Mouchoirs": 5.0, "Puissance cognitive": 15.0, "altruisme": 15.0, "Sécurité": -20.0, "Confiance": 3.0, "Courage": 12.0, "Influence": 5.0, "Angoisse": -10.0}, "leftPhrase": "Prends moins de photos tu vas mal finir", "rightPhrase": "Prends plus de photos c'est épanouissant"}, {"question": "Es-tu de droite??", "stats": {"Attaque": 15.0, "Vitesse": 1.0, "Urbanisme": -15.0, "Charisme": 2.0, "Argent": 20.0, "Sociabilité": -1.0, "PV": 15.0, "Résistance": -2.0, "Poids": 5.0, "Efficacité énergétique": -20.0, "Mouchoirs": 15.0, "Puissance cognitive": -1.0, "altruisme": -10.0, "Sécurité": 6.0, "Confiance": 2.0, "Courage": -5.0, "Influence": 5.0, "Angoisse": 2.0}, "leftPhrase": "Deviens de gauche", "rightPhrase": "Deviens de droite"}, {"question": "As-tu des allergies?", "stats": {"Attaque": -15.0, "Vitesse": -5.0, "Urbanisme": 5.0, "Charisme": -15.0, "Argent": -10.0, "Sociabilité": -2.0, "Constance": -1.0, "PV": -10.0, "Résistance": -10.0, "Poids": -5.0, "Mouchoirs": 15.0, "Puissance cognitive": 10.0, "altruisme": 10.0, "Sécurité": -20.0, "Confiance": -10.0, "Influence": -1.0, "Angoisse": 10.0}, "leftPhrase": "Retire tes allergies", "rightPhrase": "Attrape une allergie"}, {"question": "As-tu un animal?", "stats": {"Attaque": 20.0, "Vitesse": -5.0, "Urbanisme": 2.0, "Charisme": 20.0, "Argent": 15.0, "Sociabilité": 25.0, "Constance": 20.0, "PV": -15.0, "Résistance": 10.0, "Poids": -5.0, "Vitesse de récupération (sommeil)": 10.0, "Mouchoirs": -5.0, "Puissance cognitive": -5.0, "altruisme": 30.0, "Sécurité": 20.0, "Confiance": 3.0, "Courage": 5.0, "Influence": 10.0, "Angoisse": -5.0}, "leftPhrase": "Vend ton animal", "rightPhrase": "Adopte un lapin géant"}, {"question": "Te perds-tu souvent?", "stats": {"Attaque": -5.0, "Vitesse": -30.0, "Urbanisme": 30.0, "Charisme": -40.0, "Sociabilité": 5.0, "Constance": -5.0, "Efficacité énergétique": -50.0, "Mouchoirs": 2.0, "Puissance cognitive": -40.0, "altruisme": 15.0, "Sécurité": -45.0, "Confiance": 15.0, "Courage": 25.0, "Influence": -10.0, "Angoisse": 20.0}, "leftPhrase": "Utilise plus souvent le GPS", "rightPhrase": "Perds toi"}, {"question": "Préfères-tu manger avec des gens?", "stats": {"Vitesse": -15.0, "Urbanisme": 15.0, "Charisme": 13.0, "Argent": -10.0, "Sociabilité": 30.0, "Constance": -5.0, "PV": 10.0, "Résistance": 15.0, "Poids": 16.0, "Efficacité énergétique": -10.0, "Mouchoirs": -5.0, "Puissance cognitive": 5.0, "altruisme": -10.0, "Sécurité": 15.0, "Confiance": -10.0, "Courage": 5.0, "Influence": 10.0, "Angoisse": -30.0}, "leftPhrase": "Mange seul.", "rightPhrase": "Sociabilise, mange avec des gens"}, {"question": "Fais-tu régulièrement du sport?", "stats": {"Attaque": 100.0, "Vitesse": 40.0, "Urbanisme": 15.0, "Charisme": 30.0, "Argent": 10.0, "Sociabilité": 17.0, "Constance": 12.0, "PV": 2.0, "Résistance": 15.0, "Poids": 15.0, "Efficacité énergétique": 10.0, "Vitesse de récupération (sommeil)": 12.0, "Mouchoirs": 5.0, "Puissance cognitive": -15.0, "altruisme": -15.0, "Sécurité": 5.0, "Confiance": 6.0, "Courage": 20.0, "Influence": 10.0, "Angoisse": -20.0}, "leftPhrase": "Fais moins de sport tu es déjà parfait(e)", "rightPhrase": "Bouge toi, fais du sport"}, {"question": "Traverses-tu toujours au passage piéton quand le feu est vert?", "stats": {"Attaque": -30.0, "Vitesse": -25.0, "Urbanisme": 15.0, "Charisme": -20.0, "Argent": -30.0, "Sociabilité": 25.0, "Constance": 15.0, "PV": 10.0, "Résistance": -5.0, "Poids": -2.0, "Efficacité énergétique": -10.0, "Vitesse de récupération (sommeil)": 3.0, "Mouchoirs": -1.0, "Puissance cognitive": 20.0, "altruisme": 10.0, "Sécurité": 30.0, "Confiance": -10.0, "Courage": -30.0, "Influence": -5.0, "Angoisse": 10.0}, "leftPhrase": "Traverse au rouge", "rightPhrase": "Traverse au vert"}, {"question": "Utilises-tu souvent des sites de streaming douteux?", "stats": {"Attaque": 5.0, "Vitesse": 5.0, "Urbanisme": 10.0, "Charisme": -20.0, "Argent": -15.0, "Sociabilité": -15.0, "Résistance": 9.0, "Poids": 5.0, "Efficacité énergétique": -5.0, "Mouchoirs": -5.0, "Puissance cognitive": 5.0, "Sécurité": -27.0, "Confiance": 5.0, "Courage": 15.0, "Influence": -5.0, "Angoisse": 5.0}, "leftPhrase": "Achète tes DVDs", "rightPhrase": "Va sur des sites douteux, c'est instructif"}, {"question": "À quelle fréquence partages-tu tes scores sur Strava?", "stats": {"Attaque": 4.0, "Vitesse": 10.0, "Urbanisme": 5.0, "Charisme": -15.0, "Argent": 15.0, "Sociabilité": -20.0, "Constance": 20.0, "Résistance": 2.0, "Poids": -15.0, "Efficacité énergétique": -15.0, "Vitesse de récupération (sommeil)": 4.0, "Mouchoirs": -2.0, "Puissance cognitive": -15.0, "altruisme": -10.0, "Sécurité": -30.0, "Confiance": 50.0, "Influence": -5.0, "Angoisse": 15.0}, "leftPhrase": "Partage moins tes scores sur strava, tout le monde s'en fiche.", "rightPhrase": "Tout le monde veut connaître tes scores Strava, partage-les !"}, {"question": "Comment évalues-tu ta situation amoureuse?", "stats": {"Attaque": -10.0, "Vitesse": -7.0, "Urbanisme": 3.0, "Argent": -5.0, "Sociabilité": 10.0, "Constance": 5.0, "PV": 11.0, "Résistance": 6.0, "Poids": 8.0, "Efficacité énergétique": -4.0, "Vitesse de récupération (sommeil)": 4.0, "Mouchoirs": 3.0, "Puissance cognitive": 1.0, "altruisme": 3.0, "Sécurité": 9.0, "Confiance": 30.0, "Courage": -5.0, "Influence": 10.0, "Angoisse": -30.0}, "leftPhrase": "Quitte ton/ta partenaire", "rightPhrase": "Quitte ton/ta partenaire"}, {"question": "As-tu beaucoup de notifications indésirables?", "stats": {"Attaque": -15.0, "Vitesse": -5.0, "Charisme": -10.0, "Argent": -5.0, "Sociabilité": -5.0, "Constance": -10.0, "PV": -1.0, "Résistance": 5.0, "Poids": 2.0, "Efficacité énergétique": -10.0, "Vitesse de récupération (sommeil)": -2.0, "Mouchoirs": 1.0, "Puissance cognitive": -23.0, "altruisme": 5.0, "Sécurité": -40.0, "Confiance": -9.0, "Courage": -20.0, "Influence": -20.0, "Angoisse": -20.0}, "leftPhrase": "Va dans les paramètres de ton téléphone", "rightPhrase": "Accepte les notifications"}, {"question": "As-tu mal à ton genou?", "stats": {"Attaque": -30.0, "Vitesse": -40.0, "Urbanisme": 20.0, "Charisme": -25.0, "Argent": -15.0, "Sociabilité": 10.0, "PV": -30.0, "Résistance": -30.0, "Poids": -1.0, "Efficacité énergétique": -5.0, "Vitesse de récupération (sommeil)": -9.0, "Puissance cognitive": -2.0, "altruisme": 10.0, "Sécurité": -30.0, "Confiance": -15.0, "Courage": -5.0, "Angoisse": -20.0}, "leftPhrase": "Fais une opération", "rightPhrase": "Casse toi le genou"}, {"question": "À quelle fréquence bois-tu de l'alcool", "stats": {"Attaque": 50.0, "Vitesse": -10.0, "Urbanisme": -5.0, "Charisme": -20.0, "Argent": -30.0, "Sociabilité": 20.0, "Constance": -30.0, "PV": -45.0, "Résistance": -35.0, "Poids": 25.0, "Efficacité énergétique": -30.0, "Vitesse de récupération (sommeil)": -5.0, "Mouchoirs": 10.0, "Puissance cognitive": -30.0, "altruisme": -30.0, "Sécurité": -30.0, "Confiance": 30.0, "Courage": 10.0, "Influence": 5.0, "Angoisse": 15.0}, "leftPhrase": "Bois moins", "rightPhrase": "Bois plus"}];
+const STATS = ["Attaque", "Vitesse", "Urbanisme", "Charisme", "Argent", "Sociabilité", "Constance", "PV", "Résistance", "Poids", "Efficacité énergétique", "Vitesse de récupération (sommeil)", "Mouchoirs", "Puissance cognitive", "altruisme", "Sécurité", "Confiance", "Courage", "Influence", "Angoisse"];
+const MAX_PER_STAT = {"Attaque": 421.0, "Vitesse": 402.0, "Urbanisme": 185.0, "Charisme": 448.0, "Argent": 346.0, "Sociabilité": 319.0, "Constance": 287.0, "PV": 261.0, "Résistance": 287.0, "Poids": 312.0, "Efficacité énergétique": 389.0, "Vitesse de récupération (sommeil)": 200.0, "Mouchoirs": 141.0, "Puissance cognitive": 398.0, "altruisme": 225.0, "Sécurité": 465.0, "Confiance": 277.0, "Courage": 292.0, "Influence": 186.0, "Angoisse": 417.0};
 const CATEGORIES = {"Physique": ["Attaque", "Vitesse", "PV", "Résistance", "Poids", "Efficacité énergétique", "Vitesse de récupération (sommeil)"], "Société": ["Urbanisme", "Charisme", "Argent", "Sociabilité", "altruisme", "Sécurité", "Confiance", "Courage", "Influence"], "Autres": ["Constance", "Mouchoirs", "Puissance cognitive", "Angoisse"]};
+const TOTALMAX = 2000;
 
-function shuffle(arr) {
+function shuffle(arr){
   const a = arr.slice();
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
   }
   return a;
 }
@@ -187,19 +183,18 @@ const goodList = document.getElementById('goodList');
 const avoidList = document.getElementById('avoidList');
 
 const OPTIONS = [
-  { value:1, label:'--', cls:'d1' },
-  { value:2, label:'-', cls:'d2' },
-  { value:3, label:'o', cls:'d3' },
-  { value:4, label:'+', cls:'d4' },
-  { value:5, label:'++', cls:'d5' },
+  {value:1,label:'--',cls:'d1'},
+  {value:2,label:'-',cls:'d2'},
+  {value:3,label:'o',cls:'d3'},
+  {value:4,label:'+',cls:'d4'},
+  {value:5,label:'++',cls:'d5'}
 ];
 
-function updateProgress() {
+function updateProgress(){
   progressText.textContent = (currentIndex + 1) + ' / ' + questions.length;
   progressBar.style.width = (((currentIndex + 1) / questions.length) * 100) + '%';
 }
-
-function renderQuestion() {
+function renderQuestion(){
   const q = questions[currentIndex];
   counter.textContent = (currentIndex + 1) + ' / ' + questions.length;
   qtext.textContent = q.question;
@@ -208,16 +203,16 @@ function renderQuestion() {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'choice' + (answers[currentIndex] === opt.value ? ' selected' : '');
-    btn.innerHTML = '<div class="dot ' + opt.cls + '">' + opt.label + '</div><div class="mark">' + opt.label + '</div>';
-    btn.onclick = () => {
+    btn.innerHTML = '<div class="dot '+opt.cls+'">'+opt.label+'</div><div class="mark">'+opt.label+'</div>';
+    btn.onclick = function(){
       answers[currentIndex] = opt.value;
       renderQuestion();
-      if (currentIndex < questions.length - 1) {
-        setTimeout(() => {
+      if(currentIndex < questions.length - 1){
+        setTimeout(function(){
           currentIndex += 1;
           updateProgress();
           renderQuestion();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          window.scrollTo({top:0, behavior:'smooth'});
         }, 120);
       }
     };
@@ -226,109 +221,98 @@ function renderQuestion() {
   document.getElementById('prevBtn').disabled = currentIndex === 0;
   document.getElementById('nextBtn').textContent = currentIndex === questions.length - 1 ? 'Voir les résultats' : 'Suivant';
 }
-
-function contribution(weight, answer) {
-  if (weight > 0) return weight * ((answer - 1) / 4);
-  if (weight < 0) return Math.abs(weight) * ((5 - answer) / 4);
+function contribution(weight, answer){
+  if(weight > 0) return weight * ((answer - 1) / 4);
+  if(weight < 0) return Math.abs(weight) * ((5 - answer) / 4);
   return 0;
 }
-
-function computeDirection(meta, answer) {
-  let gainLeft = 0;
-  let gainRight = 0;
-  for (const stat in meta.stats) {
+function computeDirection(meta, answer){
+  let gainLeft = 0, gainRight = 0;
+  for(const stat in meta.stats){
     const w = Number(meta.stats[stat]);
     gainLeft += contribution(w, 1) - contribution(w, answer);
     gainRight += contribution(w, 5) - contribution(w, answer);
   }
   const best = gainLeft > gainRight ? 'left' : 'right';
-  return { gainLeft, gainRight, best, gain: Math.max(gainLeft, gainRight) };
+  return {gainLeft, gainRight, best, gain: Math.max(gainLeft, gainRight)};
 }
-
-function computeResults() {
-  const raw = Object.fromEntries(STATS.map(s => [s, 0]));
+function computeResults(){
+  const raw = {};
+  STATS.forEach(s => raw[s] = 0);
   const normalized = {};
   const improvements = [];
   const mistakes = [];
-
-  for (let i = 0; i < questions.length; i++) {
+  for(let i=0;i<questions.length;i++){
     const q = questions[i];
     const answer = answers[i];
-    if (answer == null) continue;
-
-    for (const stat of STATS) {
-      if (Object.prototype.hasOwnProperty.call(q.stats, stat)) {
+    if(answer == null) continue;
+    STATS.forEach(stat => {
+      if(Object.prototype.hasOwnProperty.call(q.stats, stat)){
         raw[stat] += contribution(Number(q.stats[stat]), answer);
       }
-    }
-
+    });
     const dir = computeDirection(q, answer);
-    if (dir.gain > 0.01) {
+    if(dir.gain > 0.01){
       const betterPhrase = dir.best === 'left' ? q.leftPhrase : q.rightPhrase;
       const oppositePhrase = dir.best === 'left' ? q.rightPhrase : q.leftPhrase;
-      if (betterPhrase) improvements.push({ phrase: betterPhrase.trim(), score: dir.gain });
-      if (oppositePhrase) mistakes.push({ phrase: oppositePhrase.trim(), score: dir.gain });
+      if(betterPhrase) improvements.push({phrase: betterPhrase.trim(), score: dir.gain, question:q.question});
+      if(oppositePhrase) mistakes.push({phrase: oppositePhrase.trim(), score: dir.gain, question:q.question});
     }
   }
-
-  for (const stat of STATS) {
+  STATS.forEach(stat => {
     normalized[stat] = MAX_PER_STAT[stat] > 0 ? Math.round((raw[stat] / MAX_PER_STAT[stat]) * 100) : 0;
-  }
-
-  return { normalized, improvements, mistakes };
+  });
+  return {normalized, improvements, mistakes};
 }
-
-function topUnique(items, n) {
-  const seen = new Set();
+function topUnique(items, n){
+  const seenPhrase = new Set();
+  const seenQuestion = new Set();
   const out = [];
-  items.sort((a, b) => b.score - a.score);
-  for (const item of items) {
-    const key = item.phrase.toLowerCase().trim();
-    if (seen.has(key)) continue;
-    seen.add(key);
+  items.sort((a,b) => b.score - a.score);
+  for(const item of items){
+    const kp = item.phrase.toLowerCase().trim();
+    const kq = item.question.toLowerCase().trim();
+    if(seenPhrase.has(kp) || seenQuestion.has(kq)) continue;
+    seenPhrase.add(kp);
+    seenQuestion.add(kq);
     out.push(item);
-    if (out.length >= n) break;
+    if(out.length >= n) break;
   }
   return out;
 }
-
-function renderGroupBars(normalized) {
+function renderGroupBars(normalized){
   groupBars.innerHTML = '';
   Object.entries(CATEGORIES).forEach(([groupName, groupStats]) => {
     const valid = groupStats.filter(s => STATS.includes(s));
-    if (!valid.length) return;
+    if(!valid.length) return;
     const group = document.createElement('section');
     group.className = 'group';
-    group.innerHTML = '<h3>' + groupName + '</h3>';
+    group.innerHTML = '<h3>'+groupName+'</h3>';
     valid.forEach(stat => {
       const val = normalized[stat] || 0;
       const row = document.createElement('div');
       row.className = 'stat';
-      row.innerHTML = '<div class="statline"><div>' + stat + '</div><div><strong>' + val + '</strong>/100</div></div><div class="bar"><div class="fill" style="width:' + val + '%"></div></div>';
+      row.innerHTML = '<div class="statline"><div>'+stat+'</div><div><strong>'+val+'</strong>/100</div></div><div class="bar"><div class="fill" style="width:'+val+'%"></div></div>';
       group.appendChild(row);
     });
     groupBars.appendChild(group);
   });
 }
-
-function wrapText(ctx, text, maxWidth) {
+function wrapText(ctx, text, maxWidth){
   const words = String(text).split(' ');
   const lines = [];
   let line = '';
-  for (const word of words) {
+  words.forEach(word => {
     const test = line ? line + ' ' + word : word;
-    if (ctx.measureText(test).width > maxWidth && line) {
+    if(ctx.measureText(test).width > maxWidth && line){
       lines.push(line);
       line = word;
-    } else {
-      line = test;
-    }
-  }
-  if (line) lines.push(line);
+    } else line = test;
+  });
+  if(line) lines.push(line);
   return lines;
 }
-
-function drawRadar(canvas, labels, values) {
+function drawRadar(canvas, labels, values){
   const ctx = canvas.getContext('2d');
   const dpr = Math.max(1, window.devicePixelRatio || 1);
   const cssW = Math.min(canvas.parentElement.clientWidth - 12, 760);
@@ -341,22 +325,21 @@ function drawRadar(canvas, labels, values) {
 
   const w = cssW, h = cssH, cx = w / 2, cy = h / 2;
   const radius = Math.min(w * 0.33, h * 0.34);
-  ctx.clearRect(0, 0, w, h);
-
+  ctx.clearRect(0,0,w,h);
   const glow = ctx.createRadialGradient(cx, cy, 10, cx, cy, radius * 1.1);
   glow.addColorStop(0, 'rgba(102,192,244,.12)');
   glow.addColorStop(1, 'rgba(102,192,244,0)');
   ctx.fillStyle = glow;
-  ctx.fillRect(0, 0, w, h);
+  ctx.fillRect(0,0,w,h);
 
-  for (let level = 1; level <= 5; level++) {
+  for(let level=1; level<=5; level++){
     const r = radius * level / 5;
     ctx.beginPath();
     labels.forEach((_, i) => {
       const a = -Math.PI / 2 + i * (Math.PI * 2 / labels.length);
       const x = cx + Math.cos(a) * r;
       const y = cy + Math.sin(a) * r;
-      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
     });
     ctx.closePath();
     ctx.strokeStyle = level === 5 ? 'rgba(255,255,255,.18)' : 'rgba(255,255,255,.08)';
@@ -390,7 +373,7 @@ function drawRadar(canvas, labels, values) {
     const a = -Math.PI / 2 + i * (Math.PI * 2 / labels.length);
     const x = cx + Math.cos(a) * radius * v;
     const y = cy + Math.sin(a) * radius * v;
-    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
   });
   ctx.closePath();
   const poly = ctx.createLinearGradient(cx - radius, cy - radius, cx + radius, cy + radius);
@@ -419,21 +402,19 @@ function drawRadar(canvas, labels, values) {
     ctx.stroke();
   });
 }
-
-function renderRadars(normalized) {
+function renderRadars(normalized){
   radarsWrap.innerHTML = '';
   Object.entries(CATEGORIES).forEach(([groupName, groupStats]) => {
     const valid = groupStats.filter(s => STATS.includes(s));
-    if (!valid.length) return;
+    if(!valid.length) return;
     const card = document.createElement('section');
     card.className = 'radarcard';
-    card.innerHTML = '<h3 class="radarname">' + groupName + '</h3><canvas class="radarcanvas"></canvas>';
+    card.innerHTML = '<h3 class="radarname">'+groupName+'</h3><canvas class="radarcanvas"></canvas>';
     radarsWrap.appendChild(card);
     drawRadar(card.querySelector('canvas'), valid, valid.map(s => normalized[s] || 0));
   });
 }
-
-function renderAdvice(improvements, mistakes) {
+function renderAdvice(improvements, mistakes){
   goodList.innerHTML = '';
   avoidList.innerHTML = '';
   topUnique(improvements, 3).forEach(item => {
@@ -448,9 +429,33 @@ function renderAdvice(improvements, mistakes) {
   });
 }
 
-function showResults() {
+window.goPrev = function(){
+  if(currentIndex > 0){
+    currentIndex -= 1;
+    updateProgress();
+    renderQuestion();
+  }
+};
+window.goNext = function(){
+  if(answers[currentIndex] == null) return;
+  if(currentIndex === questions.length - 1){
+    window.showResults();
+  } else {
+    currentIndex += 1;
+    updateProgress();
+    renderQuestion();
+  }
+};
+window.backToQuestions = function(){
+  resultsView.classList.add('hidden');
+  questionView.classList.remove('hidden');
+  currentIndex = questions.length - 1;
+  updateProgress();
+  renderQuestion();
+};
+window.showResults = function(){
   const missing = answers.findIndex(a => a == null);
-  if (missing !== -1) {
+  if(missing !== -1){
     currentIndex = missing;
     updateProgress();
     renderQuestion();
@@ -459,7 +464,7 @@ function showResults() {
   const result = computeResults();
   let total = 0;
   STATS.forEach(s => { total += result.normalized[s]; });
-  totalScore.innerHTML = total + ' <small>/ ' + (STATS.length * 100) + '</small>';
+  totalScore.innerHTML = total + ' <small>/ ' + TOTALMAX + '</small>';
   renderRadars(result.normalized);
   renderGroupBars(result.normalized);
   renderAdvice(result.improvements, result.mistakes);
@@ -467,40 +472,11 @@ function showResults() {
   resultsView.classList.remove('hidden');
   progressText.textContent = 'Terminé';
   progressBar.style.width = '100%';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-document.getElementById('prevBtn').onclick = () => {
-  if (currentIndex > 0) {
-    currentIndex -= 1;
-    updateProgress();
-    renderQuestion();
-  }
+  window.scrollTo({top:0, behavior:'smooth'});
 };
 
-document.getElementById('nextBtn').onclick = () => {
-  if (answers[currentIndex] == null) return;
-  if (currentIndex === questions.length - 1) {
-    showResults();
-  } else {
-    currentIndex += 1;
-    updateProgress();
-    renderQuestion();
-  }
-};
-
-document.getElementById('backBtn').onclick = () => {
-  resultsView.classList.add('hidden');
-  questionView.classList.remove('hidden');
-  currentIndex = questions.length - 1;
-  updateProgress();
-  renderQuestion();
-};
-
-document.getElementById('restartBtn').onclick = () => window.location.reload();
-
-window.addEventListener('resize', () => {
-  if (!resultsView.classList.contains('hidden')) {
+window.addEventListener('resize', function(){
+  if(!resultsView.classList.contains('hidden')){
     const result = computeResults();
     renderRadars(result.normalized);
   }
@@ -508,7 +484,6 @@ window.addEventListener('resize', () => {
 
 updateProgress();
 renderQuestion();
-})();
 </script>
 </body>
 </html>
