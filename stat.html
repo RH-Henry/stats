@@ -60,7 +60,6 @@ html,body {
 .navbtn, .finishbtn { flex:1; border:0; border-radius:18px; padding:15px 16px; font-size:16px; font-weight:800; cursor:pointer; }
 .prev { background:rgba(255,255,255,.06); color:#d9e5f2; border:1px solid var(--line); }
 .next, .finishbtn { background:linear-gradient(180deg,#1fa4ff,#147fd0); color:white; box-shadow:0 12px 30px rgba(20,127,208,.28); }
-
 .hidden { display:none !important; }
 .scorebox {
   display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; margin-bottom:16px; padding:14px 16px;
@@ -71,12 +70,10 @@ html,body {
 .scorevalue small { font-size:.38em; color:var(--muted); font-weight:700; }
 .block { background:rgba(255,255,255,.03); border:1px solid var(--line); border-radius:22px; padding:14px; margin-bottom:14px; }
 .sectiontitle { font-size:18px; font-weight:900; margin:0 0 12px; }
-
 .radarsCol { display:grid; grid-template-columns:1fr; gap:14px; }
 .radarcard { background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015)); border:1px solid var(--line); border-radius:22px; padding:16px; }
 .radarname { font-size:18px; font-weight:900; margin:0 0 10px; color:#e8f3ff; }
 .radarcanvas { display:block; width:100%; height:auto; margin:0 auto; }
-
 .groups { display:grid; gap:14px; }
 .group { background:rgba(255,255,255,.02); border:1px solid var(--line); border-radius:18px; padding:12px; }
 .group h3 { margin:0 0 10px; font-size:16px; font-weight:900; }
@@ -84,7 +81,6 @@ html,body {
 .statline { display:flex; justify-content:space-between; gap:10px; margin-bottom:6px; font-size:14px; }
 .bar { height:12px; border-radius:999px; overflow:hidden; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.05); }
 .fill { height:100%; width:0; background:linear-gradient(90deg,#66c0f4,#8de1ff); }
-
 .dual { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
 .col { border-radius:18px; padding:14px; }
 .col.good { background:rgba(103,223,141,.09); border:1px solid rgba(103,223,141,.22); }
@@ -114,7 +110,6 @@ html,body {
       <div class="progress"><div id="progressBar"></div></div>
     </div>
   </div>
-
   <div class="panel">
     <section class="view" id="questionView">
       <div class="qtop"><div class="counter" id="counter"></div></div>
@@ -125,23 +120,19 @@ html,body {
         <button type="button" class="navbtn next" id="nextBtn">Suivant</button>
       </div>
     </section>
-
     <section class="view hidden" id="resultsView">
       <div class="scorebox">
         <div class="scorelabel">Total stat</div>
         <div class="scorevalue" id="totalScore">0 <small>/ 1700</small></div>
       </div>
-
       <div class="block">
         <h2 class="sectiontitle">Radars par catégorie</h2>
         <div class="radarsCol" id="radarsWrap"></div>
       </div>
-
       <div class="block">
         <h2 class="sectiontitle">Stats par catégorie</h2>
         <div class="groups" id="groupBars"></div>
       </div>
-
       <div class="block">
         <div class="dual">
           <div class="col good">
@@ -154,7 +145,6 @@ html,body {
           </div>
         </div>
       </div>
-
       <div class="footerbtns">
         <button type="button" class="navbtn prev" id="backBtn">Retour</button>
         <button type="button" class="finishbtn" id="restartBtn">Recommencer</button>
@@ -219,20 +209,18 @@ function renderQuestion() {
     btn.type = 'button';
     btn.className = 'choice' + (answers[currentIndex] === opt.value ? ' selected' : '');
     btn.innerHTML = '<div class="dot ' + opt.cls + '">' + opt.label + '</div><div class="mark">' + opt.label + '</div>';
-    btn.addEventListener('click', () => {
+    btn.onclick = () => {
       answers[currentIndex] = opt.value;
       renderQuestion();
-      setTimeout(() => {
-        if (currentIndex === questions.length - 1) {
-          showResults();
-        } else {
+      if (currentIndex < questions.length - 1) {
+        setTimeout(() => {
           currentIndex += 1;
           updateProgress();
           renderQuestion();
           window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-      }, 120);
-    });
+        }, 120);
+      }
+    };
     answersEl.appendChild(btn);
   });
   document.getElementById('prevBtn').disabled = currentIndex === 0;
@@ -293,7 +281,7 @@ function computeResults() {
 function topUnique(items, n) {
   const seen = new Set();
   const out = [];
-  items.sort((a,b) => b.score - a.score);
+  items.sort((a, b) => b.score - a.score);
   for (const item of items) {
     const key = item.phrase.toLowerCase().trim();
     if (seen.has(key)) continue;
@@ -351,7 +339,7 @@ function drawRadar(canvas, labels, values) {
   canvas.height = Math.round(cssH * dpr);
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-  const w = cssW, h = cssH, cx = w/2, cy = h/2;
+  const w = cssW, h = cssH, cx = w / 2, cy = h / 2;
   const radius = Math.min(w * 0.33, h * 0.34);
   ctx.clearRect(0, 0, w, h);
 
@@ -365,7 +353,7 @@ function drawRadar(canvas, labels, values) {
     const r = radius * level / 5;
     ctx.beginPath();
     labels.forEach((_, i) => {
-      const a = -Math.PI/2 + i * (Math.PI*2/labels.length);
+      const a = -Math.PI / 2 + i * (Math.PI * 2 / labels.length);
       const x = cx + Math.cos(a) * r;
       const y = cy + Math.sin(a) * r;
       if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
@@ -377,7 +365,7 @@ function drawRadar(canvas, labels, values) {
   }
 
   labels.forEach((label, i) => {
-    const a = -Math.PI/2 + i * (Math.PI*2/labels.length);
+    const a = -Math.PI / 2 + i * (Math.PI * 2 / labels.length);
     const x = cx + Math.cos(a) * radius;
     const y = cy + Math.sin(a) * radius;
     ctx.beginPath();
@@ -399,7 +387,7 @@ function drawRadar(canvas, labels, values) {
   ctx.beginPath();
   labels.forEach((label, i) => {
     const v = (values[i] || 0) / 100;
-    const a = -Math.PI/2 + i * (Math.PI*2/labels.length);
+    const a = -Math.PI / 2 + i * (Math.PI * 2 / labels.length);
     const x = cx + Math.cos(a) * radius * v;
     const y = cy + Math.sin(a) * radius * v;
     if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
@@ -419,7 +407,7 @@ function drawRadar(canvas, labels, values) {
 
   labels.forEach((label, i) => {
     const v = (values[i] || 0) / 100;
-    const a = -Math.PI/2 + i * (Math.PI*2/labels.length);
+    const a = -Math.PI / 2 + i * (Math.PI * 2 / labels.length);
     const x = cx + Math.cos(a) * radius * v;
     const y = cy + Math.sin(a) * radius * v;
     ctx.beginPath();
@@ -470,7 +458,7 @@ function showResults() {
   }
   const result = computeResults();
   let total = 0;
-  STATS.forEach(s => total += result.normalized[s]);
+  STATS.forEach(s => { total += result.normalized[s]; });
   totalScore.innerHTML = total + ' <small>/ ' + (STATS.length * 100) + '</small>';
   renderRadars(result.normalized);
   renderGroupBars(result.normalized);
@@ -482,15 +470,15 @@ function showResults() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-document.getElementById('prevBtn').addEventListener('click', () => {
+document.getElementById('prevBtn').onclick = () => {
   if (currentIndex > 0) {
     currentIndex -= 1;
     updateProgress();
     renderQuestion();
   }
-});
+};
 
-document.getElementById('nextBtn').addEventListener('click', () => {
+document.getElementById('nextBtn').onclick = () => {
   if (answers[currentIndex] == null) return;
   if (currentIndex === questions.length - 1) {
     showResults();
@@ -499,17 +487,17 @@ document.getElementById('nextBtn').addEventListener('click', () => {
     updateProgress();
     renderQuestion();
   }
-});
+};
 
-document.getElementById('backBtn').addEventListener('click', () => {
+document.getElementById('backBtn').onclick = () => {
   resultsView.classList.add('hidden');
   questionView.classList.remove('hidden');
   currentIndex = questions.length - 1;
   updateProgress();
   renderQuestion();
-});
+};
 
-document.getElementById('restartBtn').addEventListener('click', () => window.location.reload());
+document.getElementById('restartBtn').onclick = () => window.location.reload();
 
 window.addEventListener('resize', () => {
   if (!resultsView.classList.contains('hidden')) {
