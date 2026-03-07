@@ -7,8 +7,8 @@
 <style>
 :root {
   --text:#e8edf5; --muted:#8fa0b5; --line:rgba(255,255,255,.09);
-  --accent:#66c0f4; --accent2:#1a9fff; --bg1:#0b1016; --bg2:#111923; --bg3:#0e141c;
-  --shadow:0 18px 45px rgba(0,0,0,.38);
+  --accent:#66c0f4; --accent2:#1a9fff; --good:#66e18a; --good2:#2ebd64;
+  --bg1:#0b1016; --bg2:#111923; --bg3:#0e141c; --shadow:0 18px 45px rgba(0,0,0,.38);
 }
 * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 html,body {
@@ -37,7 +37,6 @@ body { min-height:100vh; }
 .progress > div {
   height:100%; width:0; background:linear-gradient(90deg,var(--accent),var(--accent2)); transition:width .25s ease;
 }
-
 .viewport {
   position:relative; min-height:calc(100vh - 150px);
   background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
@@ -47,10 +46,7 @@ body { min-height:100vh; }
 .screen.active { display:flex; flex-direction:column; }
 .qtop { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
 .counter { font-size:14px; color:var(--muted); font-weight:700; letter-spacing:.02em; }
-.qtext {
-  font-size:clamp(24px, 5.4vw, 42px); line-height:1.18; font-weight:900;
-  margin:8px 0 24px; text-wrap:balance;
-}
+.qtext { font-size:clamp(24px, 5.2vw, 40px); line-height:1.18; font-weight:900; margin:8px 0 24px; text-wrap:balance; }
 .answers { display:grid; grid-template-columns:repeat(5, minmax(0,1fr)); gap:10px; margin-top:auto; }
 .opt input { position:absolute; opacity:0; pointer-events:none; }
 .choice {
@@ -72,14 +68,12 @@ body { min-height:100vh; }
 .d4 { width:60px; height:60px; background:linear-gradient(180deg,#98ea8b,#52b45e); }
 .d5 { width:72px; height:72px; background:linear-gradient(180deg,#66e8af,#18b36d); }
 .mark { font-size:13px; font-weight:800; color:#d4e3f3; letter-spacing:.04em; }
-
 .nav { display:flex; gap:10px; margin-top:18px; }
 .navbtn, .finishbtn {
   flex:1; border:0; border-radius:18px; padding:15px 16px; font-size:16px; font-weight:800; cursor:pointer;
 }
 .prev { background:rgba(255,255,255,.06); color:#d9e5f2; border:1px solid var(--line); }
 .next, .finishbtn { background:linear-gradient(180deg,#1fa4ff,#147fd0); color:white; box-shadow:0 12px 30px rgba(20,127,208,.28); }
-
 .results { display:none; padding:18px; }
 .results.show { display:block; }
 .scorebox {
@@ -90,38 +84,29 @@ body { min-height:100vh; }
 .scorelabel { font-size:15px; font-weight:800; }
 .scorevalue { font-size:clamp(28px,8vw,54px); font-weight:900; }
 .scorevalue small { font-size:.38em; color:var(--muted); font-weight:700; }
-
 .block {
   background:rgba(255,255,255,.03); border:1px solid var(--line); border-radius:22px; padding:14px; margin-bottom:14px;
 }
 .sectiontitle { font-size:18px; font-weight:900; margin:0 0 12px; }
-.radars {
-  display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:14px;
-}
-.radarcard {
-  background:rgba(255,255,255,.02); border:1px solid var(--line); border-radius:18px; padding:10px;
-}
+.greentitle { color:#b5ffd0; }
+.radars { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:14px; }
+.radarcard { background:rgba(255,255,255,.02); border:1px solid var(--line); border-radius:18px; padding:10px; }
 .radarname { font-size:15px; font-weight:800; margin:0 0 6px; color:#dfeaf7; }
 .radarcanvas { display:block; width:100%; height:auto; }
-
 .groups { display:grid; gap:14px; }
-.group {
-  background:rgba(255,255,255,.02); border:1px solid var(--line); border-radius:18px; padding:12px;
-}
+.group { background:rgba(255,255,255,.02); border:1px solid var(--line); border-radius:18px; padding:12px; }
 .group h3 { margin:0 0 10px; font-size:15px; font-weight:900; }
 .stat { padding:8px 0; }
 .statline { display:flex; justify-content:space-between; gap:10px; margin-bottom:6px; font-size:14px; }
 .bar { height:12px; border-radius:999px; overflow:hidden; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.05); }
 .fill { height:100%; width:0; background:linear-gradient(90deg,#66c0f4,#8de1ff); }
-
-.advice { display:grid; gap:10px; }
-.tip {
-  padding:12px 14px; border-radius:16px; background:rgba(102,192,244,.08);
-  border:1px solid rgba(102,192,244,.16); line-height:1.45;
-}
-
+.dualadvice { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.advcol { background:rgba(102,225,138,.07); border:1px solid rgba(102,225,138,.18); border-radius:18px; padding:14px; }
+.advcol h3 { margin:0 0 10px; font-size:17px; font-weight:900; color:#b5ffd0; }
+.advcol ul { margin:0; padding-left:20px; }
+.advcol li { margin:8px 0; line-height:1.45; }
 .footerbtns { display:flex; gap:10px; margin-top:18px; }
-
+@media (max-width:760px) { .dualadvice { grid-template-columns:1fr; } }
 @media (max-width:640px) {
   .topbar { display:block; }
   .meta { margin-left:0; margin-top:10px; }
@@ -190,8 +175,16 @@ body { min-height:100vh; }
       </div>
 
       <div class="block">
-        <h2 class="sectiontitle">Pistes d'amélioration</h2>
-        <div class="advice" id="adviceList"></div>
+        <div class="dualadvice">
+          <div class="advcol">
+            <h3>3 pistes d’amélioration</h3>
+            <ul id="goodList"></ul>
+          </div>
+          <div class="advcol">
+            <h3>3 erreurs à éviter</h3>
+            <ul id="avoidList"></ul>
+          </div>
+        </div>
       </div>
 
       <div class="footerbtns">
@@ -206,10 +199,8 @@ body { min-height:100vh; }
 (function(){
 const stats = ["Attaque", "Vitesse", "Urbanisme", "Charisme", "Argent", "Sociabilité", "Constance", "PV", "Résistance", "Poids", "Efficacité énergétique", "Vitesse de récupération (sommeil)", "Mouchoirs", "Puissance cognitive", "altruisme", "Sécurité", "Confiance"];
 const maxPerStat = {"Attaque": 301.0, "Vitesse": 352.0, "Urbanisme": 160.0, "Charisme": 403.0, "Argent": 301.0, "Sociabilité": 289.0, "Constance": 257.0, "PV": 186.0, "Résistance": 222.0, "Poids": 286.0, "Efficacité énergétique": 354.0, "Vitesse de récupération (sommeil)": 186.0, "Mouchoirs": 131.0, "Puissance cognitive": 366.0, "altruisme": 185.0, "Sécurité": 405.0, "Confiance": 232.0};
-const categories = {"Physique": ["Attaque", "Vitesse", "PV", "Résistance", "Poids", "Efficacité énergétique", "Vitesse de récupération (sommeil)"], "Société": ["Urbanisme", "Charisme", "Argent", "Sociabilité", "altruisme", "Sécurité", "Confiance", "Courage", "Influence"], "Autres": ["Constance", "Mouchoirs", "Puissance cognitive", "Angoisse"]};
+const categories = {"Physique": ["Attaque", "Vitesse", "PV", "Résistance", "Poids", "Efficacité énergétique", "Vitesse de récupération (sommeil)"], "Société": ["Urbanisme", "Charisme", "Argent", "Sociabilité", "altruisme", "Sécurité", "Confiance"], "Autres": ["Constance", "Mouchoirs", "Puissance cognitive"]};
 const questionMeta = [{"question": "Combien pèses tu de 1 à 5 (1 = léger, 5 = lourd)", "stats": {"Attaque": 15.0, "Vitesse": -25.0, "Urbanisme": 6.0, "Charisme": -1.0, "Argent": 15.0, "Sociabilité": 5.0, "PV": 25.0, "Résistance": 30.0, "Poids": 100.0, "Efficacité énergétique": -42.0, "Vitesse de récupération (sommeil)": -15.0, "Mouchoirs": 10.0, "altruisme": -2.0, "Confiance": 5.0}}, {"question": "Cours-tu quand tu es en retard ?", "stats": {"Attaque": 2.0, "Vitesse": 48.0, "Urbanisme": 15.0, "Charisme": -50.0, "Argent": -25.0, "Sociabilité": 10.0, "Constance": -15.0, "Poids": -30.0, "Efficacité énergétique": -20.0, "Vitesse de récupération (sommeil)": -20.0, "Mouchoirs": 15.0, "Puissance cognitive": -5.0, "altruisme": 20.0, "Sécurité": -20.0, "Confiance": -3.0}}, {"question": "Es tu souvent en retard ?", "stats": {"Attaque": 15.0, "Vitesse": -25.0, "Urbanisme": 1.0, "Charisme": -29.0, "Argent": -21.0, "Sociabilité": -1.0, "Constance": -35.0, "Efficacité énergétique": 10.0, "Vitesse de récupération (sommeil)": -1.0, "Puissance cognitive": -15.0, "altruisme": -20.0, "Sécurité": -20.0, "Confiance": 10.0}}, {"question": "écris tu souvent \"bonne/joyeuse anniversaire\" ?", "stats": {"Attaque": 10.0, "Charisme": -20.0, "Argent": 5.0, "Sociabilité": 30.0, "Constance": -10.0, "Poids": 5.0, "Efficacité énergétique": -10.0, "Vitesse de récupération (sommeil)": -5.0, "Puissance cognitive": -10.0, "altruisme": -10.0, "Sécurité": -10.0, "Confiance": 15.0}}, {"question": "Tes horaires de repas sont elles régulières ?", "stats": {"Attaque": 15.0, "Vitesse": 15.0, "Urbanisme": 2.0, "Charisme": 35.0, "Argent": 20.0, "Sociabilité": 30.0, "Constance": 30.0, "PV": 35.0, "Résistance": 36.0, "Poids": 33.0, "Efficacité énergétique": -20.0, "Vitesse de récupération (sommeil)": -20.0, "Mouchoirs": 2.0, "Puissance cognitive": 45.0, "Sécurité": 25.0, "Confiance": 5.0}}, {"question": "Vas tu à tous les cours", "stats": {"Attaque": -15.0, "Vitesse": 10.0, "Urbanisme": 1.0, "Charisme": 5.0, "Argent": 15.0, "Sociabilité": 5.0, "Constance": 30.0, "Vitesse de récupération (sommeil)": 35.0, "Mouchoirs": -15.0, "Puissance cognitive": 25.0, "Sécurité": 23.0, "Confiance": 1.0}}, {"question": "Connais tu tes tables de multiplication", "stats": {"Attaque": 15.0, "Vitesse": 15.0, "Urbanisme": -5.0, "Charisme": 15.0, "Argent": 10.0, "Sociabilité": 1.0, "Résistance": -10.0, "Poids": 5.0, "Efficacité énergétique": 20.0, "Vitesse de récupération (sommeil)": 5.0, "Puissance cognitive": 11.0, "Confiance": -5.0}}, {"question": "Tes horaires de sommeil sont elles régulières", "stats": {"Attaque": 15.0, "Vitesse": 20.0, "Charisme": 15.0, "Argent": 15.0, "Sociabilité": -10.0, "Constance": 15.0, "PV": 20.0, "Résistance": 9.0, "Poids": 5.0, "Efficacité énergétique": 22.0, "Vitesse de récupération (sommeil)": 15.0, "Puissance cognitive": 15.0, "Sécurité": 10.0, "Confiance": 5.0}}, {"question": "Dors tu autant que tu le devrais la nuit", "stats": {"Attaque": 20.0, "Vitesse": 30.0, "Charisme": 20.0, "Argent": 10.0, "Sociabilité": -20.0, "Constance": 5.0, "PV": 15.0, "Résistance": 8.0, "Poids": 1.0, "Efficacité énergétique": 30.0, "Vitesse de récupération (sommeil)": -25.0, "Mouchoirs": 10.0, "Puissance cognitive": 30.0, "Sécurité": 10.0, "Confiance": 10.0}}, {"question": "Vas tu sur les réseaux sociaux avant de dormir", "stats": {"Charisme": -15.0, "Argent": -15.0, "Sociabilité": -7.0, "Constance": 9.0, "PV": -7.0, "Résistance": -45.0, "Poids": -19.0, "Efficacité énergétique": -10.0, "Vitesse de récupération (sommeil)": -10.0, "Mouchoirs": -5.0, "Puissance cognitive": -40.0, "Sécurité": -20.0, "Confiance": -15.0}}, {"question": "Portes-tu souvent les mêmes vêtements ?", "stats": {"Vitesse": 6.0, "Charisme": -5.0, "Argent": -10.0, "Sociabilité": -10.0, "Constance": 15.0, "Résistance": 5.0, "Efficacité énergétique": 30.0, "Mouchoirs": 10.0, "Puissance cognitive": 15.0, "Confiance": 5.0}}, {"question": "Prends-tu beaucoup de photos ?", "stats": {"Vitesse": 10.0, "Urbanisme": 15.0, "Charisme": -8.0, "Argent": 5.0, "Sociabilité": -5.0, "PV": 10.0, "Poids": -10.0, "Efficacité énergétique": -6.0, "Mouchoirs": 5.0, "Puissance cognitive": 15.0, "altruisme": 15.0, "Sécurité": -20.0, "Confiance": 3.0}}, {"question": "Es tu de droite", "stats": {"Attaque": 15.0, "Vitesse": 1.0, "Urbanisme": -15.0, "Charisme": 2.0, "Argent": 20.0, "Sociabilité": -1.0, "PV": 15.0, "Résistance": -2.0, "Poids": 5.0, "Efficacité énergétique": -20.0, "Mouchoirs": 15.0, "Puissance cognitive": -1.0, "altruisme": -10.0, "Sécurité": 6.0, "Confiance": 2.0}}, {"question": "As-des allergies ?", "stats": {"Attaque": -15.0, "Vitesse": -5.0, "Urbanisme": 5.0, "Charisme": -15.0, "Argent": -10.0, "Sociabilité": -2.0, "Constance": -1.0, "PV": -10.0, "Résistance": -10.0, "Poids": -5.0, "Mouchoirs": 15.0, "Puissance cognitive": 10.0, "altruisme": 10.0, "Sécurité": -20.0, "Confiance": -10.0}}, {"question": "As-tu un animal ?", "stats": {"Attaque": 20.0, "Vitesse": -5.0, "Urbanisme": 2.0, "Charisme": 20.0, "Argent": 15.0, "Sociabilité": 25.0, "Constance": 20.0, "PV": -15.0, "Résistance": 10.0, "Poids": -5.0, "Vitesse de récupération (sommeil)": 10.0, "Mouchoirs": -5.0, "Puissance cognitive": -5.0, "altruisme": 30.0, "Sécurité": 20.0, "Confiance": 3.0}}, {"question": "Te perds tu souvent", "stats": {"Attaque": -5.0, "Vitesse": -30.0, "Urbanisme": 30.0, "Charisme": -40.0, "Sociabilité": 5.0, "Constance": -5.0, "Efficacité énergétique": -50.0, "Mouchoirs": 2.0, "Puissance cognitive": -40.0, "altruisme": 15.0, "Sécurité": -45.0, "Confiance": 15.0}}, {"question": "Préfères tu manger avec des gens", "stats": {"Vitesse": -15.0, "Urbanisme": 15.0, "Charisme": 13.0, "Argent": -10.0, "Sociabilité": 30.0, "Constance": -5.0, "PV": 10.0, "Résistance": 15.0, "Poids": 16.0, "Efficacité énergétique": -10.0, "Mouchoirs": -5.0, "Puissance cognitive": 5.0, "altruisme": -10.0, "Sécurité": 15.0, "Confiance": -10.0}}, {"question": "Fais tu régulièrement du sport", "stats": {"Attaque": 60.0, "Vitesse": 40.0, "Urbanisme": 15.0, "Charisme": 30.0, "Argent": 10.0, "Sociabilité": 17.0, "Constance": 12.0, "PV": 2.0, "Résistance": 15.0, "Poids": 15.0, "Efficacité énergétique": 10.0, "Vitesse de récupération (sommeil)": 12.0, "Mouchoirs": 5.0, "Puissance cognitive": -15.0, "altruisme": -15.0, "Sécurité": 5.0, "Confiance": 6.0}}, {"question": "Traverses tu toujours au passage piéton quand le feu est vert", "stats": {"Attaque": -30.0, "Vitesse": -25.0, "Urbanisme": 15.0, "Charisme": -20.0, "Argent": -30.0, "Sociabilité": 25.0, "Constance": 15.0, "PV": 10.0, "Résistance": -5.0, "Poids": -2.0, "Efficacité énergétique": -10.0, "Vitesse de récupération (sommeil)": 3.0, "Mouchoirs": -1.0, "Puissance cognitive": 20.0, "altruisme": 10.0, "Sécurité": 30.0, "Confiance": -10.0}}, {"question": "Utilises tu souvent des sites de streaming douteux", "stats": {"Attaque": 5.0, "Vitesse": 5.0, "Urbanisme": 10.0, "Charisme": -20.0, "Argent": -15.0, "Sociabilité": -15.0, "Résistance": 9.0, "Poids": 5.0, "Efficacité énergétique": -5.0, "Mouchoirs": -5.0, "Puissance cognitive": 5.0, "Sécurité": -27.0, "Confiance": 5.0}}, {"question": "À quelle fréquence partages-tu tes scores sur Strava ?", "stats": {"Attaque": 4.0, "Vitesse": 10.0, "Urbanisme": 5.0, "Charisme": -15.0, "Argent": 15.0, "Sociabilité": -20.0, "Constance": 20.0, "Résistance": 2.0, "Poids": -15.0, "Efficacité énergétique": -15.0, "Vitesse de récupération (sommeil)": 4.0, "Mouchoirs": -2.0, "Puissance cognitive": -15.0, "altruisme": -10.0, "Sécurité": -30.0, "Confiance": 50.0}}, {"question": "Comment évalues tu ta situation amoureuse", "stats": {"Attaque": -10.0, "Vitesse": -7.0, "Urbanisme": 3.0, "Argent": -5.0, "Sociabilité": 10.0, "Constance": 5.0, "PV": 11.0, "Résistance": 6.0, "Poids": 8.0, "Efficacité énergétique": -4.0, "Vitesse de récupération (sommeil)": 4.0, "Mouchoirs": 3.0, "Puissance cognitive": 1.0, "altruisme": 3.0, "Sécurité": 9.0, "Confiance": 30.0}}, {"question": "As tu beaucoup de notifications indésirables", "stats": {"Attaque": -15.0, "Vitesse": -5.0, "Charisme": -10.0, "Argent": -5.0, "Sociabilité": -5.0, "Constance": -10.0, "PV": -1.0, "Résistance": 5.0, "Poids": 2.0, "Efficacité énergétique": -10.0, "Vitesse de récupération (sommeil)": -2.0, "Mouchoirs": 1.0, "Puissance cognitive": -23.0, "altruisme": 5.0, "Sécurité": -40.0, "Confiance": -9.0}}];
-const answerLabels = {1:'--',2:'-',3:'o',4:'+',5:'++'};
-
 const screens = Array.from(document.querySelectorAll('.question-screen'));
 const resultsScreen = document.getElementById('resultsScreen');
 const progressText = document.getElementById('progressText');
@@ -217,7 +208,8 @@ const progressBar = document.getElementById('progressBar');
 const totalScore = document.getElementById('totalScore');
 const radarWrap = document.getElementById('radarsWrap');
 const groupBars = document.getElementById('groupBars');
-const adviceList = document.getElementById('adviceList');
+const goodList = document.getElementById('goodList');
+const avoidList = document.getElementById('avoidList');
 let current = 0;
 
 function shuffle(arr){
@@ -311,12 +303,8 @@ function wrapText(ctx, text, maxWidth){
   let line = '';
   words.forEach(word => {
     const test = line ? line + ' ' + word : word;
-    if(ctx.measureText(test).width > maxWidth && line){
-      lines.push(line);
-      line = word;
-    } else {
-      line = test;
-    }
+    if(ctx.measureText(test).width > maxWidth && line){ lines.push(line); line = word; }
+    else { line = test; }
   });
   if(line) lines.push(line);
   return lines;
@@ -412,42 +400,85 @@ function renderRadars(normalized){
     card.className = 'radarcard';
     card.innerHTML = '<h3 class="radarname">'+groupName+'</h3><canvas class="radarcanvas"></canvas>';
     radarWrap.appendChild(card);
-    const values = validStats.map(s => normalized[s] ?? 0);
-    drawRadar(card.querySelector('canvas'), validStats, values);
+    drawRadar(card.querySelector('canvas'), validStats, validStats.map(s => normalized[s] ?? 0));
   });
 }
 
-function makeAdvice(stat, entries){
-  const top = entries
-    .filter(e => e.loss > 0.01)
-    .sort((a,b) => b.loss - a.loss)
-    .slice(0, 2);
+function normalizeQuestionText(q){
+  return String(q).replace(/\s+/g, ' ').trim().replace(/[? ]+$/,'');
+}
 
-  if(!top.length){
-    return 'Pour améliorer '+stat+', continuez à renforcer les réponses déjà les plus favorables à cette statistique.';
-  }
-
-  const parts = top.map(e => {
-    if(e.weight > 0){
-      return 'monter votre réponse sur « '+e.question+' » (actuellement '+answerLabels[e.answer]+')';
-    }
-    return 'baisser votre réponse sur « '+e.question+' » (actuellement '+answerLabels[e.answer]+')';
-  });
-
-  return 'Pour améliorer '+stat+', il faudrait surtout '+parts.join(' et ')+'.';
+function buildActionText(question, direction){
+  const q = normalizeQuestionText(question);
+  if(direction === 'down') return 'Réduire : ' + q + '.';
+  return 'Renforcer : ' + q + '.';
 }
 
 function renderAdvice(normalized, analysis){
-  adviceList.innerHTML = '';
-  const lowest = [...stats]
-    .sort((a,b) => (normalized[a] ?? 0) - (normalized[b] ?? 0))
-    .slice(0, 3);
+  goodList.innerHTML = '';
+  avoidList.innerHTML = '';
 
+  const lowest = [...stats].sort((a,b) => (normalized[a] ?? 0) - (normalized[b] ?? 0)).slice(0, 3);
+  const pool = [];
   lowest.forEach(stat => {
-    const tip = document.createElement('div');
-    tip.className = 'tip';
-    tip.textContent = makeAdvice(stat, analysis[stat] || []);
-    adviceList.appendChild(tip);
+    (analysis[stat] || []).forEach(entry => {
+      if(entry.loss <= 0.01) return;
+      const direction = entry.weight > 0 ? 'up' : 'down';
+      pool.push({
+        question: entry.question,
+        direction,
+        loss: entry.loss,
+        stat
+      });
+    });
+  });
+
+  pool.sort((a,b) => b.loss - a.loss);
+
+  const seen = new Set();
+  const picks = [];
+  for(const item of pool){
+    const key = item.question + '|' + item.direction;
+    if(seen.has(key)) continue;
+    seen.add(key);
+    picks.push(item);
+    if(picks.length >= 3) break;
+  }
+
+  const avoidPicks = [];
+  const goodPicks = [];
+  for(const item of picks){
+    if(item.direction === 'up') goodPicks.push(item);
+    else avoidPicks.push(item);
+  }
+
+  // ensure 3/3 with fallback from pool
+  for(const item of pool){
+    if(goodPicks.length >= 3) break;
+    const key = item.question + '|up';
+    if(item.direction === 'up' && !goodPicks.some(x => x.question === item.question)) goodPicks.push(item);
+  }
+  for(const item of pool){
+    if(avoidPicks.length >= 3) break;
+    if(item.direction === 'down' && !avoidPicks.some(x => x.question === item.question)) avoidPicks.push(item);
+  }
+
+  // generic fallback if one side is short
+  for(const item of picks){
+    if(goodPicks.length < 3 && !goodPicks.some(x => x.question === item.question)) goodPicks.push({...item, direction:'up'});
+    if(avoidPicks.length < 3 && !avoidPicks.some(x => x.question === item.question)) avoidPicks.push({...item, direction:'down'});
+  }
+
+  goodPicks.slice(0,3).forEach(item => {
+    const li = document.createElement('li');
+    li.textContent = buildActionText(item.question, 'up');
+    goodList.appendChild(li);
+  });
+
+  avoidPicks.slice(0,3).forEach(item => {
+    const li = document.createElement('li');
+    li.textContent = buildActionText(item.question, 'down');
+    avoidList.appendChild(li);
   });
 }
 
@@ -461,7 +492,6 @@ function showResults(){
   let total = 0;
   stats.forEach(s => total += result.normalized[s]);
   totalScore.innerHTML = total + ' <small>/ 1700</small>';
-
   renderRadars(result.normalized);
   renderGroupBars(result.normalized);
   renderAdvice(result.normalized, result.analysis);
