@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Questionnaire Puissance</title>
+<style>
+:root{--text:#e8edf5;--muted:#97a5b7;--line:rgba(255,255,255,.08);--accent:#66c0f4;--accent2:#1a9fff;--shadow:0 14px 40px rgba(0,0,0,.35);--radius:18px}
+*{box-sizing:border-box} html,body{margin:0;padding:0;background:radial-gradient(circle at top, rgba(102,192,244,.12), transparent 35%), linear-gradient(180deg,#0b1016,#111923 26%,#0e141c 100%);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+.wrap{max-width:920px;margin:0 auto;padding:18px 14px 80px} .hero{background:linear-gradient(180deg,rgba(102,192,244,.08),rgba(255,255,255,.02));border:1px solid var(--line);box-shadow:var(--shadow);border-radius:24px;padding:18px 16px;margin-bottom:16px}
+.title{font-size:clamp(24px,5vw,36px);font-weight:800;margin:0 0 6px} .subtitle{color:var(--muted);font-size:14px;line-height:1.45;margin:0}
+.pillbar{margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap} .pill{background:rgba(255,255,255,.04);border:1px solid var(--line);padding:9px 12px;border-radius:999px;font-size:13px}
+.progressOuter{flex:1 1 200px;min-width:180px;height:12px;background:rgba(255,255,255,.06);border-radius:999px;overflow:hidden;border:1px solid rgba(255,255,255,.06)} .progressInner{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .25s ease}
+.notice{background:rgba(102,192,244,.08);border:1px solid rgba(102,192,244,.22);color:#dff3ff;border-radius:14px;padding:12px 14px;margin:14px 0 18px;font-size:14px}
+.list{display:grid;gap:14px} .card{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015));border:1px solid var(--line);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
+.qhead{display:flex;align-items:start;gap:10px;margin-bottom:12px} .qnum{min-width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(180deg,rgba(102,192,244,.22),rgba(102,192,244,.08));border:1px solid rgba(102,192,244,.25);color:#dff3ff;font-weight:800;font-size:14px}
+.qtext{font-size:16px;line-height:1.38;font-weight:700;padding-top:3px} .answers{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.opt input{position:absolute;opacity:0;pointer-events:none} .choice{min-height:88px;border-radius:16px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;user-select:none}
+.opt input:checked + .choice{border-color:rgba(102,192,244,.55);background:linear-gradient(180deg,rgba(102,192,244,.16),rgba(102,192,244,.05));box-shadow:inset 0 0 0 1px rgba(102,192,244,.18),0 0 0 3px rgba(102,192,244,.08)}
+.dot{border-radius:50%;display:grid;place-items:center;font-weight:900;color:white;text-shadow:0 1px 1px rgba(0,0,0,.35)} .d1{width:24px;height:24px;background:linear-gradient(180deg,#ff7c7c,#d94c4c)} .d2{width:30px;height:30px;background:linear-gradient(180deg,#ffc17a,#e88d3d)} .d3{width:36px;height:36px;background:linear-gradient(180deg,#aab6c2,#7d8a97)} .d4{width:42px;height:42px;background:linear-gradient(180deg,#98ea8b,#52b45e)} .d5{width:48px;height:48px;background:linear-gradient(180deg,#66e8af,#18b36d)}
+.label{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.03em} .actions{position:sticky;bottom:10px;margin-top:18px;z-index:4;display:flex;justify-content:center} .btn{border:0;border-radius:16px;padding:16px 20px;width:min(100%,560px);font-size:16px;font-weight:800;color:white;cursor:pointer;background:linear-gradient(180deg,#1fa4ff,#147fd0);box-shadow:0 12px 30px rgba(20,127,208,.35)}
+.results{display:none;margin-top:22px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:24px;padding:16px;box-shadow:var(--shadow)} .results.show{display:block} .rtitle{margin:0 0 12px;font-size:24px;font-weight:900}
+.scorebox{display:grid;grid-template-columns:1fr auto;gap:8px 12px;align-items:center;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:16px} .total{font-size:clamp(28px,7vw,46px);font-weight:900;color:#dff3ff;line-height:1} .total small{font-size:.4em;color:var(--muted);font-weight:700}
+.grid{display:grid;grid-template-columns:1fr;gap:16px} .panel{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:18px;padding:14px} .statrow{margin-bottom:12px} .statmeta{display:flex;justify-content:space-between;gap:12px;margin-bottom:7px;font-size:14px} .bar{height:10px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.06)} .fill{height:100%;background:linear-gradient(90deg,#66c0f4,#8de1ff)} canvas{width:100%;height:auto;display:block}
+@media (min-width:800px){.grid{grid-template-columns:1.05fr .95fr}.choice{min-height:102px}}
+</style></head>
+<body><div class="wrap">
+<section class="hero"><h1 class="title">Questionnaire Puissance</h1>
+<p class="subtitle">Style jeu vidéo / Steam. Répondez sur 5 niveaux : <strong>--</strong>, <strong>-</strong>, <strong>o</strong>, <strong>+</strong>, <strong>++</strong>. Les cases vides du tableau d'origine sont traitées comme <strong>aucune modification</strong> de la statistique concernée.</p>
+<div class="pillbar"><div class="pill" id="answeredText">0 / 23 réponses</div><div class="progressOuter"><div class="progressInner" id="progressBar"></div></div><div class="pill">Stats normalisées sur 100</div></div></section>
+<div class="notice">La ligne « Somme » a été retirée.</div>
+<main id="questionList" class="list">
+<section class="card question-card" data-stats='{&quot;Attaque&quot;: 15.0, &quot;Vitesse&quot;: -25.0, &quot;Urbanisme&quot;: 6.0, &quot;Charisme&quot;: -1.0, &quot;Argent&quot;: 15.0, &quot;Sociabilité&quot;: 5.0, &quot;PV&quot;: 25.0, &quot;Résistance&quot;: 30.0, &quot;Poids&quot;: 100.0, &quot;Efficacité énergétique&quot;: -42.0, &quot;Vitesse de récupération (sommeil)&quot;: -15.0, &quot;Mouchoirs&quot;: 10.0, &quot;altruisme&quot;: -2.0, &quot;Confiance&quot;: 5.0}' data-qid="q_0">
+  <div class="qhead">
+    <div class="qnum">1</div>
+    <div class="qtext">Combien pèses tu de 1 à 5 (1 = léger, 5 = lourd)</div>
+  </div>
+  <div class="answers">
+<label class="opt">
+  <input type="radio" name="q_0" value="1">
+  <div class="choice" title="Très négatif">
+    <div class="dot d1">--</div>
+    <div class="label">--</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_0" value="2">
+  <div class="choice" title="Négatif">
+    <div class="dot d2">-</div>
+    <div class="label">-</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_0" value="3">
+  <div class="choice" title="Neutre">
+    <div class="dot d3">o</div>
+    <div class="label">o</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_0" value="4">
+  <div class="choice" title="Positif">
+    <div class="dot d4">+</div>
+    <div class="label">+</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_0" value="5">
+  <div class="choice" title="Très positif">
+    <div class="dot d5">++</div>
+    <div class="label">++</div>
+  </div>
+</label></div>
+</section>
+<section class="card question-card" data-stats='{&quot;Attaque&quot;: 2.0, &quot;Vitesse&quot;: 48.0, &quot;Urbanisme&quot;: 15.0, &quot;Charisme&quot;: -50.0, &quot;Argent&quot;: -25.0, &quot;Sociabilité&quot;: 10.0, &quot;Constance&quot;: -15.0, &quot;Poids&quot;: -30.0, &quot;Efficacité énergétique&quot;: -20.0, &quot;Vitesse de récupération (sommeil)&quot;: -20.0, &quot;Mouchoirs&quot;: 15.0, &quot;Puissance cognitive&quot;: -5.0, &quot;altruisme&quot;: 20.0, &quot;Sécurité&quot;: -20.0, &quot;Confiance&quot;: -3.0}' data-qid="q_1">
+  <div class="qhead">
+    <div class="qnum">2</div>
+    <div class="qtext">Cours-tu quand tu es en retard ?</div>
+  </div>
+  <div class="answers">
+<label class="opt">
+  <input type="radio" name="q_1" value="1">
+  <div class="choice" title="Très négatif">
+    <div class="dot d1">--</div>
+    <div class="label">--</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_1" value="2">
+  <div class="choice" title="Négatif">
+    <div class="dot d2">-</div>
+    <div class="label">-</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_1" value="3">
+  <div class="choice" title="Neutre">
+    <div class="dot d3">o</div>
+    <div class="label">o</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_1" value="4">
+  <div class="choice" title="Positif">
+    <div class="dot d4">+</div>
+    <div class="label">+</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_1" value="5">
+  <div class="choice" title="Très positif">
+    <div class="dot d5">++</div>
+    <div class="label">++</div>
+  </div>
+</label></div>
+</section>
+<section class="card question-card" data-stats='{&quot;Attaque&quot;: 15.0, &quot;Vitesse&quot;: -25.0, &quot;Urbanisme&quot;: 1.0, &quot;Charisme&quot;: -29.0, &quot;Argent&quot;: -21.0, &quot;Sociabilité&quot;: -1.0, &quot;Constance&quot;: -35.0, &quot;Efficacité énergétique&quot;: 10.0, &quot;Vitesse de récupération (sommeil)&quot;: -1.0, &quot;Puissance cognitive&quot;: -15.0, &quot;altruisme&quot;: -20.0, &quot;Sécurité&quot;: -20.0, &quot;Confiance&quot;: 10.0}' data-qid="q_2">
+  <div class="qhead">
+    <div class="qnum">3</div>
+    <div class="qtext">Es tu souvent en retard ?</div>
+  </div>
+  <div class="answers">
+<label class="opt">
+  <input type="radio" name="q_2" value="1">
+  <div class="choice" title="Très négatif">
+    <div class="dot d1">--</div>
+    <div class="label">--</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_2" value="2">
+  <div class="choice" title="Négatif">
+    <div class="dot d2">-</div>
+    <div class="label">-</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_2" value="3">
+  <div class="choice" title="Neutre">
+    <div class="dot d3">o</div>
+    <div class="label">o</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_2" value="4">
+  <div class="choice" title="Positif">
+    <div class="dot d4">+</div>
+    <div class="label">+</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_2" value="5">
+  <div class="choice" title="Très positif">
+    <div class="dot d5">++</div>
+    <div class="label">++</div>
+  </div>
+</label></div>
+</section>
+<section class="card question-card" data-stats='{&quot;Attaque&quot;: 10.0, &quot;Charisme&quot;: -20.0, &quot;Argent&quot;: 5.0, &quot;Sociabilité&quot;: 30.0, &quot;Constance&quot;: -10.0, &quot;Poids&quot;: 5.0, &quot;Efficacité énergétique&quot;: -10.0, &quot;Vitesse de récupération (sommeil)&quot;: -5.0, &quot;Puissance cognitive&quot;: -10.0, &quot;altruisme&quot;: -10.0, &quot;Sécurité&quot;: -10.0, &quot;Confiance&quot;: 15.0}' data-qid="q_3">
+  <div class="qhead">
+    <div class="qnum">4</div>
+    <div class="qtext">écris tu souvent &quot;bonne/joyeuse anniversaire&quot; ?</div>
+  </div>
+  <div class="answers">
+<label class="opt">
+  <input type="radio" name="q_3" value="1">
+  <div class="choice" title="Très négatif">
+    <div class="dot d1">--</div>
+    <div class="label">--</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_3" value="2">
+  <div class="choice" title="Négatif">
+    <div class="dot d2">-</div>
+    <div class="label">-</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_3" value="3">
+  <div class="choice" title="Neutre">
+    <div class="dot d3">o</div>
+    <div class="label">o</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_3" value="4">
+  <div class="choice" title="Positif">
+    <div class="dot d4">+</div>
+    <div class="label">+</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_3" value="5">
+  <div class="choice" title="Très positif">
+    <div class="dot d5">++</div>
+    <div class="label">++</div>
+  </div>
+</label></div>
+</section>
+<section class="card question-card" data-stats='{&quot;Attaque&quot;: 15.0, &quot;Vitesse&quot;: 15.0, &quot;Urbanisme&quot;: 2.0, &quot;Charisme&quot;: 35.0, &quot;Argent&quot;: 20.0, &quot;Sociabilité&quot;: 30.0, &quot;Constance&quot;: 30.0, &quot;PV&quot;: 35.0, &quot;Résistance&quot;: 36.0, &quot;Poids&quot;: 33.0, &quot;Efficacité énergétique&quot;: -20.0, &quot;Vitesse de récupération (sommeil)&quot;: -20.0, &quot;Mouchoirs&quot;: 2.0, &quot;Puissance cognitive&quot;: 45.0, &quot;Sécurité&quot;: 25.0, &quot;Confiance&quot;: 5.0}' data-qid="q_4">
+  <div class="qhead">
+    <div class="qnum">5</div>
+    <div class="qtext">Tes horaires de repas sont elles régulières ?</div>
+  </div>
+  <div class="answers">
+<label class="opt">
+  <input type="radio" name="q_4" value="1">
+  <div class="choice" title="Très négatif">
+    <div class="dot d1">--</div>
+    <div class="label">--</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_4" value="2">
+  <div class="choice" title="Négatif">
+    <div class="dot d2">-</div>
+    <div class="label">-</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_4" value="3">
+  <div class="choice" title="Neutre">
+    <div class="dot d3">o</div>
+    <div class="label">o</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_4" value="4">
+  <div class="choice" title="Positif">
+    <div class="dot d4">+</div>
+    <div class="label">+</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_4" value="5">
+  <div class="choice" title="Très positif">
+    <div class="dot d5">++</div>
+    <div class="label">++</div>
+  </div>
+</label></div>
+</section>
+<section class="card question-card" data-stats='{&quot;Attaque&quot;: -15.0, &quot;Vitesse&quot;: 10.0, &quot;Urbanisme&quot;: 1.0, &quot;Charisme&quot;: 5.0, &quot;Argent&quot;: 15.0, &quot;Sociabilité&quot;: 5.0, &quot;Constance&quot;: 30.0, &quot;Vitesse de récupération (sommeil)&quot;: 35.0, &quot;Mouchoirs&quot;: -15.0, &quot;Puissance cognitive&quot;: 25.0, &quot;Sécurité&quot;: 23.0, &quot;Confiance&quot;: 1.0}' data-qid="q_5">
+  <div class="qhead">
+    <div class="qnum">6</div>
+    <div class="qtext">Vas tu à tous les cours</div>
+  </div>
+  <div class="answers">
+<label class="opt">
+  <input type="radio" name="q_5" value="1">
+  <div class="choice" title="Très négatif">
+    <div class="dot d1">--</div>
+    <div class="label">--</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_5" value="2">
+  <div class="choice" title="Négatif">
+    <div class="dot d2">-</div>
+    <div class="label">-</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_5" value="3">
+  <div class="choice" title="Neutre">
+    <div class="dot d3">o</div>
+    <div class="label">o</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_5" value="4">
+  <div class="choice" title="Positif">
+    <div class="dot d4">+</div>
+    <div class="label">+</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_5" value="5">
+  <div class="choice" title="Très positif">
+    <div class="dot d5">++</div>
+    <div class="label">++</div>
+  </div>
+</label></div>
+</section>
+<section class="card question-card" data-stats='{&quot;Attaque&quot;: 15.0, &quot;Vitesse&quot;: 15.0, &quot;Urbanisme&quot;: -5.0, &quot;Charisme&quot;: 15.0, &quot;Argent&quot;: 10.0, &quot;Sociabilité&quot;: 1.0, &quot;Résistance&quot;: -10.0, &quot;Poids&quot;: 5.0, &quot;Efficacité énergétique&quot;: 20.0, &quot;Vitesse de récupération (sommeil)&quot;: 5.0, &quot;Puissance cognitive&quot;: 11.0, &quot;Confiance&quot;: -5.0}' data-qid="q_6">
+  <div class="qhead">
+    <div class="qnum">7</div>
+    <div class="qtext">Connais tu tes tables de multiplication</div>
+  </div>
+  <div class="answers">
+<label class="opt">
+  <input type="radio" name="q_6" value="1">
+  <div class="choice" title="Très négatif">
+    <div class="dot d1">--</div>
+    <div class="label">--</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_6" value="2">
+  <div class="choice" title="Négatif">
+    <div class="dot d2">-</div>
+    <div class="label">-</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_6" value="3">
+  <div class="choice" title="Neutre">
+    <div class="dot d3">o</div>
+    <div class="label">o</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_6" value="4">
+  <div class="choice" title="Positif">
+    <div class="dot d4">+</div>
+    <div class="label">+</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_6" value="5">
+  <div class="choice" title="Très positif">
+    <div class="dot d5">++</div>
+    <div class="label">++</div>
+  </div>
+</label></div>
+</section>
+<section class="card question-card" data-stats='{&quot;Attaque&quot;: 15.0, &quot;Vitesse&quot;: 20.0, &quot;Charisme&quot;: 15.0, &quot;Argent&quot;: 15.0, &quot;Sociabilité&quot;: -10.0, &quot;Constance&quot;: 15.0, &quot;PV&quot;: 20.0, &quot;Résistance&quot;: 9.0, &quot;Poids&quot;: 5.0, &quot;Efficacité énergétique&quot;: 22.0, &quot;Vitesse de récupération (sommeil)&quot;: 15.0, &quot;Puissance cognitive&quot;: 15.0, &quot;Sécurité&quot;: 10.0, &quot;Confiance&quot;: 5.0}' data-qid="q_7">
+  <div class="qhead">
+    <div class="qnum">8</div>
+    <div class="qtext">Tes horaires de sommeil sont elles régulières</div>
+  </div>
+  <div class="answers">
+<label class="opt">
+  <input type="radio" name="q_7" value="1">
+  <div class="choice" title="Très négatif">
+    <div class="dot d1">--</div>
+    <div class="label">--</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_7" value="2">
+  <div class="choice" title="Négatif">
+    <div class="dot d2">-</div>
+    <div class="label">-</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_7" value="3">
+  <div class="choice" title="Neutre">
+    <div class="dot d3">o</div>
+    <div class="label">o</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_7" value="4">
+  <div class="choice" title="Positif">
+    <div class="dot d4">+</div>
+    <div class="label">+</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_7" value="5">
+  <div class="choice" title="Très positif">
+    <div class="dot d5">++</div>
+    <div class="label">++</div>
+  </div>
+</label></div>
+</section>
+<section class="card question-card" data-stats='{&quot;Attaque&quot;: 20.0, &quot;Vitesse&quot;: 30.0, &quot;Charisme&quot;: 20.0, &quot;Argent&quot;: 10.0, &quot;Sociabilité&quot;: -20.0, &quot;Constance&quot;: 5.0, &quot;PV&quot;: 15.0, &quot;Résistance&quot;: 8.0, &quot;Poids&quot;: 1.0, &quot;Efficacité énergétique&quot;: 30.0, &quot;Vitesse de récupération (sommeil)&quot;: -25.0, &quot;Mouchoirs&quot;: 10.0, &quot;Puissance cognitive&quot;: 30.0, &quot;Sécurité&quot;: 10.0, &quot;Confiance&quot;: 10.0}' data-qid="q_8">
+  <div class="qhead">
+    <div class="qnum">9</div>
+    <div class="qtext">Dors tu autant que tu le devrais la nuit</div>
+  </div>
+  <div class="answers">
+<label class="opt">
+  <input type="radio" name="q_8" value="1">
+  <div class="choice" title="Très négatif">
+    <div class="dot d1">--</div>
+    <div class="label">--</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_8" value="2">
+  <div class="choice" title="Négatif">
+    <div class="dot d2">-</div>
+    <div class="label">-</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_8" value="3">
+  <div class="choice" title="Neutre">
+    <div class="dot d3">o</div>
+    <div class="label">o</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_8" value="4">
+  <div class="choice" title="Positif">
+    <div class="dot d4">+</div>
+    <div class="label">+</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_8" value="5">
+  <div class="choice" title="Très positif">
+    <div class="dot d5">++</div>
+    <div class="label">++</div>
+  </div>
+</label></div>
+</section>
+<section class="card question-card" data-stats='{&quot;Charisme&quot;: -15.0, &quot;Argent&quot;: -15.0, &quot;Sociabilité&quot;: -7.0, &quot;Constance&quot;: 9.0, &quot;PV&quot;: -7.0, &quot;Résistance&quot;: -45.0, &quot;Poids&quot;: -19.0, &quot;Efficacité énergétique&quot;: -10.0, &quot;Vitesse de récupération (sommeil)&quot;: -10.0, &quot;Mouchoirs&quot;: -5.0, &quot;Puissance cognitive&quot;: -40.0, &quot;Sécurité&quot;: -20.0, &quot;Confiance&quot;: -15.0}' data-qid="q_9">
+  <div class="qhead">
+    <div class="qnum">10</div>
+    <div class="qtext">Vas tu sur les réseaux sociaux avant de dormir</div>
+  </div>
+  <div class="answers">
+<label class="opt">
+  <input type="radio" name="q_9" value="1">
+  <div class="choice" title="Très négatif">
+    <div class="dot d1">--</div>
+    <div class="label">--</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_9" value="2">
+  <div class="choice" title="Négatif">
+    <div class="dot d2">-</div>
+    <div class="label">-</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_9" value="3">
+  <div class="choice" title="Neutre">
+    <div class="dot d3">o</div>
+    <div class="label">o</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_9" value="4">
+  <div class="choice" title="Positif">
+    <div class="dot d4">+</div>
+    <div class="label">+</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_9" value="5">
+  <div class="choice" title="Très positif">
+    <div class="dot d5">++</div>
+    <div class="label">++</div>
+  </div>
+</label></div>
+</section>
+<section class="card question-card" data-stats='{&quot;Vitesse&quot;: 6.0, &quot;Charisme&quot;: -5.0, &quot;Argent&quot;: -10.0, &quot;Sociabilité&quot;: -10.0, &quot;Constance&quot;: 15.0, &quot;Résistance&quot;: 5.0, &quot;Efficacité énergétique&quot;: 30.0, &quot;Mouchoirs&quot;: 10.0, &quot;Puissance cognitive&quot;: 15.0, &quot;Confiance&quot;: 5.0}' data-qid="q_10">
+  <div class="qhead">
+    <div class="qnum">11</div>
+    <div class="qtext">Portes-tu souvent les mêmes vêtements ?</div>
+  </div>
+  <div class="answers">
+<label class="opt">
+  <input type="radio" name="q_10" value="1">
+  <div class="choice" title="Très négatif">
+    <div class="dot d1">--</div>
+    <div class="label">--</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_10" value="2">
+  <div class="choice" title="Négatif">
+    <div class="dot d2">-</div>
+    <div class="label">-</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_10" value="3">
+  <div class="choice" title="Neutre">
+    <div class="dot d3">o</div>
+    <div class="label">o</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_10" value="4">
+  <div class="choice" title="Positif">
+    <div class="dot d4">+</div>
+    <div class="label">+</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_10" value="5">
+  <div class="choice" title="Très positif">
+    <div class="dot d5">++</div>
+    <div class="label">++</div>
+  </div>
+</label></div>
+</section>
+<section class="card question-card" data-stats='{&quot;Vitesse&quot;: 10.0, &quot;Urbanisme&quot;: 15.0, &quot;Charisme&quot;: -8.0, &quot;Argent&quot;: 5.0, &quot;Sociabilité&quot;: -5.0, &quot;PV&quot;: 10.0, &quot;Poids&quot;: -10.0, &quot;Efficacité énergétique&quot;: -6.0, &quot;Mouchoirs&quot;: 5.0, &quot;Puissance cognitive&quot;: 15.0, &quot;altruisme&quot;: 15.0, &quot;Sécurité&quot;: -20.0, &quot;Confiance&quot;: 3.0}' data-qid="q_11">
+  <div class="qhead">
+    <div class="qnum">12</div>
+    <div class="qtext">Prends-tu beaucoup de photos ?</div>
+  </div>
+  <div class="answers">
+<label class="opt">
+  <input type="radio" name="q_11" value="1">
+  <div class="choice" title="Très négatif">
+    <div class="dot d1">--</div>
+    <div class="label">--</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_11" value="2">
+  <div class="choice" title="Négatif">
+    <div class="dot d2">-</div>
+    <div class="label">-</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_11" value="3">
+  <div class="choice" title="Neutre">
+    <div class="dot d3">o</div>
+    <div class="label">o</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_11" value="4">
+  <div class="choice" title="Positif">
+    <div class="dot d4">+</div>
+    <div class="label">+</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_11" value="5">
+  <div class="choice" title="Très positif">
+    <div class="dot d5">++</div>
+    <div class="label">++</div>
+  </div>
+</label></div>
+</section>
+<section class="card question-card" data-stats='{&quot;Attaque&quot;: 15.0, &quot;Vitesse&quot;: 1.0, &quot;Urbanisme&quot;: -15.0, &quot;Charisme&quot;: 2.0, &quot;Argent&quot;: 20.0, &quot;Sociabilité&quot;: -1.0, &quot;PV&quot;: 15.0, &quot;Résistance&quot;: -2.0, &quot;Poids&quot;: 5.0, &quot;Efficacité énergétique&quot;: -20.0, &quot;Mouchoirs&quot;: 15.0, &quot;Puissance cognitive&quot;: -1.0, &quot;altruisme&quot;: -10.0, &quot;Sécurité&quot;: 6.0, &quot;Confiance&quot;: 2.0}' data-qid="q_12">
+  <div class="qhead">
+    <div class="qnum">13</div>
+    <div class="qtext">Es tu de droite</div>
+  </div>
+  <div class="answers">
+<label class="opt">
+  <input type="radio" name="q_12" value="1">
+  <div class="choice" title="Très négatif">
+    <div class="dot d1">--</div>
+    <div class="label">--</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_12" value="2">
+  <div class="choice" title="Négatif">
+    <div class="dot d2">-</div>
+    <div class="label">-</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_12" value="3">
+  <div class="choice" title="Neutre">
+    <div class="dot d3">o</div>
+    <div class="label">o</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_12" value="4">
+  <div class="choice" title="Positif">
+    <div class="dot d4">+</div>
+    <div class="label">+</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_12" value="5">
+  <div class="choice" title="Très positif">
+    <div class="dot d5">++</div>
+    <div class="label">++</div>
+  </div>
+</label></div>
+</section>
+<section class="card question-card" data-stats='{&quot;Attaque&quot;: -15.0, &quot;Vitesse&quot;: -5.0, &quot;Urbanisme&quot;: 5.0, &quot;Charisme&quot;: -15.0, &quot;Argent&quot;: -10.0, &quot;Sociabilité&quot;: -2.0, &quot;Constance&quot;: -1.0, &quot;PV&quot;: -10.0, &quot;Résistance&quot;: -10.0, &quot;Poids&quot;: -5.0, &quot;Mouchoirs&quot;: 15.0, &quot;Puissance cognitive&quot;: 10.0, &quot;altruisme&quot;: 10.0, &quot;Sécurité&quot;: -20.0, &quot;Confiance&quot;: -10.0}' data-qid="q_13">
+  <div class="qhead">
+    <div class="qnum">14</div>
+    <div class="qtext">As-des allergies ?</div>
+  </div>
+  <div class="answers">
+<label class="opt">
+  <input type="radio" name="q_13" value="1">
+  <div class="choice" title="Très négatif">
+    <div class="dot d1">--</div>
+    <div class="label">--</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_13" value="2">
+  <div class="choice" title="Négatif">
+    <div class="dot d2">-</div>
+    <div class="label">-</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_13" value="3">
+  <div class="choice" title="Neutre">
+    <div class="dot d3">o</div>
+    <div class="label">o</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_13" value="4">
+  <div class="choice" title="Positif">
+    <div class="dot d4">+</div>
+    <div class="label">+</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_13" value="5">
+  <div class="choice" title="Très positif">
+    <div class="dot d5">++</div>
+    <div class="label">++</div>
+  </div>
+</label></div>
+</section>
+<section class="card question-card" data-stats='{&quot;Attaque&quot;: 20.0, &quot;Vitesse&quot;: -5.0, &quot;Urbanisme&quot;: 2.0, &quot;Charisme&quot;: 20.0, &quot;Argent&quot;: 15.0, &quot;Sociabilité&quot;: 25.0, &quot;Constance&quot;: 20.0, &quot;PV&quot;: -15.0, &quot;Résistance&quot;: 10.0, &quot;Poids&quot;: -5.0, &quot;Vitesse de récupération (sommeil)&quot;: 10.0, &quot;Mouchoirs&quot;: -5.0, &quot;Puissance cognitive&quot;: -5.0, &quot;altruisme&quot;: 30.0, &quot;Sécurité&quot;: 20.0, &quot;Confiance&quot;: 3.0}' data-qid="q_14">
+  <div class="qhead">
+    <div class="qnum">15</div>
+    <div class="qtext">As-tu un animal ?</div>
+  </div>
+  <div class="answers">
+<label class="opt">
+  <input type="radio" name="q_14" value="1">
+  <div class="choice" title="Très négatif">
+    <div class="dot d1">--</div>
+    <div class="label">--</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_14" value="2">
+  <div class="choice" title="Négatif">
+    <div class="dot d2">-</div>
+    <div class="label">-</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_14" value="3">
+  <div class="choice" title="Neutre">
+    <div class="dot d3">o</div>
+    <div class="label">o</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_14" value="4">
+  <div class="choice" title="Positif">
+    <div class="dot d4">+</div>
+    <div class="label">+</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_14" value="5">
+  <div class="choice" title="Très positif">
+    <div class="dot d5">++</div>
+    <div class="label">++</div>
+  </div>
+</label></div>
+</section>
+<section class="card question-card" data-stats='{&quot;Attaque&quot;: -5.0, &quot;Vitesse&quot;: -30.0, &quot;Urbanisme&quot;: 30.0, &quot;Charisme&quot;: -40.0, &quot;Sociabilité&quot;: 5.0, &quot;Constance&quot;: -5.0, &quot;Efficacité énergétique&quot;: -50.0, &quot;Mouchoirs&quot;: 2.0, &quot;Puissance cognitive&quot;: -40.0, &quot;altruisme&quot;: 15.0, &quot;Sécurité&quot;: -45.0, &quot;Confiance&quot;: 15.0}' data-qid="q_15">
+  <div class="qhead">
+    <div class="qnum">16</div>
+    <div class="qtext">Te perds tu souvent</div>
+  </div>
+  <div class="answers">
+<label class="opt">
+  <input type="radio" name="q_15" value="1">
+  <div class="choice" title="Très négatif">
+    <div class="dot d1">--</div>
+    <div class="label">--</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_15" value="2">
+  <div class="choice" title="Négatif">
+    <div class="dot d2">-</div>
+    <div class="label">-</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_15" value="3">
+  <div class="choice" title="Neutre">
+    <div class="dot d3">o</div>
+    <div class="label">o</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_15" value="4">
+  <div class="choice" title="Positif">
+    <div class="dot d4">+</div>
+    <div class="label">+</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_15" value="5">
+  <div class="choice" title="Très positif">
+    <div class="dot d5">++</div>
+    <div class="label">++</div>
+  </div>
+</label></div>
+</section>
+<section class="card question-card" data-stats='{&quot;Vitesse&quot;: -15.0, &quot;Urbanisme&quot;: 15.0, &quot;Charisme&quot;: 13.0, &quot;Argent&quot;: -10.0, &quot;Sociabilité&quot;: 30.0, &quot;Constance&quot;: -5.0, &quot;PV&quot;: 10.0, &quot;Résistance&quot;: 15.0, &quot;Poids&quot;: 16.0, &quot;Efficacité énergétique&quot;: -10.0, &quot;Mouchoirs&quot;: -5.0, &quot;Puissance cognitive&quot;: 5.0, &quot;altruisme&quot;: -10.0, &quot;Sécurité&quot;: 15.0, &quot;Confiance&quot;: -10.0}' data-qid="q_16">
+  <div class="qhead">
+    <div class="qnum">17</div>
+    <div class="qtext">Préfères tu manger avec des gens</div>
+  </div>
+  <div class="answers">
+<label class="opt">
+  <input type="radio" name="q_16" value="1">
+  <div class="choice" title="Très négatif">
+    <div class="dot d1">--</div>
+    <div class="label">--</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_16" value="2">
+  <div class="choice" title="Négatif">
+    <div class="dot d2">-</div>
+    <div class="label">-</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_16" value="3">
+  <div class="choice" title="Neutre">
+    <div class="dot d3">o</div>
+    <div class="label">o</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_16" value="4">
+  <div class="choice" title="Positif">
+    <div class="dot d4">+</div>
+    <div class="label">+</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_16" value="5">
+  <div class="choice" title="Très positif">
+    <div class="dot d5">++</div>
+    <div class="label">++</div>
+  </div>
+</label></div>
+</section>
+<section class="card question-card" data-stats='{&quot;Attaque&quot;: 60.0, &quot;Vitesse&quot;: 40.0, &quot;Urbanisme&quot;: 15.0, &quot;Charisme&quot;: 30.0, &quot;Argent&quot;: 10.0, &quot;Sociabilité&quot;: 17.0, &quot;Constance&quot;: 12.0, &quot;PV&quot;: 2.0, &quot;Résistance&quot;: 15.0, &quot;Poids&quot;: 15.0, &quot;Efficacité énergétique&quot;: 10.0, &quot;Vitesse de récupération (sommeil)&quot;: 12.0, &quot;Mouchoirs&quot;: 5.0, &quot;Puissance cognitive&quot;: -15.0, &quot;altruisme&quot;: -15.0, &quot;Sécurité&quot;: 5.0, &quot;Confiance&quot;: 6.0}' data-qid="q_17">
+  <div class="qhead">
+    <div class="qnum">18</div>
+    <div class="qtext">Fais tu régulièrement du sport</div>
+  </div>
+  <div class="answers">
+<label class="opt">
+  <input type="radio" name="q_17" value="1">
+  <div class="choice" title="Très négatif">
+    <div class="dot d1">--</div>
+    <div class="label">--</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_17" value="2">
+  <div class="choice" title="Négatif">
+    <div class="dot d2">-</div>
+    <div class="label">-</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_17" value="3">
+  <div class="choice" title="Neutre">
+    <div class="dot d3">o</div>
+    <div class="label">o</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_17" value="4">
+  <div class="choice" title="Positif">
+    <div class="dot d4">+</div>
+    <div class="label">+</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_17" value="5">
+  <div class="choice" title="Très positif">
+    <div class="dot d5">++</div>
+    <div class="label">++</div>
+  </div>
+</label></div>
+</section>
+<section class="card question-card" data-stats='{&quot;Attaque&quot;: -30.0, &quot;Vitesse&quot;: -25.0, &quot;Urbanisme&quot;: 15.0, &quot;Charisme&quot;: -20.0, &quot;Argent&quot;: -30.0, &quot;Sociabilité&quot;: 25.0, &quot;Constance&quot;: 15.0, &quot;PV&quot;: 10.0, &quot;Résistance&quot;: -5.0, &quot;Poids&quot;: -2.0, &quot;Efficacité énergétique&quot;: -10.0, &quot;Vitesse de récupération (sommeil)&quot;: 3.0, &quot;Mouchoirs&quot;: -1.0, &quot;Puissance cognitive&quot;: 20.0, &quot;altruisme&quot;: 10.0, &quot;Sécurité&quot;: 30.0, &quot;Confiance&quot;: -10.0}' data-qid="q_18">
+  <div class="qhead">
+    <div class="qnum">19</div>
+    <div class="qtext">Traverses tu toujours au passage piéton quand le feu est vert</div>
+  </div>
+  <div class="answers">
+<label class="opt">
+  <input type="radio" name="q_18" value="1">
+  <div class="choice" title="Très négatif">
+    <div class="dot d1">--</div>
+    <div class="label">--</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_18" value="2">
+  <div class="choice" title="Négatif">
+    <div class="dot d2">-</div>
+    <div class="label">-</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_18" value="3">
+  <div class="choice" title="Neutre">
+    <div class="dot d3">o</div>
+    <div class="label">o</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_18" value="4">
+  <div class="choice" title="Positif">
+    <div class="dot d4">+</div>
+    <div class="label">+</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_18" value="5">
+  <div class="choice" title="Très positif">
+    <div class="dot d5">++</div>
+    <div class="label">++</div>
+  </div>
+</label></div>
+</section>
+<section class="card question-card" data-stats='{&quot;Attaque&quot;: 5.0, &quot;Vitesse&quot;: 5.0, &quot;Urbanisme&quot;: 10.0, &quot;Charisme&quot;: -20.0, &quot;Argent&quot;: -15.0, &quot;Sociabilité&quot;: -15.0, &quot;Résistance&quot;: 9.0, &quot;Poids&quot;: 5.0, &quot;Efficacité énergétique&quot;: -5.0, &quot;Mouchoirs&quot;: -5.0, &quot;Puissance cognitive&quot;: 5.0, &quot;Sécurité&quot;: -27.0, &quot;Confiance&quot;: 5.0}' data-qid="q_19">
+  <div class="qhead">
+    <div class="qnum">20</div>
+    <div class="qtext">Utilises tu souvent des sites de streaming douteux</div>
+  </div>
+  <div class="answers">
+<label class="opt">
+  <input type="radio" name="q_19" value="1">
+  <div class="choice" title="Très négatif">
+    <div class="dot d1">--</div>
+    <div class="label">--</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_19" value="2">
+  <div class="choice" title="Négatif">
+    <div class="dot d2">-</div>
+    <div class="label">-</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_19" value="3">
+  <div class="choice" title="Neutre">
+    <div class="dot d3">o</div>
+    <div class="label">o</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_19" value="4">
+  <div class="choice" title="Positif">
+    <div class="dot d4">+</div>
+    <div class="label">+</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_19" value="5">
+  <div class="choice" title="Très positif">
+    <div class="dot d5">++</div>
+    <div class="label">++</div>
+  </div>
+</label></div>
+</section>
+<section class="card question-card" data-stats='{&quot;Attaque&quot;: 4.0, &quot;Vitesse&quot;: 10.0, &quot;Urbanisme&quot;: 5.0, &quot;Charisme&quot;: -15.0, &quot;Argent&quot;: 15.0, &quot;Sociabilité&quot;: -20.0, &quot;Constance&quot;: 20.0, &quot;Résistance&quot;: 2.0, &quot;Poids&quot;: -15.0, &quot;Efficacité énergétique&quot;: -15.0, &quot;Vitesse de récupération (sommeil)&quot;: 4.0, &quot;Mouchoirs&quot;: -2.0, &quot;Puissance cognitive&quot;: -15.0, &quot;altruisme&quot;: -10.0, &quot;Sécurité&quot;: -30.0, &quot;Confiance&quot;: 50.0}' data-qid="q_20">
+  <div class="qhead">
+    <div class="qnum">21</div>
+    <div class="qtext">À quelle fréquence partages-tu tes scores sur Strava ?</div>
+  </div>
+  <div class="answers">
+<label class="opt">
+  <input type="radio" name="q_20" value="1">
+  <div class="choice" title="Très négatif">
+    <div class="dot d1">--</div>
+    <div class="label">--</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_20" value="2">
+  <div class="choice" title="Négatif">
+    <div class="dot d2">-</div>
+    <div class="label">-</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_20" value="3">
+  <div class="choice" title="Neutre">
+    <div class="dot d3">o</div>
+    <div class="label">o</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_20" value="4">
+  <div class="choice" title="Positif">
+    <div class="dot d4">+</div>
+    <div class="label">+</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_20" value="5">
+  <div class="choice" title="Très positif">
+    <div class="dot d5">++</div>
+    <div class="label">++</div>
+  </div>
+</label></div>
+</section>
+<section class="card question-card" data-stats='{&quot;Attaque&quot;: -10.0, &quot;Vitesse&quot;: -7.0, &quot;Urbanisme&quot;: 3.0, &quot;Argent&quot;: -5.0, &quot;Sociabilité&quot;: 10.0, &quot;Constance&quot;: 5.0, &quot;PV&quot;: 11.0, &quot;Résistance&quot;: 6.0, &quot;Poids&quot;: 8.0, &quot;Efficacité énergétique&quot;: -4.0, &quot;Vitesse de récupération (sommeil)&quot;: 4.0, &quot;Mouchoirs&quot;: 3.0, &quot;Puissance cognitive&quot;: 1.0, &quot;altruisme&quot;: 3.0, &quot;Sécurité&quot;: 9.0, &quot;Confiance&quot;: 30.0}' data-qid="q_21">
+  <div class="qhead">
+    <div class="qnum">22</div>
+    <div class="qtext">Comment évalues tu ta situation amoureuse</div>
+  </div>
+  <div class="answers">
+<label class="opt">
+  <input type="radio" name="q_21" value="1">
+  <div class="choice" title="Très négatif">
+    <div class="dot d1">--</div>
+    <div class="label">--</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_21" value="2">
+  <div class="choice" title="Négatif">
+    <div class="dot d2">-</div>
+    <div class="label">-</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_21" value="3">
+  <div class="choice" title="Neutre">
+    <div class="dot d3">o</div>
+    <div class="label">o</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_21" value="4">
+  <div class="choice" title="Positif">
+    <div class="dot d4">+</div>
+    <div class="label">+</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_21" value="5">
+  <div class="choice" title="Très positif">
+    <div class="dot d5">++</div>
+    <div class="label">++</div>
+  </div>
+</label></div>
+</section>
+<section class="card question-card" data-stats='{&quot;Attaque&quot;: -15.0, &quot;Vitesse&quot;: -5.0, &quot;Charisme&quot;: -10.0, &quot;Argent&quot;: -5.0, &quot;Sociabilité&quot;: -5.0, &quot;Constance&quot;: -10.0, &quot;PV&quot;: -1.0, &quot;Résistance&quot;: 5.0, &quot;Poids&quot;: 2.0, &quot;Efficacité énergétique&quot;: -10.0, &quot;Vitesse de récupération (sommeil)&quot;: -2.0, &quot;Mouchoirs&quot;: 1.0, &quot;Puissance cognitive&quot;: -23.0, &quot;altruisme&quot;: 5.0, &quot;Sécurité&quot;: -40.0, &quot;Confiance&quot;: -9.0}' data-qid="q_22">
+  <div class="qhead">
+    <div class="qnum">23</div>
+    <div class="qtext">As tu beaucoup de notifications indésirables</div>
+  </div>
+  <div class="answers">
+<label class="opt">
+  <input type="radio" name="q_22" value="1">
+  <div class="choice" title="Très négatif">
+    <div class="dot d1">--</div>
+    <div class="label">--</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_22" value="2">
+  <div class="choice" title="Négatif">
+    <div class="dot d2">-</div>
+    <div class="label">-</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_22" value="3">
+  <div class="choice" title="Neutre">
+    <div class="dot d3">o</div>
+    <div class="label">o</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_22" value="4">
+  <div class="choice" title="Positif">
+    <div class="dot d4">+</div>
+    <div class="label">+</div>
+  </div>
+</label>
+<label class="opt">
+  <input type="radio" name="q_22" value="5">
+  <div class="choice" title="Très positif">
+    <div class="dot d5">++</div>
+    <div class="label">++</div>
+  </div>
+</label></div>
+</section></main>
+<div class="actions"><button class="btn" id="finishBtn" type="button">Terminer et afficher les stats</button></div>
+<section class="results" id="results"><h2 class="rtitle">Résultats</h2>
+<div class="scorebox"><div><div style="font-weight:800;font-size:16px">Total stat</div><div style="color:var(--muted);font-size:13px;margin-top:4px">Somme des stats normalisées</div></div><div class="total" id="totalScore">0 <small>/ 1700</small></div></div>
+<div class="grid"><div class="panel"><canvas id="radar" width="760" height="760" aria-label="Diagramme radar"></canvas></div><div class="panel"><div id="statList"></div></div></div></section>
+</div>
+<script>
+(function(){
+var stats=["Attaque", "Vitesse", "Urbanisme", "Charisme", "Argent", "Sociabilité", "Constance", "PV", "Résistance", "Poids", "Efficacité énergétique", "Vitesse de récupération (sommeil)", "Mouchoirs", "Puissance cognitive", "altruisme", "Sécurité", "Confiance"];
+var maxPerStat={"Attaque": 301.0, "Vitesse": 352.0, "Urbanisme": 160.0, "Charisme": 403.0, "Argent": 301.0, "Sociabilité": 289.0, "Constance": 257.0, "PV": 186.0, "Résistance": 222.0, "Poids": 286.0, "Efficacité énergétique": 354.0, "Vitesse de récupération (sommeil)": 186.0, "Mouchoirs": 131.0, "Puissance cognitive": 366.0, "altruisme": 185.0, "Sécurité": 405.0, "Confiance": 232.0};
+var questionCards=[].slice.call(document.querySelectorAll('.question-card'));
+var answeredText=document.getElementById('answeredText'), progressBar=document.getElementById('progressBar'), finishBtn=document.getElementById('finishBtn'), resultsEl=document.getElementById('results'), statListEl=document.getElementById('statList'), totalScoreEl=document.getElementById('totalScore'), radar=document.getElementById('radar'), ctx=radar.getContext?radar.getContext('2d'):null;
+function shuffleCards(){var c=document.getElementById('questionList');for(var i=questionCards.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=questionCards[i];questionCards[i]=questionCards[j];questionCards[j]=t;} c.innerHTML=''; for(var k=0;k<questionCards.length;k++){questionCards[k].querySelector('.qnum').textContent=String(k+1); c.appendChild(questionCards[k]);}}
+function updateProgress(){var answered=0; for(var i=0;i<questionCards.length;i++){var qid=questionCards[i].getAttribute('data-qid'); if(document.querySelector('input[name="'+qid+'"]:checked')) answered++;} answeredText.textContent=answered+' / '+questionCards.length+' réponses'; progressBar.style.width=((answered/questionCards.length)*100)+'%';}
+function contribution(weight, answer){if(weight>0) return weight*((answer-1)/4); if(weight<0) return Math.abs(weight)*((5-answer)/4); return 0;}
+function computeScores(){var raw={}, normalized={}, unanswered=0; for(var i=0;i<stats.length;i++) raw[stats[i]]=0; for(var i=0;i<questionCards.length;i++){var card=questionCards[i], qid=card.getAttribute('data-qid'), checked=document.querySelector('input[name="'+qid+'"]:checked'); if(!checked){unanswered++; continue;} var answer=Number(checked.value), map=JSON.parse(card.getAttribute('data-stats')); for(var s=0;s<stats.length;s++){var stat=stats[s]; if(!Object.prototype.hasOwnProperty.call(map, stat)) continue; raw[stat]+=contribution(Number(map[stat]), answer);}} for(var i=0;i<stats.length;i++){var st=stats[i]; normalized[st]=maxPerStat[st]>0?Math.round((raw[st]/maxPerStat[st])*100):0;} return {normalized:normalized, unanswered:unanswered};}
+function renderStats(normalized){statListEl.innerHTML=''; for(var i=0;i<stats.length;i++){var stat=stats[i], val=normalized[stat], row=document.createElement('div'); row.className='statrow'; row.innerHTML='<div class="statmeta"><div>'+stat+'</div><div><strong>'+val+'</strong>/100</div></div><div class="bar"><div class="fill" style="width:'+val+'%"></div></div>'; statListEl.appendChild(row);}}
+function drawRadar(normalized){if(!ctx) return; var dpr=Math.max(1, window.devicePixelRatio||1), cssSize=Math.min(radar.parentElement.clientWidth-8,520); radar.style.width=cssSize+'px'; radar.style.height=cssSize+'px'; radar.width=Math.round(cssSize*dpr); radar.height=Math.round(cssSize*dpr); ctx.setTransform(dpr,0,0,dpr,0,0); var w=cssSize,h=cssSize,cx=w/2,cy=h/2,radius=Math.min(w,h)*0.34,levels=5; ctx.clearRect(0,0,w,h); for(var level=1; level<=levels; level++){var r=radius*(level/levels); ctx.beginPath(); for(var i=0;i<stats.length;i++){var a=-Math.PI/2+(i*Math.PI*2/stats.length), x=cx+Math.cos(a)*r, y=cy+Math.sin(a)*r; if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);} ctx.closePath(); ctx.strokeStyle='rgba(255,255,255,'+(0.08+level*0.01)+')'; ctx.lineWidth=1; ctx.stroke();} for(var i=0;i<stats.length;i++){var a=-Math.PI/2+(i*Math.PI*2/stats.length), x=cx+Math.cos(a)*radius, y=cy+Math.sin(a)*radius; ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(x,y); ctx.strokeStyle='rgba(255,255,255,.08)'; ctx.stroke(); var lx=cx+Math.cos(a)*(radius+26), ly=cy+Math.sin(a)*(radius+26); ctx.fillStyle='#dce7f4'; ctx.font='600 11px system-ui, sans-serif'; ctx.textAlign=Math.cos(a)>0.25?'left':(Math.cos(a)<-0.25?'right':'center'); ctx.textBaseline=Math.sin(a)>0.3?'top':(Math.sin(a)<-0.3?'bottom':'middle'); ctx.fillText(stats[i], lx, ly);} ctx.beginPath(); for(var i=0;i<stats.length;i++){var v=normalized[stats[i]]/100, a=-Math.PI/2+(i*Math.PI*2/stats.length), x=cx+Math.cos(a)*radius*v, y=cy+Math.sin(a)*radius*v; if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);} ctx.closePath(); ctx.fillStyle='rgba(102,192,244,.24)'; ctx.strokeStyle='#66c0f4'; ctx.lineWidth=3; ctx.fill(); ctx.stroke();}
+document.addEventListener('change', function(e){if(e.target && e.target.matches('input[type="radio"]')) updateProgress();});
+finishBtn.addEventListener('click', function(){var result=computeScores(); if(result.unanswered>0){alert('Il manque '+result.unanswered+' réponse(s).'); return;} var total=0; for(var i=0;i<stats.length;i++) total+=result.normalized[stats[i]]; totalScoreEl.innerHTML=total+' <small>/ 1700</small>'; renderStats(result.normalized); drawRadar(result.normalized); resultsEl.classList.add('show'); resultsEl.scrollIntoView({behavior:'smooth', block:'start'});});
+shuffleCards(); updateProgress();
+})();
+</script></body></html>
