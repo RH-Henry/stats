@@ -7,53 +7,44 @@
 <style>
 :root {
   --text:#e8edf5; --muted:#8fa0b5; --line:rgba(255,255,255,.09);
-  --accent:#66c0f4; --accent2:#1a9fff; --good:#66e18a; --good2:#2ebd64;
+  --accent:#66c0f4; --accent2:#1a9fff; --good:#67df8d; --good2:#2fb760; --bad:#ff6a76; --bad2:#d73f56;
   --bg1:#0b1016; --bg2:#111923; --bg3:#0e141c; --shadow:0 18px 45px rgba(0,0,0,.38);
 }
 * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 html,body {
-  margin:0; padding:0; height:100%;
-  background:radial-gradient(circle at top, rgba(102,192,244,.12), transparent 35%),
-             linear-gradient(180deg,var(--bg1),var(--bg2) 26%,var(--bg3) 100%);
+  margin:0; padding:0; min-height:100%;
+  background:radial-gradient(circle at top, rgba(102,192,244,.12), transparent 35%), linear-gradient(180deg,var(--bg1),var(--bg2) 26%,var(--bg3) 100%);
   color:var(--text); font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
 }
-body { min-height:100vh; }
 .app { max-width:980px; margin:0 auto; padding:14px 14px 24px; }
 .topbar {
   display:flex; align-items:center; gap:10px; margin-bottom:12px;
   background:linear-gradient(180deg, rgba(102,192,244,.08), rgba(255,255,255,.02));
   border:1px solid var(--line); border-radius:22px; padding:14px; box-shadow:var(--shadow);
 }
-.title { font-size:clamp(24px, 5vw, 36px); font-weight:900; line-height:1.05; margin:0; }
+.title { font-size:clamp(24px, 5vw, 36px); font-weight:900; margin:0; }
 .meta { margin-left:auto; display:flex; align-items:center; gap:10px; min-width:160px; }
-.badge {
-  padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.05);
-  border:1px solid var(--line); font-size:13px; color:#dbe7f5; white-space:nowrap;
-}
-.progress {
-  flex:1; height:10px; background:rgba(255,255,255,.06); border-radius:999px;
-  overflow:hidden; border:1px solid rgba(255,255,255,.06);
-}
-.progress > div {
-  height:100%; width:0; background:linear-gradient(90deg,var(--accent),var(--accent2)); transition:width .25s ease;
-}
+.badge { padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid var(--line); font-size:13px; }
+.progress { flex:1; height:10px; background:rgba(255,255,255,.06); border-radius:999px; overflow:hidden; border:1px solid rgba(255,255,255,.06); }
+.progress > div { height:100%; width:0; background:linear-gradient(90deg,var(--accent),var(--accent2)); transition:width .25s ease; }
+
 .viewport {
-  position:relative; min-height:calc(100vh - 150px);
+  min-height:calc(100vh - 150px);
   background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
   border:1px solid var(--line); border-radius:26px; box-shadow:var(--shadow); overflow:hidden;
 }
 .screen { display:none; padding:20px 16px 18px; min-height:calc(100vh - 190px); }
 .screen.active { display:flex; flex-direction:column; }
 .qtop { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
-.counter { font-size:14px; color:var(--muted); font-weight:700; letter-spacing:.02em; }
+.counter { font-size:14px; color:var(--muted); font-weight:700; }
 .qtext { font-size:clamp(24px, 5.2vw, 40px); line-height:1.18; font-weight:900; margin:8px 0 24px; text-wrap:balance; }
-.answers { display:grid; grid-template-columns:repeat(5, minmax(0,1fr)); gap:10px; margin-top:auto; }
+.answers { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; margin-top:auto; }
 .opt input { position:absolute; opacity:0; pointer-events:none; }
 .choice {
   min-height:100px; border-radius:22px; border:1px solid var(--line);
   background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  gap:8px; cursor:pointer; transition:transform .12s ease,border-color .12s ease,background .12s ease, box-shadow .12s ease;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; cursor:pointer;
+  transition:transform .12s ease,border-color .12s ease,background .12s ease, box-shadow .12s ease;
 }
 .choice:active { transform:scale(.98); }
 .opt input:checked + .choice {
@@ -67,59 +58,60 @@ body { min-height:100vh; }
 .d3 { width:48px; height:48px; background:linear-gradient(180deg,#aab6c2,#7d8a97); }
 .d4 { width:60px; height:60px; background:linear-gradient(180deg,#98ea8b,#52b45e); }
 .d5 { width:72px; height:72px; background:linear-gradient(180deg,#66e8af,#18b36d); }
-.mark { font-size:13px; font-weight:800; color:#d4e3f3; letter-spacing:.04em; }
+.mark { font-size:13px; font-weight:800; color:#d4e3f3; }
 .nav { display:flex; gap:10px; margin-top:18px; }
-.navbtn, .finishbtn {
-  flex:1; border:0; border-radius:18px; padding:15px 16px; font-size:16px; font-weight:800; cursor:pointer;
-}
+.navbtn, .finishbtn { flex:1; border:0; border-radius:18px; padding:15px 16px; font-size:16px; font-weight:800; cursor:pointer; }
 .prev { background:rgba(255,255,255,.06); color:#d9e5f2; border:1px solid var(--line); }
 .next, .finishbtn { background:linear-gradient(180deg,#1fa4ff,#147fd0); color:white; box-shadow:0 12px 30px rgba(20,127,208,.28); }
+
 .results { display:none; padding:18px; }
 .results.show { display:block; }
 .scorebox {
-  display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center;
-  margin-bottom:16px; padding:14px 16px; border-radius:20px;
-  background:rgba(255,255,255,.035); border:1px solid var(--line);
+  display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; margin-bottom:16px; padding:14px 16px;
+  border-radius:20px; background:rgba(255,255,255,.035); border:1px solid var(--line);
 }
 .scorelabel { font-size:15px; font-weight:800; }
 .scorevalue { font-size:clamp(28px,8vw,54px); font-weight:900; }
 .scorevalue small { font-size:.38em; color:var(--muted); font-weight:700; }
-.block {
-  background:rgba(255,255,255,.03); border:1px solid var(--line); border-radius:22px; padding:14px; margin-bottom:14px;
-}
+
+.block { background:rgba(255,255,255,.03); border:1px solid var(--line); border-radius:22px; padding:14px; margin-bottom:14px; }
 .sectiontitle { font-size:18px; font-weight:900; margin:0 0 12px; }
-.greentitle { color:#b5ffd0; }
-.radars { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:14px; }
-.radarcard { background:rgba(255,255,255,.02); border:1px solid var(--line); border-radius:18px; padding:10px; }
-.radarname { font-size:15px; font-weight:800; margin:0 0 6px; color:#dfeaf7; }
-.radarcanvas { display:block; width:100%; height:auto; }
+
+.radarsCol { display:grid; grid-template-columns:1fr; gap:14px; }
+.radarcard {
+  background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+  border:1px solid var(--line); border-radius:22px; padding:16px;
+}
+.radarname { font-size:18px; font-weight:900; margin:0 0 10px; color:#e8f3ff; }
+.radarcanvas { display:block; width:100%; height:auto; margin:0 auto; }
+
 .groups { display:grid; gap:14px; }
 .group { background:rgba(255,255,255,.02); border:1px solid var(--line); border-radius:18px; padding:12px; }
-.group h3 { margin:0 0 10px; font-size:15px; font-weight:900; }
+.group h3 { margin:0 0 10px; font-size:16px; font-weight:900; }
 .stat { padding:8px 0; }
 .statline { display:flex; justify-content:space-between; gap:10px; margin-bottom:6px; font-size:14px; }
 .bar { height:12px; border-radius:999px; overflow:hidden; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.05); }
 .fill { height:100%; width:0; background:linear-gradient(90deg,#66c0f4,#8de1ff); }
+
 .dualadvice { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-.advcol { background:rgba(102,225,138,.07); border:1px solid rgba(102,225,138,.18); border-radius:18px; padding:14px; }
-.advcol h3 { margin:0 0 10px; font-size:17px; font-weight:900; color:#b5ffd0; }
+.advcol { border-radius:18px; padding:14px; }
+.advcol.good { background:rgba(103,223,141,.09); border:1px solid rgba(103,223,141,.22); }
+.advcol.bad { background:rgba(255,106,118,.09); border:1px solid rgba(255,106,118,.22); }
+.advcol h3 { margin:0 0 10px; font-size:17px; font-weight:900; }
+.advcol.good h3 { color:#b8ffd0; }
+.advcol.bad h3 { color:#ffb1bb; }
 .advcol ul { margin:0; padding-left:20px; }
 .advcol li { margin:8px 0; line-height:1.45; }
+
 .footerbtns { display:flex; gap:10px; margin-top:18px; }
 @media (max-width:760px) { .dualadvice { grid-template-columns:1fr; } }
 @media (max-width:640px) {
   .topbar { display:block; }
   .meta { margin-left:0; margin-top:10px; }
-  .viewport { min-height:calc(100vh - 120px); }
   .screen { min-height:calc(100vh - 160px); padding:18px 14px; }
-  .qtext { margin:8px 0 18px; }
   .answers { gap:8px; }
   .choice { min-height:88px; }
-  .d1 { width:22px; height:22px; }
-  .d2 { width:30px; height:30px; }
-  .d3 { width:40px; height:40px; }
-  .d4 { width:50px; height:50px; }
-  .d5 { width:60px; height:60px; }
+  .d1 { width:22px; height:22px; } .d2 { width:30px; height:30px; } .d3 { width:40px; height:40px; } .d4 { width:50px; height:50px; } .d5 { width:60px; height:60px; }
 }
 </style>
 </head>
@@ -128,45 +120,22 @@ body { min-height:100vh; }
   <div class="topbar">
     <h1 class="title">Questionnaire Puissance</h1>
     <div class="meta">
-      <div class="badge" id="progressText">1 / 23</div>
+      <div class="badge" id="progressText">1 / 25</div>
       <div class="progress"><div id="progressBar"></div></div>
     </div>
   </div>
 
   <div class="viewport" id="viewport">
-    <section class="screen question-screen" data-stats='{&quot;Attaque&quot;: 15.0, &quot;Vitesse&quot;: -25.0, &quot;Urbanisme&quot;: 6.0, &quot;Charisme&quot;: -1.0, &quot;Argent&quot;: 15.0, &quot;Sociabilité&quot;: 5.0, &quot;PV&quot;: 25.0, &quot;Résistance&quot;: 30.0, &quot;Poids&quot;: 100.0, &quot;Efficacité énergétique&quot;: -42.0, &quot;Vitesse de récupération (sommeil)&quot;: -15.0, &quot;Mouchoirs&quot;: 10.0, &quot;altruisme&quot;: -2.0, &quot;Confiance&quot;: 5.0}' data-qid="q_0" data-index="0"><div class="qtop"><div class="counter"></div></div><div class="qtext">Combien pèses tu de 1 à 5 (1 = léger, 5 = lourd)</div><div class="answers"><label class="opt"><input type="radio" name="q_0" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_0" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_0" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_0" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_0" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section>
-<section class="screen question-screen" data-stats='{&quot;Attaque&quot;: 2.0, &quot;Vitesse&quot;: 48.0, &quot;Urbanisme&quot;: 15.0, &quot;Charisme&quot;: -50.0, &quot;Argent&quot;: -25.0, &quot;Sociabilité&quot;: 10.0, &quot;Constance&quot;: -15.0, &quot;Poids&quot;: -30.0, &quot;Efficacité énergétique&quot;: -20.0, &quot;Vitesse de récupération (sommeil)&quot;: -20.0, &quot;Mouchoirs&quot;: 15.0, &quot;Puissance cognitive&quot;: -5.0, &quot;altruisme&quot;: 20.0, &quot;Sécurité&quot;: -20.0, &quot;Confiance&quot;: -3.0}' data-qid="q_1" data-index="1"><div class="qtop"><div class="counter"></div></div><div class="qtext">Cours-tu quand tu es en retard ?</div><div class="answers"><label class="opt"><input type="radio" name="q_1" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_1" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_1" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_1" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_1" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section>
-<section class="screen question-screen" data-stats='{&quot;Attaque&quot;: 15.0, &quot;Vitesse&quot;: -25.0, &quot;Urbanisme&quot;: 1.0, &quot;Charisme&quot;: -29.0, &quot;Argent&quot;: -21.0, &quot;Sociabilité&quot;: -1.0, &quot;Constance&quot;: -35.0, &quot;Efficacité énergétique&quot;: 10.0, &quot;Vitesse de récupération (sommeil)&quot;: -1.0, &quot;Puissance cognitive&quot;: -15.0, &quot;altruisme&quot;: -20.0, &quot;Sécurité&quot;: -20.0, &quot;Confiance&quot;: 10.0}' data-qid="q_2" data-index="2"><div class="qtop"><div class="counter"></div></div><div class="qtext">Es tu souvent en retard ?</div><div class="answers"><label class="opt"><input type="radio" name="q_2" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_2" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_2" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_2" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_2" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section>
-<section class="screen question-screen" data-stats='{&quot;Attaque&quot;: 10.0, &quot;Charisme&quot;: -20.0, &quot;Argent&quot;: 5.0, &quot;Sociabilité&quot;: 30.0, &quot;Constance&quot;: -10.0, &quot;Poids&quot;: 5.0, &quot;Efficacité énergétique&quot;: -10.0, &quot;Vitesse de récupération (sommeil)&quot;: -5.0, &quot;Puissance cognitive&quot;: -10.0, &quot;altruisme&quot;: -10.0, &quot;Sécurité&quot;: -10.0, &quot;Confiance&quot;: 15.0}' data-qid="q_3" data-index="3"><div class="qtop"><div class="counter"></div></div><div class="qtext">écris tu souvent &quot;bonne/joyeuse anniversaire&quot; ?</div><div class="answers"><label class="opt"><input type="radio" name="q_3" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_3" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_3" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_3" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_3" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section>
-<section class="screen question-screen" data-stats='{&quot;Attaque&quot;: 15.0, &quot;Vitesse&quot;: 15.0, &quot;Urbanisme&quot;: 2.0, &quot;Charisme&quot;: 35.0, &quot;Argent&quot;: 20.0, &quot;Sociabilité&quot;: 30.0, &quot;Constance&quot;: 30.0, &quot;PV&quot;: 35.0, &quot;Résistance&quot;: 36.0, &quot;Poids&quot;: 33.0, &quot;Efficacité énergétique&quot;: -20.0, &quot;Vitesse de récupération (sommeil)&quot;: -20.0, &quot;Mouchoirs&quot;: 2.0, &quot;Puissance cognitive&quot;: 45.0, &quot;Sécurité&quot;: 25.0, &quot;Confiance&quot;: 5.0}' data-qid="q_4" data-index="4"><div class="qtop"><div class="counter"></div></div><div class="qtext">Tes horaires de repas sont elles régulières ?</div><div class="answers"><label class="opt"><input type="radio" name="q_4" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_4" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_4" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_4" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_4" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section>
-<section class="screen question-screen" data-stats='{&quot;Attaque&quot;: -15.0, &quot;Vitesse&quot;: 10.0, &quot;Urbanisme&quot;: 1.0, &quot;Charisme&quot;: 5.0, &quot;Argent&quot;: 15.0, &quot;Sociabilité&quot;: 5.0, &quot;Constance&quot;: 30.0, &quot;Vitesse de récupération (sommeil)&quot;: 35.0, &quot;Mouchoirs&quot;: -15.0, &quot;Puissance cognitive&quot;: 25.0, &quot;Sécurité&quot;: 23.0, &quot;Confiance&quot;: 1.0}' data-qid="q_5" data-index="5"><div class="qtop"><div class="counter"></div></div><div class="qtext">Vas tu à tous les cours</div><div class="answers"><label class="opt"><input type="radio" name="q_5" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_5" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_5" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_5" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_5" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section>
-<section class="screen question-screen" data-stats='{&quot;Attaque&quot;: 15.0, &quot;Vitesse&quot;: 15.0, &quot;Urbanisme&quot;: -5.0, &quot;Charisme&quot;: 15.0, &quot;Argent&quot;: 10.0, &quot;Sociabilité&quot;: 1.0, &quot;Résistance&quot;: -10.0, &quot;Poids&quot;: 5.0, &quot;Efficacité énergétique&quot;: 20.0, &quot;Vitesse de récupération (sommeil)&quot;: 5.0, &quot;Puissance cognitive&quot;: 11.0, &quot;Confiance&quot;: -5.0}' data-qid="q_6" data-index="6"><div class="qtop"><div class="counter"></div></div><div class="qtext">Connais tu tes tables de multiplication</div><div class="answers"><label class="opt"><input type="radio" name="q_6" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_6" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_6" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_6" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_6" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section>
-<section class="screen question-screen" data-stats='{&quot;Attaque&quot;: 15.0, &quot;Vitesse&quot;: 20.0, &quot;Charisme&quot;: 15.0, &quot;Argent&quot;: 15.0, &quot;Sociabilité&quot;: -10.0, &quot;Constance&quot;: 15.0, &quot;PV&quot;: 20.0, &quot;Résistance&quot;: 9.0, &quot;Poids&quot;: 5.0, &quot;Efficacité énergétique&quot;: 22.0, &quot;Vitesse de récupération (sommeil)&quot;: 15.0, &quot;Puissance cognitive&quot;: 15.0, &quot;Sécurité&quot;: 10.0, &quot;Confiance&quot;: 5.0}' data-qid="q_7" data-index="7"><div class="qtop"><div class="counter"></div></div><div class="qtext">Tes horaires de sommeil sont elles régulières</div><div class="answers"><label class="opt"><input type="radio" name="q_7" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_7" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_7" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_7" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_7" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section>
-<section class="screen question-screen" data-stats='{&quot;Attaque&quot;: 20.0, &quot;Vitesse&quot;: 30.0, &quot;Charisme&quot;: 20.0, &quot;Argent&quot;: 10.0, &quot;Sociabilité&quot;: -20.0, &quot;Constance&quot;: 5.0, &quot;PV&quot;: 15.0, &quot;Résistance&quot;: 8.0, &quot;Poids&quot;: 1.0, &quot;Efficacité énergétique&quot;: 30.0, &quot;Vitesse de récupération (sommeil)&quot;: -25.0, &quot;Mouchoirs&quot;: 10.0, &quot;Puissance cognitive&quot;: 30.0, &quot;Sécurité&quot;: 10.0, &quot;Confiance&quot;: 10.0}' data-qid="q_8" data-index="8"><div class="qtop"><div class="counter"></div></div><div class="qtext">Dors tu autant que tu le devrais la nuit</div><div class="answers"><label class="opt"><input type="radio" name="q_8" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_8" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_8" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_8" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_8" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section>
-<section class="screen question-screen" data-stats='{&quot;Charisme&quot;: -15.0, &quot;Argent&quot;: -15.0, &quot;Sociabilité&quot;: -7.0, &quot;Constance&quot;: 9.0, &quot;PV&quot;: -7.0, &quot;Résistance&quot;: -45.0, &quot;Poids&quot;: -19.0, &quot;Efficacité énergétique&quot;: -10.0, &quot;Vitesse de récupération (sommeil)&quot;: -10.0, &quot;Mouchoirs&quot;: -5.0, &quot;Puissance cognitive&quot;: -40.0, &quot;Sécurité&quot;: -20.0, &quot;Confiance&quot;: -15.0}' data-qid="q_9" data-index="9"><div class="qtop"><div class="counter"></div></div><div class="qtext">Vas tu sur les réseaux sociaux avant de dormir</div><div class="answers"><label class="opt"><input type="radio" name="q_9" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_9" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_9" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_9" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_9" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section>
-<section class="screen question-screen" data-stats='{&quot;Vitesse&quot;: 6.0, &quot;Charisme&quot;: -5.0, &quot;Argent&quot;: -10.0, &quot;Sociabilité&quot;: -10.0, &quot;Constance&quot;: 15.0, &quot;Résistance&quot;: 5.0, &quot;Efficacité énergétique&quot;: 30.0, &quot;Mouchoirs&quot;: 10.0, &quot;Puissance cognitive&quot;: 15.0, &quot;Confiance&quot;: 5.0}' data-qid="q_10" data-index="10"><div class="qtop"><div class="counter"></div></div><div class="qtext">Portes-tu souvent les mêmes vêtements ?</div><div class="answers"><label class="opt"><input type="radio" name="q_10" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_10" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_10" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_10" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_10" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section>
-<section class="screen question-screen" data-stats='{&quot;Vitesse&quot;: 10.0, &quot;Urbanisme&quot;: 15.0, &quot;Charisme&quot;: -8.0, &quot;Argent&quot;: 5.0, &quot;Sociabilité&quot;: -5.0, &quot;PV&quot;: 10.0, &quot;Poids&quot;: -10.0, &quot;Efficacité énergétique&quot;: -6.0, &quot;Mouchoirs&quot;: 5.0, &quot;Puissance cognitive&quot;: 15.0, &quot;altruisme&quot;: 15.0, &quot;Sécurité&quot;: -20.0, &quot;Confiance&quot;: 3.0}' data-qid="q_11" data-index="11"><div class="qtop"><div class="counter"></div></div><div class="qtext">Prends-tu beaucoup de photos ?</div><div class="answers"><label class="opt"><input type="radio" name="q_11" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_11" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_11" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_11" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_11" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section>
-<section class="screen question-screen" data-stats='{&quot;Attaque&quot;: 15.0, &quot;Vitesse&quot;: 1.0, &quot;Urbanisme&quot;: -15.0, &quot;Charisme&quot;: 2.0, &quot;Argent&quot;: 20.0, &quot;Sociabilité&quot;: -1.0, &quot;PV&quot;: 15.0, &quot;Résistance&quot;: -2.0, &quot;Poids&quot;: 5.0, &quot;Efficacité énergétique&quot;: -20.0, &quot;Mouchoirs&quot;: 15.0, &quot;Puissance cognitive&quot;: -1.0, &quot;altruisme&quot;: -10.0, &quot;Sécurité&quot;: 6.0, &quot;Confiance&quot;: 2.0}' data-qid="q_12" data-index="12"><div class="qtop"><div class="counter"></div></div><div class="qtext">Es tu de droite</div><div class="answers"><label class="opt"><input type="radio" name="q_12" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_12" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_12" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_12" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_12" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section>
-<section class="screen question-screen" data-stats='{&quot;Attaque&quot;: -15.0, &quot;Vitesse&quot;: -5.0, &quot;Urbanisme&quot;: 5.0, &quot;Charisme&quot;: -15.0, &quot;Argent&quot;: -10.0, &quot;Sociabilité&quot;: -2.0, &quot;Constance&quot;: -1.0, &quot;PV&quot;: -10.0, &quot;Résistance&quot;: -10.0, &quot;Poids&quot;: -5.0, &quot;Mouchoirs&quot;: 15.0, &quot;Puissance cognitive&quot;: 10.0, &quot;altruisme&quot;: 10.0, &quot;Sécurité&quot;: -20.0, &quot;Confiance&quot;: -10.0}' data-qid="q_13" data-index="13"><div class="qtop"><div class="counter"></div></div><div class="qtext">As-des allergies ?</div><div class="answers"><label class="opt"><input type="radio" name="q_13" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_13" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_13" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_13" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_13" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section>
-<section class="screen question-screen" data-stats='{&quot;Attaque&quot;: 20.0, &quot;Vitesse&quot;: -5.0, &quot;Urbanisme&quot;: 2.0, &quot;Charisme&quot;: 20.0, &quot;Argent&quot;: 15.0, &quot;Sociabilité&quot;: 25.0, &quot;Constance&quot;: 20.0, &quot;PV&quot;: -15.0, &quot;Résistance&quot;: 10.0, &quot;Poids&quot;: -5.0, &quot;Vitesse de récupération (sommeil)&quot;: 10.0, &quot;Mouchoirs&quot;: -5.0, &quot;Puissance cognitive&quot;: -5.0, &quot;altruisme&quot;: 30.0, &quot;Sécurité&quot;: 20.0, &quot;Confiance&quot;: 3.0}' data-qid="q_14" data-index="14"><div class="qtop"><div class="counter"></div></div><div class="qtext">As-tu un animal ?</div><div class="answers"><label class="opt"><input type="radio" name="q_14" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_14" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_14" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_14" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_14" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section>
-<section class="screen question-screen" data-stats='{&quot;Attaque&quot;: -5.0, &quot;Vitesse&quot;: -30.0, &quot;Urbanisme&quot;: 30.0, &quot;Charisme&quot;: -40.0, &quot;Sociabilité&quot;: 5.0, &quot;Constance&quot;: -5.0, &quot;Efficacité énergétique&quot;: -50.0, &quot;Mouchoirs&quot;: 2.0, &quot;Puissance cognitive&quot;: -40.0, &quot;altruisme&quot;: 15.0, &quot;Sécurité&quot;: -45.0, &quot;Confiance&quot;: 15.0}' data-qid="q_15" data-index="15"><div class="qtop"><div class="counter"></div></div><div class="qtext">Te perds tu souvent</div><div class="answers"><label class="opt"><input type="radio" name="q_15" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_15" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_15" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_15" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_15" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section>
-<section class="screen question-screen" data-stats='{&quot;Vitesse&quot;: -15.0, &quot;Urbanisme&quot;: 15.0, &quot;Charisme&quot;: 13.0, &quot;Argent&quot;: -10.0, &quot;Sociabilité&quot;: 30.0, &quot;Constance&quot;: -5.0, &quot;PV&quot;: 10.0, &quot;Résistance&quot;: 15.0, &quot;Poids&quot;: 16.0, &quot;Efficacité énergétique&quot;: -10.0, &quot;Mouchoirs&quot;: -5.0, &quot;Puissance cognitive&quot;: 5.0, &quot;altruisme&quot;: -10.0, &quot;Sécurité&quot;: 15.0, &quot;Confiance&quot;: -10.0}' data-qid="q_16" data-index="16"><div class="qtop"><div class="counter"></div></div><div class="qtext">Préfères tu manger avec des gens</div><div class="answers"><label class="opt"><input type="radio" name="q_16" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_16" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_16" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_16" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_16" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section>
-<section class="screen question-screen" data-stats='{&quot;Attaque&quot;: 60.0, &quot;Vitesse&quot;: 40.0, &quot;Urbanisme&quot;: 15.0, &quot;Charisme&quot;: 30.0, &quot;Argent&quot;: 10.0, &quot;Sociabilité&quot;: 17.0, &quot;Constance&quot;: 12.0, &quot;PV&quot;: 2.0, &quot;Résistance&quot;: 15.0, &quot;Poids&quot;: 15.0, &quot;Efficacité énergétique&quot;: 10.0, &quot;Vitesse de récupération (sommeil)&quot;: 12.0, &quot;Mouchoirs&quot;: 5.0, &quot;Puissance cognitive&quot;: -15.0, &quot;altruisme&quot;: -15.0, &quot;Sécurité&quot;: 5.0, &quot;Confiance&quot;: 6.0}' data-qid="q_17" data-index="17"><div class="qtop"><div class="counter"></div></div><div class="qtext">Fais tu régulièrement du sport</div><div class="answers"><label class="opt"><input type="radio" name="q_17" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_17" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_17" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_17" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_17" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section>
-<section class="screen question-screen" data-stats='{&quot;Attaque&quot;: -30.0, &quot;Vitesse&quot;: -25.0, &quot;Urbanisme&quot;: 15.0, &quot;Charisme&quot;: -20.0, &quot;Argent&quot;: -30.0, &quot;Sociabilité&quot;: 25.0, &quot;Constance&quot;: 15.0, &quot;PV&quot;: 10.0, &quot;Résistance&quot;: -5.0, &quot;Poids&quot;: -2.0, &quot;Efficacité énergétique&quot;: -10.0, &quot;Vitesse de récupération (sommeil)&quot;: 3.0, &quot;Mouchoirs&quot;: -1.0, &quot;Puissance cognitive&quot;: 20.0, &quot;altruisme&quot;: 10.0, &quot;Sécurité&quot;: 30.0, &quot;Confiance&quot;: -10.0}' data-qid="q_18" data-index="18"><div class="qtop"><div class="counter"></div></div><div class="qtext">Traverses tu toujours au passage piéton quand le feu est vert</div><div class="answers"><label class="opt"><input type="radio" name="q_18" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_18" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_18" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_18" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_18" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section>
-<section class="screen question-screen" data-stats='{&quot;Attaque&quot;: 5.0, &quot;Vitesse&quot;: 5.0, &quot;Urbanisme&quot;: 10.0, &quot;Charisme&quot;: -20.0, &quot;Argent&quot;: -15.0, &quot;Sociabilité&quot;: -15.0, &quot;Résistance&quot;: 9.0, &quot;Poids&quot;: 5.0, &quot;Efficacité énergétique&quot;: -5.0, &quot;Mouchoirs&quot;: -5.0, &quot;Puissance cognitive&quot;: 5.0, &quot;Sécurité&quot;: -27.0, &quot;Confiance&quot;: 5.0}' data-qid="q_19" data-index="19"><div class="qtop"><div class="counter"></div></div><div class="qtext">Utilises tu souvent des sites de streaming douteux</div><div class="answers"><label class="opt"><input type="radio" name="q_19" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_19" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_19" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_19" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_19" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section>
-<section class="screen question-screen" data-stats='{&quot;Attaque&quot;: 4.0, &quot;Vitesse&quot;: 10.0, &quot;Urbanisme&quot;: 5.0, &quot;Charisme&quot;: -15.0, &quot;Argent&quot;: 15.0, &quot;Sociabilité&quot;: -20.0, &quot;Constance&quot;: 20.0, &quot;Résistance&quot;: 2.0, &quot;Poids&quot;: -15.0, &quot;Efficacité énergétique&quot;: -15.0, &quot;Vitesse de récupération (sommeil)&quot;: 4.0, &quot;Mouchoirs&quot;: -2.0, &quot;Puissance cognitive&quot;: -15.0, &quot;altruisme&quot;: -10.0, &quot;Sécurité&quot;: -30.0, &quot;Confiance&quot;: 50.0}' data-qid="q_20" data-index="20"><div class="qtop"><div class="counter"></div></div><div class="qtext">À quelle fréquence partages-tu tes scores sur Strava ?</div><div class="answers"><label class="opt"><input type="radio" name="q_20" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_20" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_20" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_20" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_20" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section>
-<section class="screen question-screen" data-stats='{&quot;Attaque&quot;: -10.0, &quot;Vitesse&quot;: -7.0, &quot;Urbanisme&quot;: 3.0, &quot;Argent&quot;: -5.0, &quot;Sociabilité&quot;: 10.0, &quot;Constance&quot;: 5.0, &quot;PV&quot;: 11.0, &quot;Résistance&quot;: 6.0, &quot;Poids&quot;: 8.0, &quot;Efficacité énergétique&quot;: -4.0, &quot;Vitesse de récupération (sommeil)&quot;: 4.0, &quot;Mouchoirs&quot;: 3.0, &quot;Puissance cognitive&quot;: 1.0, &quot;altruisme&quot;: 3.0, &quot;Sécurité&quot;: 9.0, &quot;Confiance&quot;: 30.0}' data-qid="q_21" data-index="21"><div class="qtop"><div class="counter"></div></div><div class="qtext">Comment évalues tu ta situation amoureuse</div><div class="answers"><label class="opt"><input type="radio" name="q_21" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_21" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_21" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_21" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_21" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section>
-<section class="screen question-screen" data-stats='{&quot;Attaque&quot;: -15.0, &quot;Vitesse&quot;: -5.0, &quot;Charisme&quot;: -10.0, &quot;Argent&quot;: -5.0, &quot;Sociabilité&quot;: -5.0, &quot;Constance&quot;: -10.0, &quot;PV&quot;: -1.0, &quot;Résistance&quot;: 5.0, &quot;Poids&quot;: 2.0, &quot;Efficacité énergétique&quot;: -10.0, &quot;Vitesse de récupération (sommeil)&quot;: -2.0, &quot;Mouchoirs&quot;: 1.0, &quot;Puissance cognitive&quot;: -23.0, &quot;altruisme&quot;: 5.0, &quot;Sécurité&quot;: -40.0, &quot;Confiance&quot;: -9.0}' data-qid="q_22" data-index="22"><div class="qtop"><div class="counter"></div></div><div class="qtext">As tu beaucoup de notifications indésirables</div><div class="answers"><label class="opt"><input type="radio" name="q_22" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_22" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_22" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_22" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_22" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section>
-
+    <section class="screen question-screen" data-meta='{&quot;stats&quot;: {&quot;Attaque&quot;: 15.0, &quot;Vitesse&quot;: -25.0, &quot;Urbanisme&quot;: 6.0, &quot;Charisme&quot;: -1.0, &quot;Argent&quot;: 15.0, &quot;Sociabilité&quot;: 5.0, &quot;PV&quot;: 25.0, &quot;Résistance&quot;: 30.0, &quot;Poids&quot;: 100.0, &quot;Efficacité énergétique&quot;: -42.0, &quot;Vitesse de récupération (sommeil)&quot;: -15.0, &quot;Mouchoirs&quot;: 10.0, &quot;altruisme&quot;: -2.0, &quot;Confiance&quot;: -5.0, &quot;Courage&quot;: 10.0, &quot;Influence&quot;: 5.0, &quot;Angoisse&quot;: -30.0}, &quot;leftPhrase&quot;: &quot;Tu devrais maigrir&quot;, &quot;rightPhrase&quot;: &quot;Tu devrais grossir&quot;, &quot;question&quot;: &quot;À quel point es tu lourd selon toi&quot;}' data-qid="q_0"><div class="qtop"><div class="counter"></div></div><div class="qtext">À quel point es tu lourd selon toi</div><div class="answers"><label class="opt"><input type="radio" name="q_0" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_0" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_0" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_0" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_0" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section><section class="screen question-screen" data-meta='{&quot;stats&quot;: {&quot;Attaque&quot;: 2.0, &quot;Vitesse&quot;: 48.0, &quot;Urbanisme&quot;: 15.0, &quot;Charisme&quot;: -50.0, &quot;Argent&quot;: -25.0, &quot;Sociabilité&quot;: 10.0, &quot;Constance&quot;: -15.0, &quot;Poids&quot;: -30.0, &quot;Efficacité énergétique&quot;: -20.0, &quot;Vitesse de récupération (sommeil)&quot;: -20.0, &quot;Mouchoirs&quot;: 15.0, &quot;Puissance cognitive&quot;: -5.0, &quot;altruisme&quot;: 20.0, &quot;Sécurité&quot;: -20.0, &quot;Confiance&quot;: -3.0, &quot;Courage&quot;: 20.0, &quot;Influence&quot;: -10.0, &quot;Angoisse&quot;: 10.0}, &quot;leftPhrase&quot;: &quot;Tu devrais moins te presser dans la vie&quot;, &quot;rightPhrase&quot;: &quot;Tu devrais accélérer&quot;, &quot;question&quot;: &quot;Cours-tu quand tu es en retard ?&quot;}' data-qid="q_1"><div class="qtop"><div class="counter"></div></div><div class="qtext">Cours-tu quand tu es en retard ?</div><div class="answers"><label class="opt"><input type="radio" name="q_1" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_1" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_1" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_1" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_1" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section><section class="screen question-screen" data-meta='{&quot;stats&quot;: {&quot;Attaque&quot;: 15.0, &quot;Vitesse&quot;: -25.0, &quot;Urbanisme&quot;: 1.0, &quot;Charisme&quot;: -29.0, &quot;Argent&quot;: -21.0, &quot;Sociabilité&quot;: -1.0, &quot;Constance&quot;: -35.0, &quot;Efficacité énergétique&quot;: 10.0, &quot;Vitesse de récupération (sommeil)&quot;: -1.0, &quot;Puissance cognitive&quot;: -15.0, &quot;altruisme&quot;: -20.0, &quot;Sécurité&quot;: -20.0, &quot;Confiance&quot;: 10.0, &quot;Courage&quot;: 10.0, &quot;Influence&quot;: -20.0, &quot;Angoisse&quot;: -20.0}, &quot;leftPhrase&quot;: &quot;Tu devrais être plus souvent être à l&#x27;heure&quot;, &quot;rightPhrase&quot;: &quot;Tu devrais être plus souvent en retard&quot;, &quot;question&quot;: &quot;Es-tu souvent en retard ?&quot;}' data-qid="q_2"><div class="qtop"><div class="counter"></div></div><div class="qtext">Es-tu souvent en retard ?</div><div class="answers"><label class="opt"><input type="radio" name="q_2" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_2" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_2" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_2" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_2" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section><section class="screen question-screen" data-meta='{&quot;stats&quot;: {&quot;Attaque&quot;: 10.0, &quot;Charisme&quot;: -20.0, &quot;Argent&quot;: 5.0, &quot;Sociabilité&quot;: 30.0, &quot;Constance&quot;: -10.0, &quot;Poids&quot;: 5.0, &quot;Efficacité énergétique&quot;: -10.0, &quot;Vitesse de récupération (sommeil)&quot;: -5.0, &quot;Puissance cognitive&quot;: -10.0, &quot;altruisme&quot;: -10.0, &quot;Sécurité&quot;: -10.0, &quot;Confiance&quot;: 15.0, &quot;Courage&quot;: 5.0, &quot;Influence&quot;: -10.0, &quot;Angoisse&quot;: -5.0}, &quot;leftPhrase&quot;: &quot;Soigne ton orthographe&quot;, &quot;rightPhrase&quot;: &quot;Tu peux te permettre d&#x27;être plus négligeant sur ton orthographe&quot;, &quot;question&quot;: &quot;Écris-tu souvent \&quot;bonne/joyeuse anniversaire\&quot; ?&quot;}' data-qid="q_3"><div class="qtop"><div class="counter"></div></div><div class="qtext">Écris-tu souvent &quot;bonne/joyeuse anniversaire&quot; ?</div><div class="answers"><label class="opt"><input type="radio" name="q_3" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_3" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_3" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_3" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_3" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section><section class="screen question-screen" data-meta='{&quot;stats&quot;: {&quot;Attaque&quot;: 15.0, &quot;Vitesse&quot;: 15.0, &quot;Urbanisme&quot;: 2.0, &quot;Charisme&quot;: 35.0, &quot;Argent&quot;: 20.0, &quot;Sociabilité&quot;: 30.0, &quot;Constance&quot;: 30.0, &quot;PV&quot;: 35.0, &quot;Résistance&quot;: 36.0, &quot;Poids&quot;: 33.0, &quot;Efficacité énergétique&quot;: -20.0, &quot;Vitesse de récupération (sommeil)&quot;: -20.0, &quot;Mouchoirs&quot;: 2.0, &quot;Puissance cognitive&quot;: 45.0, &quot;Sécurité&quot;: 25.0, &quot;Confiance&quot;: 5.0, &quot;Courage&quot;: -20.0, &quot;Angoisse&quot;: 20.0}, &quot;leftPhrase&quot;: &quot;Mange à des horaires moins régulières&quot;, &quot;rightPhrase&quot;: &quot;Mange plus souvent aux mêmes horaires&quot;, &quot;question&quot;: &quot;Tes horaires de repas sont elles régulières ?&quot;}' data-qid="q_4"><div class="qtop"><div class="counter"></div></div><div class="qtext">Tes horaires de repas sont elles régulières ?</div><div class="answers"><label class="opt"><input type="radio" name="q_4" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_4" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_4" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_4" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_4" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section><section class="screen question-screen" data-meta='{&quot;stats&quot;: {&quot;Attaque&quot;: -15.0, &quot;Vitesse&quot;: 10.0, &quot;Urbanisme&quot;: 1.0, &quot;Charisme&quot;: 5.0, &quot;Argent&quot;: 15.0, &quot;Sociabilité&quot;: 5.0, &quot;Constance&quot;: 30.0, &quot;Vitesse de récupération (sommeil)&quot;: 35.0, &quot;Mouchoirs&quot;: -15.0, &quot;Puissance cognitive&quot;: 25.0, &quot;Sécurité&quot;: 23.0, &quot;Confiance&quot;: 1.0, &quot;Courage&quot;: 15.0, &quot;Angoisse&quot;: 5.0}, &quot;leftPhrase&quot;: &quot;Détend-toi, pas besoin d&#x27;assister à tous les cours&quot;, &quot;rightPhrase&quot;: &quot;Les cours sont importants, tu devrais y assister plus souvent&quot;, &quot;question&quot;: &quot;Vas-tu à tous les cours ?&quot;}' data-qid="q_5"><div class="qtop"><div class="counter"></div></div><div class="qtext">Vas-tu à tous les cours ?</div><div class="answers"><label class="opt"><input type="radio" name="q_5" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_5" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_5" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_5" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_5" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section><section class="screen question-screen" data-meta='{&quot;stats&quot;: {&quot;Attaque&quot;: 15.0, &quot;Vitesse&quot;: 15.0, &quot;Urbanisme&quot;: -5.0, &quot;Charisme&quot;: 15.0, &quot;Argent&quot;: 10.0, &quot;Sociabilité&quot;: 1.0, &quot;Résistance&quot;: -10.0, &quot;Poids&quot;: 5.0, &quot;Efficacité énergétique&quot;: 20.0, &quot;Vitesse de récupération (sommeil)&quot;: 5.0, &quot;Puissance cognitive&quot;: 11.0, &quot;Confiance&quot;: -5.0, &quot;Courage&quot;: -20.0, &quot;Influence&quot;: 5.0, &quot;Angoisse&quot;: -15.0}, &quot;leftPhrase&quot;: &quot;Pas besoin de faire genre que tu sais tout, oublie les tables de multiplication&quot;, &quot;rightPhrase&quot;: &quot;Certaines choses sont importantes dans la vie, apprends les tables de multiplication !!&quot;, &quot;question&quot;: &quot;Connais-tu tes tables de multiplication ?&quot;}' data-qid="q_6"><div class="qtop"><div class="counter"></div></div><div class="qtext">Connais-tu tes tables de multiplication ?</div><div class="answers"><label class="opt"><input type="radio" name="q_6" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_6" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_6" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_6" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_6" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section><section class="screen question-screen" data-meta='{&quot;stats&quot;: {&quot;Attaque&quot;: 15.0, &quot;Vitesse&quot;: 20.0, &quot;Charisme&quot;: 15.0, &quot;Argent&quot;: 15.0, &quot;Sociabilité&quot;: -10.0, &quot;Constance&quot;: 15.0, &quot;PV&quot;: 20.0, &quot;Résistance&quot;: 9.0, &quot;Poids&quot;: 5.0, &quot;Efficacité énergétique&quot;: 22.0, &quot;Vitesse de récupération (sommeil)&quot;: 15.0, &quot;Puissance cognitive&quot;: 15.0, &quot;Sécurité&quot;: 10.0, &quot;Confiance&quot;: 5.0, &quot;Angoisse&quot;: -30.0}, &quot;leftPhrase&quot;: &quot;Dors à des horaires différentes plus souvent.&quot;, &quot;rightPhrase&quot;: &quot;Couche toi plus souvent à la même heure.&quot;, &quot;question&quot;: &quot;Tes horaires de sommeil sont-elles régulières ?&quot;}' data-qid="q_7"><div class="qtop"><div class="counter"></div></div><div class="qtext">Tes horaires de sommeil sont-elles régulières ?</div><div class="answers"><label class="opt"><input type="radio" name="q_7" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_7" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_7" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_7" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_7" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section><section class="screen question-screen" data-meta='{&quot;stats&quot;: {&quot;Attaque&quot;: 20.0, &quot;Vitesse&quot;: 30.0, &quot;Charisme&quot;: 20.0, &quot;Argent&quot;: 10.0, &quot;Sociabilité&quot;: -20.0, &quot;Constance&quot;: 5.0, &quot;PV&quot;: 15.0, &quot;Résistance&quot;: 8.0, &quot;Poids&quot;: 1.0, &quot;Efficacité énergétique&quot;: 30.0, &quot;Vitesse de récupération (sommeil)&quot;: -25.0, &quot;Mouchoirs&quot;: 10.0, &quot;Puissance cognitive&quot;: 30.0, &quot;Sécurité&quot;: 10.0, &quot;Confiance&quot;: 10.0, &quot;Influence&quot;: -10.0, &quot;Angoisse&quot;: -25.0}, &quot;leftPhrase&quot;: &quot;Dors moins&quot;, &quot;rightPhrase&quot;: &quot;Dors plus&quot;, &quot;question&quot;: &quot;Dors-tu autant que tu le devrais la nuit ?&quot;}' data-qid="q_8"><div class="qtop"><div class="counter"></div></div><div class="qtext">Dors-tu autant que tu le devrais la nuit ?</div><div class="answers"><label class="opt"><input type="radio" name="q_8" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_8" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_8" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_8" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_8" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section><section class="screen question-screen" data-meta='{&quot;stats&quot;: {&quot;Charisme&quot;: -15.0, &quot;Argent&quot;: -15.0, &quot;Sociabilité&quot;: -7.0, &quot;Constance&quot;: 9.0, &quot;PV&quot;: -7.0, &quot;Résistance&quot;: -45.0, &quot;Poids&quot;: -19.0, &quot;Efficacité énergétique&quot;: -10.0, &quot;Vitesse de récupération (sommeil)&quot;: -10.0, &quot;Mouchoirs&quot;: -5.0, &quot;Puissance cognitive&quot;: -40.0, &quot;Sécurité&quot;: -20.0, &quot;Confiance&quot;: -15.0, &quot;Courage&quot;: -30.0, &quot;Influence&quot;: -15.0, &quot;Angoisse&quot;: 35.0}, &quot;leftPhrase&quot;: &quot;Couche toi sans scroller des jours&quot;, &quot;rightPhrase&quot;: &quot;Scrolle scrolle scrolle.&quot;, &quot;question&quot;: &quot;Vas-tu sur les réseaux sociaux avant de dormir ?&quot;}' data-qid="q_9"><div class="qtop"><div class="counter"></div></div><div class="qtext">Vas-tu sur les réseaux sociaux avant de dormir ?</div><div class="answers"><label class="opt"><input type="radio" name="q_9" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_9" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_9" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_9" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_9" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section><section class="screen question-screen" data-meta='{&quot;stats&quot;: {&quot;Vitesse&quot;: 6.0, &quot;Charisme&quot;: -5.0, &quot;Argent&quot;: -10.0, &quot;Sociabilité&quot;: -10.0, &quot;Constance&quot;: 15.0, &quot;Résistance&quot;: 5.0, &quot;Efficacité énergétique&quot;: 30.0, &quot;Mouchoirs&quot;: 10.0, &quot;Puissance cognitive&quot;: 15.0, &quot;Confiance&quot;: 5.0, &quot;Courage&quot;: 5.0, &quot;Influence&quot;: 10.0, &quot;Angoisse&quot;: -10.0}, &quot;leftPhrase&quot;: &quot;Porte plus souvent des vêtements différents pour le flow&quot;, &quot;rightPhrase&quot;: &quot;Porte plus souvent les mêmes vêtements c&#x27;est plus pratique&quot;, &quot;question&quot;: &quot;Portes-tu souvent les mêmes vêtements ?&quot;}' data-qid="q_10"><div class="qtop"><div class="counter"></div></div><div class="qtext">Portes-tu souvent les mêmes vêtements ?</div><div class="answers"><label class="opt"><input type="radio" name="q_10" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_10" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_10" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_10" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_10" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section><section class="screen question-screen" data-meta='{&quot;stats&quot;: {&quot;Vitesse&quot;: 10.0, &quot;Urbanisme&quot;: 15.0, &quot;Charisme&quot;: -8.0, &quot;Argent&quot;: 5.0, &quot;Sociabilité&quot;: -5.0, &quot;PV&quot;: 10.0, &quot;Poids&quot;: -10.0, &quot;Efficacité énergétique&quot;: -6.0, &quot;Mouchoirs&quot;: 5.0, &quot;Puissance cognitive&quot;: 15.0, &quot;altruisme&quot;: 15.0, &quot;Sécurité&quot;: -20.0, &quot;Confiance&quot;: 3.0, &quot;Courage&quot;: 12.0, &quot;Influence&quot;: 5.0, &quot;Angoisse&quot;: -10.0}, &quot;leftPhrase&quot;: &quot;Prends moins de photos tu vas mal finir&quot;, &quot;rightPhrase&quot;: &quot;Prends plus de photos c&#x27;est épanouissant&quot;, &quot;question&quot;: &quot;Prends-tu beaucoup de photos ?&quot;}' data-qid="q_11"><div class="qtop"><div class="counter"></div></div><div class="qtext">Prends-tu beaucoup de photos ?</div><div class="answers"><label class="opt"><input type="radio" name="q_11" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_11" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_11" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_11" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_11" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section><section class="screen question-screen" data-meta='{&quot;stats&quot;: {&quot;Attaque&quot;: 15.0, &quot;Vitesse&quot;: 1.0, &quot;Urbanisme&quot;: -15.0, &quot;Charisme&quot;: 2.0, &quot;Argent&quot;: 20.0, &quot;Sociabilité&quot;: -1.0, &quot;PV&quot;: 15.0, &quot;Résistance&quot;: -2.0, &quot;Poids&quot;: 5.0, &quot;Efficacité énergétique&quot;: -20.0, &quot;Mouchoirs&quot;: 15.0, &quot;Puissance cognitive&quot;: -1.0, &quot;altruisme&quot;: -10.0, &quot;Sécurité&quot;: 6.0, &quot;Confiance&quot;: 2.0, &quot;Courage&quot;: -5.0, &quot;Influence&quot;: 5.0, &quot;Angoisse&quot;: 2.0}, &quot;leftPhrase&quot;: &quot;Deviens de gauche&quot;, &quot;rightPhrase&quot;: &quot;Deviens de droite&quot;, &quot;question&quot;: &quot;Es-tu de droite ?&quot;}' data-qid="q_12"><div class="qtop"><div class="counter"></div></div><div class="qtext">Es-tu de droite ?</div><div class="answers"><label class="opt"><input type="radio" name="q_12" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_12" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_12" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_12" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_12" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section><section class="screen question-screen" data-meta='{&quot;stats&quot;: {&quot;Attaque&quot;: -15.0, &quot;Vitesse&quot;: -5.0, &quot;Urbanisme&quot;: 5.0, &quot;Charisme&quot;: -15.0, &quot;Argent&quot;: -10.0, &quot;Sociabilité&quot;: -2.0, &quot;Constance&quot;: -1.0, &quot;PV&quot;: -10.0, &quot;Résistance&quot;: -10.0, &quot;Poids&quot;: -5.0, &quot;Mouchoirs&quot;: 15.0, &quot;Puissance cognitive&quot;: 10.0, &quot;altruisme&quot;: 10.0, &quot;Sécurité&quot;: -20.0, &quot;Confiance&quot;: -10.0, &quot;Influence&quot;: -1.0, &quot;Angoisse&quot;: 10.0}, &quot;leftPhrase&quot;: &quot;Retire tes allergies&quot;, &quot;rightPhrase&quot;: &quot;Attrape une allergie&quot;, &quot;question&quot;: &quot;As-des allergies ?&quot;}' data-qid="q_13"><div class="qtop"><div class="counter"></div></div><div class="qtext">As-des allergies ?</div><div class="answers"><label class="opt"><input type="radio" name="q_13" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_13" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_13" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_13" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_13" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section><section class="screen question-screen" data-meta='{&quot;stats&quot;: {&quot;Attaque&quot;: 20.0, &quot;Vitesse&quot;: -5.0, &quot;Urbanisme&quot;: 2.0, &quot;Charisme&quot;: 20.0, &quot;Argent&quot;: 15.0, &quot;Sociabilité&quot;: 25.0, &quot;Constance&quot;: 20.0, &quot;PV&quot;: -15.0, &quot;Résistance&quot;: 10.0, &quot;Poids&quot;: -5.0, &quot;Vitesse de récupération (sommeil)&quot;: 10.0, &quot;Mouchoirs&quot;: -5.0, &quot;Puissance cognitive&quot;: -5.0, &quot;altruisme&quot;: 30.0, &quot;Sécurité&quot;: 20.0, &quot;Confiance&quot;: 3.0, &quot;Courage&quot;: 5.0, &quot;Influence&quot;: 10.0, &quot;Angoisse&quot;: -5.0}, &quot;leftPhrase&quot;: &quot;Vend ton animal&quot;, &quot;rightPhrase&quot;: &quot;Adopte un lapin géant&quot;, &quot;question&quot;: &quot;As-tu un animal ?&quot;}' data-qid="q_14"><div class="qtop"><div class="counter"></div></div><div class="qtext">As-tu un animal ?</div><div class="answers"><label class="opt"><input type="radio" name="q_14" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_14" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_14" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_14" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_14" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section><section class="screen question-screen" data-meta='{&quot;stats&quot;: {&quot;Attaque&quot;: -5.0, &quot;Vitesse&quot;: -30.0, &quot;Urbanisme&quot;: 30.0, &quot;Charisme&quot;: -40.0, &quot;Sociabilité&quot;: 5.0, &quot;Constance&quot;: -5.0, &quot;Efficacité énergétique&quot;: -50.0, &quot;Mouchoirs&quot;: 2.0, &quot;Puissance cognitive&quot;: -40.0, &quot;altruisme&quot;: 15.0, &quot;Sécurité&quot;: -45.0, &quot;Confiance&quot;: 15.0, &quot;Courage&quot;: 25.0, &quot;Influence&quot;: -10.0, &quot;Angoisse&quot;: 20.0}, &quot;leftPhrase&quot;: &quot;Utilise plus souvent le GPS&quot;, &quot;rightPhrase&quot;: &quot;Perds toi&quot;, &quot;question&quot;: &quot;Te perds-tu souvent ?&quot;}' data-qid="q_15"><div class="qtop"><div class="counter"></div></div><div class="qtext">Te perds-tu souvent ?</div><div class="answers"><label class="opt"><input type="radio" name="q_15" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_15" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_15" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_15" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_15" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section><section class="screen question-screen" data-meta='{&quot;stats&quot;: {&quot;Vitesse&quot;: -15.0, &quot;Urbanisme&quot;: 15.0, &quot;Charisme&quot;: 13.0, &quot;Argent&quot;: -10.0, &quot;Sociabilité&quot;: 30.0, &quot;Constance&quot;: -5.0, &quot;PV&quot;: 10.0, &quot;Résistance&quot;: 15.0, &quot;Poids&quot;: 16.0, &quot;Efficacité énergétique&quot;: -10.0, &quot;Mouchoirs&quot;: -5.0, &quot;Puissance cognitive&quot;: 5.0, &quot;altruisme&quot;: -10.0, &quot;Sécurité&quot;: 15.0, &quot;Confiance&quot;: -10.0, &quot;Courage&quot;: 5.0, &quot;Influence&quot;: 10.0, &quot;Angoisse&quot;: -30.0}, &quot;leftPhrase&quot;: &quot;Mange seul.&quot;, &quot;rightPhrase&quot;: &quot;Sociabilise, mange avec des gens&quot;, &quot;question&quot;: &quot;Préfères-tu manger avec des gens ?&quot;}' data-qid="q_16"><div class="qtop"><div class="counter"></div></div><div class="qtext">Préfères-tu manger avec des gens ?</div><div class="answers"><label class="opt"><input type="radio" name="q_16" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_16" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_16" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_16" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_16" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section><section class="screen question-screen" data-meta='{&quot;stats&quot;: {&quot;Attaque&quot;: 100.0, &quot;Vitesse&quot;: 40.0, &quot;Urbanisme&quot;: 15.0, &quot;Charisme&quot;: 30.0, &quot;Argent&quot;: 10.0, &quot;Sociabilité&quot;: 17.0, &quot;Constance&quot;: 12.0, &quot;PV&quot;: 2.0, &quot;Résistance&quot;: 15.0, &quot;Poids&quot;: 15.0, &quot;Efficacité énergétique&quot;: 10.0, &quot;Vitesse de récupération (sommeil)&quot;: 12.0, &quot;Mouchoirs&quot;: 5.0, &quot;Puissance cognitive&quot;: -15.0, &quot;altruisme&quot;: -15.0, &quot;Sécurité&quot;: 5.0, &quot;Confiance&quot;: 6.0, &quot;Courage&quot;: 20.0, &quot;Influence&quot;: 10.0, &quot;Angoisse&quot;: -20.0}, &quot;leftPhrase&quot;: &quot;Fais moins de sport tu es déjà parfait(e)&quot;, &quot;rightPhrase&quot;: &quot;Bouge toi, fais du sport&quot;, &quot;question&quot;: &quot;Fais-tu régulièrement du sport ?&quot;}' data-qid="q_17"><div class="qtop"><div class="counter"></div></div><div class="qtext">Fais-tu régulièrement du sport ?</div><div class="answers"><label class="opt"><input type="radio" name="q_17" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_17" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_17" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_17" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_17" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section><section class="screen question-screen" data-meta='{&quot;stats&quot;: {&quot;Attaque&quot;: -30.0, &quot;Vitesse&quot;: -25.0, &quot;Urbanisme&quot;: 15.0, &quot;Charisme&quot;: -20.0, &quot;Argent&quot;: -30.0, &quot;Sociabilité&quot;: 25.0, &quot;Constance&quot;: 15.0, &quot;PV&quot;: 10.0, &quot;Résistance&quot;: -5.0, &quot;Poids&quot;: -2.0, &quot;Efficacité énergétique&quot;: -10.0, &quot;Vitesse de récupération (sommeil)&quot;: 3.0, &quot;Mouchoirs&quot;: -1.0, &quot;Puissance cognitive&quot;: 20.0, &quot;altruisme&quot;: 10.0, &quot;Sécurité&quot;: 30.0, &quot;Confiance&quot;: -10.0, &quot;Courage&quot;: -30.0, &quot;Influence&quot;: -5.0, &quot;Angoisse&quot;: 10.0}, &quot;leftPhrase&quot;: &quot;Traverse au rouge&quot;, &quot;rightPhrase&quot;: &quot;Traverse au vert&quot;, &quot;question&quot;: &quot;Traverses-tu toujours au passage piéton quand le feu est vert ?&quot;}' data-qid="q_18"><div class="qtop"><div class="counter"></div></div><div class="qtext">Traverses-tu toujours au passage piéton quand le feu est vert ?</div><div class="answers"><label class="opt"><input type="radio" name="q_18" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_18" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_18" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_18" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_18" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section><section class="screen question-screen" data-meta='{&quot;stats&quot;: {&quot;Attaque&quot;: 5.0, &quot;Vitesse&quot;: 5.0, &quot;Urbanisme&quot;: 10.0, &quot;Charisme&quot;: -20.0, &quot;Argent&quot;: -15.0, &quot;Sociabilité&quot;: -15.0, &quot;Résistance&quot;: 9.0, &quot;Poids&quot;: 5.0, &quot;Efficacité énergétique&quot;: -5.0, &quot;Mouchoirs&quot;: -5.0, &quot;Puissance cognitive&quot;: 5.0, &quot;Sécurité&quot;: -27.0, &quot;Confiance&quot;: 5.0, &quot;Courage&quot;: 15.0, &quot;Influence&quot;: -5.0, &quot;Angoisse&quot;: 5.0}, &quot;leftPhrase&quot;: &quot;Achète tes DVDs&quot;, &quot;rightPhrase&quot;: &quot;Va sur des sites douteux, c&#x27;est instructif&quot;, &quot;question&quot;: &quot;Utilises-tu souvent des sites de streaming douteux ?&quot;}' data-qid="q_19"><div class="qtop"><div class="counter"></div></div><div class="qtext">Utilises-tu souvent des sites de streaming douteux ?</div><div class="answers"><label class="opt"><input type="radio" name="q_19" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_19" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_19" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_19" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_19" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section><section class="screen question-screen" data-meta='{&quot;stats&quot;: {&quot;Attaque&quot;: 4.0, &quot;Vitesse&quot;: 10.0, &quot;Urbanisme&quot;: 5.0, &quot;Charisme&quot;: -15.0, &quot;Argent&quot;: 15.0, &quot;Sociabilité&quot;: -20.0, &quot;Constance&quot;: 20.0, &quot;Résistance&quot;: 2.0, &quot;Poids&quot;: -15.0, &quot;Efficacité énergétique&quot;: -15.0, &quot;Vitesse de récupération (sommeil)&quot;: 4.0, &quot;Mouchoirs&quot;: -2.0, &quot;Puissance cognitive&quot;: -15.0, &quot;altruisme&quot;: -10.0, &quot;Sécurité&quot;: -30.0, &quot;Confiance&quot;: 50.0, &quot;Influence&quot;: -5.0, &quot;Angoisse&quot;: 15.0}, &quot;leftPhrase&quot;: &quot;Partage moins tes scores sur strava, tout le monde s&#x27;en fiche.&quot;, &quot;rightPhrase&quot;: &quot;Tout le monde veut connaître tes scores Strava, partage-les !&quot;, &quot;question&quot;: &quot;À quelle fréquence partages-tu tes scores sur Strava ?&quot;}' data-qid="q_20"><div class="qtop"><div class="counter"></div></div><div class="qtext">À quelle fréquence partages-tu tes scores sur Strava ?</div><div class="answers"><label class="opt"><input type="radio" name="q_20" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_20" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_20" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_20" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_20" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section><section class="screen question-screen" data-meta='{&quot;stats&quot;: {&quot;Attaque&quot;: -10.0, &quot;Vitesse&quot;: -7.0, &quot;Urbanisme&quot;: 3.0, &quot;Argent&quot;: -5.0, &quot;Sociabilité&quot;: 10.0, &quot;Constance&quot;: 5.0, &quot;PV&quot;: 11.0, &quot;Résistance&quot;: 6.0, &quot;Poids&quot;: 8.0, &quot;Efficacité énergétique&quot;: -4.0, &quot;Vitesse de récupération (sommeil)&quot;: 4.0, &quot;Mouchoirs&quot;: 3.0, &quot;Puissance cognitive&quot;: 1.0, &quot;altruisme&quot;: 3.0, &quot;Sécurité&quot;: 9.0, &quot;Confiance&quot;: 30.0, &quot;Courage&quot;: -5.0, &quot;Influence&quot;: 10.0, &quot;Angoisse&quot;: -30.0}, &quot;leftPhrase&quot;: &quot;Quitte ton/ta partenaire&quot;, &quot;rightPhrase&quot;: &quot;Quitte ton/ta partenaire&quot;, &quot;question&quot;: &quot;Comment évalues-tu ta situation amoureuse ?&quot;}' data-qid="q_21"><div class="qtop"><div class="counter"></div></div><div class="qtext">Comment évalues-tu ta situation amoureuse ?</div><div class="answers"><label class="opt"><input type="radio" name="q_21" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_21" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_21" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_21" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_21" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section><section class="screen question-screen" data-meta='{&quot;stats&quot;: {&quot;Attaque&quot;: -15.0, &quot;Vitesse&quot;: -5.0, &quot;Charisme&quot;: -10.0, &quot;Argent&quot;: -5.0, &quot;Sociabilité&quot;: -5.0, &quot;Constance&quot;: -10.0, &quot;PV&quot;: -1.0, &quot;Résistance&quot;: 5.0, &quot;Poids&quot;: 2.0, &quot;Efficacité énergétique&quot;: -10.0, &quot;Vitesse de récupération (sommeil)&quot;: -2.0, &quot;Mouchoirs&quot;: 1.0, &quot;Puissance cognitive&quot;: -23.0, &quot;altruisme&quot;: 5.0, &quot;Sécurité&quot;: -40.0, &quot;Confiance&quot;: -9.0, &quot;Courage&quot;: -20.0, &quot;Influence&quot;: -20.0, &quot;Angoisse&quot;: -20.0}, &quot;leftPhrase&quot;: &quot;Va dans les paramètres de ton téléphone&quot;, &quot;rightPhrase&quot;: &quot;Accepte les notifications&quot;, &quot;question&quot;: &quot;As-tu beaucoup de notifications indésirables ?&quot;}' data-qid="q_22"><div class="qtop"><div class="counter"></div></div><div class="qtext">As-tu beaucoup de notifications indésirables ?</div><div class="answers"><label class="opt"><input type="radio" name="q_22" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_22" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_22" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_22" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_22" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section><section class="screen question-screen" data-meta='{&quot;stats&quot;: {&quot;Attaque&quot;: -30.0, &quot;Vitesse&quot;: -40.0, &quot;Urbanisme&quot;: 20.0, &quot;Charisme&quot;: -25.0, &quot;Argent&quot;: -15.0, &quot;Sociabilité&quot;: 10.0, &quot;PV&quot;: -30.0, &quot;Résistance&quot;: -30.0, &quot;Poids&quot;: -1.0, &quot;Efficacité énergétique&quot;: -5.0, &quot;Vitesse de récupération (sommeil)&quot;: -9.0, &quot;Puissance cognitive&quot;: -2.0, &quot;altruisme&quot;: 10.0, &quot;Sécurité&quot;: -30.0, &quot;Confiance&quot;: -15.0, &quot;Courage&quot;: -5.0, &quot;Angoisse&quot;: -20.0}, &quot;leftPhrase&quot;: &quot;Fais une opération&quot;, &quot;rightPhrase&quot;: &quot;Casse toi le genou&quot;, &quot;question&quot;: &quot;As-tu mal à ton genou ?&quot;}' data-qid="q_23"><div class="qtop"><div class="counter"></div></div><div class="qtext">As-tu mal à ton genou ?</div><div class="answers"><label class="opt"><input type="radio" name="q_23" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_23" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_23" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_23" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_23" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section><section class="screen question-screen" data-meta='{&quot;stats&quot;: {&quot;Attaque&quot;: 50.0, &quot;Vitesse&quot;: -10.0, &quot;Urbanisme&quot;: -5.0, &quot;Charisme&quot;: -20.0, &quot;Argent&quot;: -30.0, &quot;Sociabilité&quot;: 20.0, &quot;Constance&quot;: -30.0, &quot;PV&quot;: -45.0, &quot;Résistance&quot;: -35.0, &quot;Poids&quot;: 25.0, &quot;Efficacité énergétique&quot;: -30.0, &quot;Vitesse de récupération (sommeil)&quot;: -5.0, &quot;Mouchoirs&quot;: 10.0, &quot;Puissance cognitive&quot;: -30.0, &quot;altruisme&quot;: -30.0, &quot;Sécurité&quot;: -30.0, &quot;Confiance&quot;: 30.0, &quot;Courage&quot;: 10.0, &quot;Influence&quot;: 5.0, &quot;Angoisse&quot;: 15.0}, &quot;leftPhrase&quot;: &quot;Bois moins&quot;, &quot;rightPhrase&quot;: &quot;Bois plus&quot;, &quot;question&quot;: &quot;À quelle fréquence bois-tu de l&#x27;alcool&quot;}' data-qid="q_24"><div class="qtop"><div class="counter"></div></div><div class="qtext">À quelle fréquence bois-tu de l&#x27;alcool</div><div class="answers"><label class="opt"><input type="radio" name="q_24" value="1"><div class="choice"><div class="dot d1">--</div><div class="mark">--</div></div></label><label class="opt"><input type="radio" name="q_24" value="2"><div class="choice"><div class="dot d2">-</div><div class="mark">-</div></div></label><label class="opt"><input type="radio" name="q_24" value="3"><div class="choice"><div class="dot d3">o</div><div class="mark">o</div></div></label><label class="opt"><input type="radio" name="q_24" value="4"><div class="choice"><div class="dot d4">+</div><div class="mark">+</div></div></label><label class="opt"><input type="radio" name="q_24" value="5"><div class="choice"><div class="dot d5">++</div><div class="mark">++</div></div></label></div><div class="nav"><button type="button" class="navbtn prev">Précédent</button><button type="button" class="navbtn next">Suivant</button></div></section>
     <section class="screen results" id="resultsScreen">
       <div class="scorebox">
         <div class="scorelabel">Total stat</div>
-        <div class="scorevalue" id="totalScore">0 <small>/ 1700</small></div>
+        <div class="scorevalue" id="totalScore">0 <small>/ 2000</small></div>
       </div>
 
       <div class="block">
         <h2 class="sectiontitle">Radars par catégorie</h2>
-        <div class="radars" id="radarsWrap"></div>
+        <div class="radarsCol" id="radarsWrap"></div>
       </div>
 
       <div class="block">
@@ -176,11 +145,11 @@ body { min-height:100vh; }
 
       <div class="block">
         <div class="dualadvice">
-          <div class="advcol">
+          <div class="advcol good">
             <h3>3 pistes d’amélioration</h3>
             <ul id="goodList"></ul>
           </div>
-          <div class="advcol">
+          <div class="advcol bad">
             <h3>3 erreurs à éviter</h3>
             <ul id="avoidList"></ul>
           </div>
@@ -196,11 +165,10 @@ body { min-height:100vh; }
 </div>
 
 <script>
-(function(){
-const stats = ["Attaque", "Vitesse", "Urbanisme", "Charisme", "Argent", "Sociabilité", "Constance", "PV", "Résistance", "Poids", "Efficacité énergétique", "Vitesse de récupération (sommeil)", "Mouchoirs", "Puissance cognitive", "altruisme", "Sécurité", "Confiance"];
-const maxPerStat = {"Attaque": 301.0, "Vitesse": 352.0, "Urbanisme": 160.0, "Charisme": 403.0, "Argent": 301.0, "Sociabilité": 289.0, "Constance": 257.0, "PV": 186.0, "Résistance": 222.0, "Poids": 286.0, "Efficacité énergétique": 354.0, "Vitesse de récupération (sommeil)": 186.0, "Mouchoirs": 131.0, "Puissance cognitive": 366.0, "altruisme": 185.0, "Sécurité": 405.0, "Confiance": 232.0};
-const categories = {"Physique": ["Attaque", "Vitesse", "PV", "Résistance", "Poids", "Efficacité énergétique", "Vitesse de récupération (sommeil)"], "Société": ["Urbanisme", "Charisme", "Argent", "Sociabilité", "altruisme", "Sécurité", "Confiance"], "Autres": ["Constance", "Mouchoirs", "Puissance cognitive"]};
-const questionMeta = [{"question": "Combien pèses tu de 1 à 5 (1 = léger, 5 = lourd)", "stats": {"Attaque": 15.0, "Vitesse": -25.0, "Urbanisme": 6.0, "Charisme": -1.0, "Argent": 15.0, "Sociabilité": 5.0, "PV": 25.0, "Résistance": 30.0, "Poids": 100.0, "Efficacité énergétique": -42.0, "Vitesse de récupération (sommeil)": -15.0, "Mouchoirs": 10.0, "altruisme": -2.0, "Confiance": 5.0}}, {"question": "Cours-tu quand tu es en retard ?", "stats": {"Attaque": 2.0, "Vitesse": 48.0, "Urbanisme": 15.0, "Charisme": -50.0, "Argent": -25.0, "Sociabilité": 10.0, "Constance": -15.0, "Poids": -30.0, "Efficacité énergétique": -20.0, "Vitesse de récupération (sommeil)": -20.0, "Mouchoirs": 15.0, "Puissance cognitive": -5.0, "altruisme": 20.0, "Sécurité": -20.0, "Confiance": -3.0}}, {"question": "Es tu souvent en retard ?", "stats": {"Attaque": 15.0, "Vitesse": -25.0, "Urbanisme": 1.0, "Charisme": -29.0, "Argent": -21.0, "Sociabilité": -1.0, "Constance": -35.0, "Efficacité énergétique": 10.0, "Vitesse de récupération (sommeil)": -1.0, "Puissance cognitive": -15.0, "altruisme": -20.0, "Sécurité": -20.0, "Confiance": 10.0}}, {"question": "écris tu souvent \"bonne/joyeuse anniversaire\" ?", "stats": {"Attaque": 10.0, "Charisme": -20.0, "Argent": 5.0, "Sociabilité": 30.0, "Constance": -10.0, "Poids": 5.0, "Efficacité énergétique": -10.0, "Vitesse de récupération (sommeil)": -5.0, "Puissance cognitive": -10.0, "altruisme": -10.0, "Sécurité": -10.0, "Confiance": 15.0}}, {"question": "Tes horaires de repas sont elles régulières ?", "stats": {"Attaque": 15.0, "Vitesse": 15.0, "Urbanisme": 2.0, "Charisme": 35.0, "Argent": 20.0, "Sociabilité": 30.0, "Constance": 30.0, "PV": 35.0, "Résistance": 36.0, "Poids": 33.0, "Efficacité énergétique": -20.0, "Vitesse de récupération (sommeil)": -20.0, "Mouchoirs": 2.0, "Puissance cognitive": 45.0, "Sécurité": 25.0, "Confiance": 5.0}}, {"question": "Vas tu à tous les cours", "stats": {"Attaque": -15.0, "Vitesse": 10.0, "Urbanisme": 1.0, "Charisme": 5.0, "Argent": 15.0, "Sociabilité": 5.0, "Constance": 30.0, "Vitesse de récupération (sommeil)": 35.0, "Mouchoirs": -15.0, "Puissance cognitive": 25.0, "Sécurité": 23.0, "Confiance": 1.0}}, {"question": "Connais tu tes tables de multiplication", "stats": {"Attaque": 15.0, "Vitesse": 15.0, "Urbanisme": -5.0, "Charisme": 15.0, "Argent": 10.0, "Sociabilité": 1.0, "Résistance": -10.0, "Poids": 5.0, "Efficacité énergétique": 20.0, "Vitesse de récupération (sommeil)": 5.0, "Puissance cognitive": 11.0, "Confiance": -5.0}}, {"question": "Tes horaires de sommeil sont elles régulières", "stats": {"Attaque": 15.0, "Vitesse": 20.0, "Charisme": 15.0, "Argent": 15.0, "Sociabilité": -10.0, "Constance": 15.0, "PV": 20.0, "Résistance": 9.0, "Poids": 5.0, "Efficacité énergétique": 22.0, "Vitesse de récupération (sommeil)": 15.0, "Puissance cognitive": 15.0, "Sécurité": 10.0, "Confiance": 5.0}}, {"question": "Dors tu autant que tu le devrais la nuit", "stats": {"Attaque": 20.0, "Vitesse": 30.0, "Charisme": 20.0, "Argent": 10.0, "Sociabilité": -20.0, "Constance": 5.0, "PV": 15.0, "Résistance": 8.0, "Poids": 1.0, "Efficacité énergétique": 30.0, "Vitesse de récupération (sommeil)": -25.0, "Mouchoirs": 10.0, "Puissance cognitive": 30.0, "Sécurité": 10.0, "Confiance": 10.0}}, {"question": "Vas tu sur les réseaux sociaux avant de dormir", "stats": {"Charisme": -15.0, "Argent": -15.0, "Sociabilité": -7.0, "Constance": 9.0, "PV": -7.0, "Résistance": -45.0, "Poids": -19.0, "Efficacité énergétique": -10.0, "Vitesse de récupération (sommeil)": -10.0, "Mouchoirs": -5.0, "Puissance cognitive": -40.0, "Sécurité": -20.0, "Confiance": -15.0}}, {"question": "Portes-tu souvent les mêmes vêtements ?", "stats": {"Vitesse": 6.0, "Charisme": -5.0, "Argent": -10.0, "Sociabilité": -10.0, "Constance": 15.0, "Résistance": 5.0, "Efficacité énergétique": 30.0, "Mouchoirs": 10.0, "Puissance cognitive": 15.0, "Confiance": 5.0}}, {"question": "Prends-tu beaucoup de photos ?", "stats": {"Vitesse": 10.0, "Urbanisme": 15.0, "Charisme": -8.0, "Argent": 5.0, "Sociabilité": -5.0, "PV": 10.0, "Poids": -10.0, "Efficacité énergétique": -6.0, "Mouchoirs": 5.0, "Puissance cognitive": 15.0, "altruisme": 15.0, "Sécurité": -20.0, "Confiance": 3.0}}, {"question": "Es tu de droite", "stats": {"Attaque": 15.0, "Vitesse": 1.0, "Urbanisme": -15.0, "Charisme": 2.0, "Argent": 20.0, "Sociabilité": -1.0, "PV": 15.0, "Résistance": -2.0, "Poids": 5.0, "Efficacité énergétique": -20.0, "Mouchoirs": 15.0, "Puissance cognitive": -1.0, "altruisme": -10.0, "Sécurité": 6.0, "Confiance": 2.0}}, {"question": "As-des allergies ?", "stats": {"Attaque": -15.0, "Vitesse": -5.0, "Urbanisme": 5.0, "Charisme": -15.0, "Argent": -10.0, "Sociabilité": -2.0, "Constance": -1.0, "PV": -10.0, "Résistance": -10.0, "Poids": -5.0, "Mouchoirs": 15.0, "Puissance cognitive": 10.0, "altruisme": 10.0, "Sécurité": -20.0, "Confiance": -10.0}}, {"question": "As-tu un animal ?", "stats": {"Attaque": 20.0, "Vitesse": -5.0, "Urbanisme": 2.0, "Charisme": 20.0, "Argent": 15.0, "Sociabilité": 25.0, "Constance": 20.0, "PV": -15.0, "Résistance": 10.0, "Poids": -5.0, "Vitesse de récupération (sommeil)": 10.0, "Mouchoirs": -5.0, "Puissance cognitive": -5.0, "altruisme": 30.0, "Sécurité": 20.0, "Confiance": 3.0}}, {"question": "Te perds tu souvent", "stats": {"Attaque": -5.0, "Vitesse": -30.0, "Urbanisme": 30.0, "Charisme": -40.0, "Sociabilité": 5.0, "Constance": -5.0, "Efficacité énergétique": -50.0, "Mouchoirs": 2.0, "Puissance cognitive": -40.0, "altruisme": 15.0, "Sécurité": -45.0, "Confiance": 15.0}}, {"question": "Préfères tu manger avec des gens", "stats": {"Vitesse": -15.0, "Urbanisme": 15.0, "Charisme": 13.0, "Argent": -10.0, "Sociabilité": 30.0, "Constance": -5.0, "PV": 10.0, "Résistance": 15.0, "Poids": 16.0, "Efficacité énergétique": -10.0, "Mouchoirs": -5.0, "Puissance cognitive": 5.0, "altruisme": -10.0, "Sécurité": 15.0, "Confiance": -10.0}}, {"question": "Fais tu régulièrement du sport", "stats": {"Attaque": 60.0, "Vitesse": 40.0, "Urbanisme": 15.0, "Charisme": 30.0, "Argent": 10.0, "Sociabilité": 17.0, "Constance": 12.0, "PV": 2.0, "Résistance": 15.0, "Poids": 15.0, "Efficacité énergétique": 10.0, "Vitesse de récupération (sommeil)": 12.0, "Mouchoirs": 5.0, "Puissance cognitive": -15.0, "altruisme": -15.0, "Sécurité": 5.0, "Confiance": 6.0}}, {"question": "Traverses tu toujours au passage piéton quand le feu est vert", "stats": {"Attaque": -30.0, "Vitesse": -25.0, "Urbanisme": 15.0, "Charisme": -20.0, "Argent": -30.0, "Sociabilité": 25.0, "Constance": 15.0, "PV": 10.0, "Résistance": -5.0, "Poids": -2.0, "Efficacité énergétique": -10.0, "Vitesse de récupération (sommeil)": 3.0, "Mouchoirs": -1.0, "Puissance cognitive": 20.0, "altruisme": 10.0, "Sécurité": 30.0, "Confiance": -10.0}}, {"question": "Utilises tu souvent des sites de streaming douteux", "stats": {"Attaque": 5.0, "Vitesse": 5.0, "Urbanisme": 10.0, "Charisme": -20.0, "Argent": -15.0, "Sociabilité": -15.0, "Résistance": 9.0, "Poids": 5.0, "Efficacité énergétique": -5.0, "Mouchoirs": -5.0, "Puissance cognitive": 5.0, "Sécurité": -27.0, "Confiance": 5.0}}, {"question": "À quelle fréquence partages-tu tes scores sur Strava ?", "stats": {"Attaque": 4.0, "Vitesse": 10.0, "Urbanisme": 5.0, "Charisme": -15.0, "Argent": 15.0, "Sociabilité": -20.0, "Constance": 20.0, "Résistance": 2.0, "Poids": -15.0, "Efficacité énergétique": -15.0, "Vitesse de récupération (sommeil)": 4.0, "Mouchoirs": -2.0, "Puissance cognitive": -15.0, "altruisme": -10.0, "Sécurité": -30.0, "Confiance": 50.0}}, {"question": "Comment évalues tu ta situation amoureuse", "stats": {"Attaque": -10.0, "Vitesse": -7.0, "Urbanisme": 3.0, "Argent": -5.0, "Sociabilité": 10.0, "Constance": 5.0, "PV": 11.0, "Résistance": 6.0, "Poids": 8.0, "Efficacité énergétique": -4.0, "Vitesse de récupération (sommeil)": 4.0, "Mouchoirs": 3.0, "Puissance cognitive": 1.0, "altruisme": 3.0, "Sécurité": 9.0, "Confiance": 30.0}}, {"question": "As tu beaucoup de notifications indésirables", "stats": {"Attaque": -15.0, "Vitesse": -5.0, "Charisme": -10.0, "Argent": -5.0, "Sociabilité": -5.0, "Constance": -10.0, "PV": -1.0, "Résistance": 5.0, "Poids": 2.0, "Efficacité énergétique": -10.0, "Vitesse de récupération (sommeil)": -2.0, "Mouchoirs": 1.0, "Puissance cognitive": -23.0, "altruisme": 5.0, "Sécurité": -40.0, "Confiance": -9.0}}];
+(() => {
+const stats = ["Attaque", "Vitesse", "Urbanisme", "Charisme", "Argent", "Sociabilité", "Constance", "PV", "Résistance", "Poids", "Efficacité énergétique", "Vitesse de récupération (sommeil)", "Mouchoirs", "Puissance cognitive", "altruisme", "Sécurité", "Confiance", "Courage", "Influence", "Angoisse"];
+const maxPerStat = {"Attaque": 421.0, "Vitesse": 402.0, "Urbanisme": 185.0, "Charisme": 448.0, "Argent": 346.0, "Sociabilité": 319.0, "Constance": 287.0, "PV": 261.0, "Résistance": 287.0, "Poids": 312.0, "Efficacité énergétique": 389.0, "Vitesse de récupération (sommeil)": 200.0, "Mouchoirs": 141.0, "Puissance cognitive": 398.0, "altruisme": 225.0, "Sécurité": 465.0, "Confiance": 277.0, "Courage": 292.0, "Influence": 186.0, "Angoisse": 417.0};
+const categories = {"Physique": ["Attaque", "Vitesse", "PV", "Résistance", "Poids", "Efficacité énergétique", "Vitesse de récupération (sommeil)"], "Société": ["Urbanisme", "Charisme", "Argent", "Sociabilité", "altruisme", "Sécurité", "Confiance", "Courage", "Influence"], "Autres": ["Constance", "Mouchoirs", "Puissance cognitive", "Angoisse"]};
 const screens = Array.from(document.querySelectorAll('.question-screen'));
 const resultsScreen = document.getElementById('resultsScreen');
 const progressText = document.getElementById('progressText');
@@ -210,180 +178,247 @@ const radarWrap = document.getElementById('radarsWrap');
 const groupBars = document.getElementById('groupBars');
 const goodList = document.getElementById('goodList');
 const avoidList = document.getElementById('avoidList');
-let current = 0;
 
-function shuffle(arr){
+function shuffle(arr) {
   for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
 }
 shuffle(screens);
 const viewport = document.getElementById('viewport');
-screens.forEach((s, i)=>{ s.dataset.order = i; viewport.insertBefore(s, resultsScreen); });
+screens.forEach((s,i)=> viewport.insertBefore(s, resultsScreen));
 
-function showScreen(index){
-  current=index;
-  screens.forEach(s=>s.classList.remove('active'));
+function showScreen(index) {
+  screens.forEach(s => s.classList.remove('active'));
   resultsScreen.classList.remove('show','active');
-  if(index>=0 && index<screens.length){
+  if(index >= 0 && index < screens.length) {
     screens[index].classList.add('active');
-    const c=screens[index].querySelector('.counter');
-    if(c) c.textContent=(index+1)+' / '+screens.length;
-    progressText.textContent=(index+1)+' / '+screens.length;
-    progressBar.style.width=((index+1)/screens.length*100)+'%';
+    const c = screens[index].querySelector('.counter');
+    if(c) c.textContent = (index+1) + ' / ' + screens.length;
+    progressText.textContent = (index+1) + ' / ' + screens.length;
+    progressBar.style.width = (((index+1)/screens.length)*100) + '%';
     window.scrollTo({top:0, behavior:'smooth'});
   }
 }
 
-function contribution(weight, answer){
-  if(weight>0) return weight*((answer-1)/4);
-  if(weight<0) return Math.abs(weight)*((5-answer)/4);
+function contribution(weight, answer) {
+  if(weight > 0) return weight * ((answer - 1) / 4);
+  if(weight < 0) return Math.abs(weight) * ((5 - answer) / 4);
   return 0;
 }
 
-function computeScores(){
+function bestDirectionForQuestion(meta, answer) {
+  let gainTo1 = 0, gainTo5 = 0;
+  for (const [stat, weight] of Object.entries(meta.stats)) {
+    gainTo1 += contribution(Number(weight), 1) - contribution(Number(weight), answer);
+    gainTo5 += contribution(Number(weight), 5) - contribution(Number(weight), answer);
+  }
+  return {
+    gainTo1,
+    gainTo5,
+    best: gainTo1 > gainTo5 ? 'left' : 'right',
+    gain: Math.max(gainTo1, gainTo5)
+  };
+}
+
+function computeScores() {
   const raw = Object.fromEntries(stats.map(s => [s, 0]));
   const normalized = {};
   const unanswered = [];
-  const analysis = Object.fromEntries(stats.map(s => [s, []]));
+  const improvements = [];
+  const mistakes = [];
 
-  screens.forEach((screen, i)=>{
+  screens.forEach((screen, i) => {
     const qid = screen.getAttribute('data-qid');
     const checked = document.querySelector('input[name="'+qid+'"]:checked');
-    if(!checked){ unanswered.push(i); return; }
+    const meta = JSON.parse(screen.getAttribute('data-meta'));
+    if(!checked) { unanswered.push(i); return; }
     const answer = Number(checked.value);
-    const map = JSON.parse(screen.getAttribute('data-stats'));
 
-    stats.forEach(stat => {
-      if(!Object.prototype.hasOwnProperty.call(map, stat)) return;
-      const weight = Number(map[stat]);
-      const got = contribution(weight, answer);
-      const max = Math.abs(weight);
-      const loss = Math.max(0, max - got);
-      raw[stat] += got;
-      analysis[stat].push({
-        question: screens[i].querySelector('.qtext').textContent,
-        answer,
-        weight,
-        got,
-        max,
-        loss
+    for (const stat of stats) {
+      if(Object.prototype.hasOwnProperty.call(meta.stats, stat)) {
+        raw[stat] += contribution(Number(meta.stats[stat]), answer);
+      }
+    }
+
+    const dir = bestDirectionForQuestion(meta, answer);
+    if (dir.gain > 0.01) {
+      const phrase = dir.best === 'left' ? meta.leftPhrase : meta.rightPhrase;
+      if (phrase && phrase.trim()) {
+        improvements.push({
+          phrase: phrase.trim(),
+          question: meta.question,
+          gain: dir.gain,
+          direction: dir.best
+        });
+      }
+    }
+
+    // red errors: strongest opposite pull from current answer
+    const worseDirection = dir.best === 'left' ? 'right' : 'left';
+    const worsePhrase = worseDirection === 'left' ? meta.leftPhrase : meta.rightPhrase;
+    const worseGain = dir.best === 'left' ? dir.gainTo5 : dir.gainTo1; // how bad current is versus opposite optimum
+    if (worsePhrase && worsePhrase.trim() && Math.abs(worseGain) > 0.01) {
+      mistakes.push({
+        phrase: worsePhrase.trim(),
+        question: meta.question,
+        severity: dir.gain,
+        direction: worseDirection
       });
-    });
+    }
   });
 
   stats.forEach(stat => {
-    normalized[stat] = maxPerStat[stat] > 0 ? Math.round((raw[stat]/maxPerStat[stat])*100) : 0;
+    normalized[stat] = maxPerStat[stat] > 0 ? Math.round((raw[stat] / maxPerStat[stat]) * 100) : 0;
   });
 
-  return {raw, normalized, unanswered, analysis};
+  return { raw, normalized, unanswered, improvements, mistakes };
 }
 
-function renderGroupBars(normalized){
+function dedupeByPhraseAndQuestion(items) {
+  const seen = new Set();
+  const out = [];
+  for (const item of items) {
+    const key = item.phrase.toLowerCase().trim() + '|' + item.question.toLowerCase().trim();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(item);
+  }
+  return out;
+}
+
+function pickTopUnique(items, scoreKey, n) {
+  const byPhrase = new Map();
+  for (const item of items.sort((a,b) => b[scoreKey] - a[scoreKey])) {
+    const key = item.phrase.toLowerCase().trim();
+    if (!byPhrase.has(key)) byPhrase.set(key, item);
+  }
+  return Array.from(byPhrase.values()).slice(0, n);
+}
+
+function renderGroupBars(normalized) {
   groupBars.innerHTML = '';
   Object.entries(categories).forEach(([groupName, groupStats]) => {
-    const validStats = groupStats.filter(s => stats.includes(s));
-    if(!validStats.length) return;
+    const valid = groupStats.filter(s => stats.includes(s));
+    if(!valid.length) return;
     const group = document.createElement('section');
     group.className = 'group';
-    group.innerHTML = '<h3>'+groupName+'</h3>';
-    validStats.forEach(stat => {
+    group.innerHTML = '<h3>' + groupName + '</h3>';
+    valid.forEach(stat => {
       const val = normalized[stat] ?? 0;
       const row = document.createElement('div');
       row.className = 'stat';
-      row.innerHTML = '<div class="statline"><div>'+stat+'</div><div><strong>'+val+'</strong>/100</div></div>'
-                    + '<div class="bar"><div class="fill" style="width:'+val+'%"></div></div>';
+      row.innerHTML = '<div class="statline"><div>'+stat+'</div><div><strong>'+val+'</strong>/100</div></div><div class="bar"><div class="fill" style="width:'+val+'%"></div></div>';
       group.appendChild(row);
     });
     groupBars.appendChild(group);
   });
 }
 
-function wrapText(ctx, text, maxWidth){
+function wrapText(ctx, text, maxWidth) {
   const words = String(text).split(' ');
   const lines = [];
   let line = '';
-  words.forEach(word => {
+  for (const word of words) {
     const test = line ? line + ' ' + word : word;
-    if(ctx.measureText(test).width > maxWidth && line){ lines.push(line); line = word; }
-    else { line = test; }
-  });
-  if(line) lines.push(line);
+    if (ctx.measureText(test).width > maxWidth && line) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = test;
+    }
+  }
+  if (line) lines.push(line);
   return lines;
 }
 
-function drawRadar(canvas, labels, values){
+function drawPrettyRadar(canvas, labels, values) {
   const ctx = canvas.getContext('2d');
   const dpr = Math.max(1, window.devicePixelRatio || 1);
-  const cssSize = Math.min(canvas.parentElement.clientWidth - 10, 420);
-  canvas.style.width = cssSize + 'px';
-  canvas.style.height = cssSize + 'px';
-  canvas.width = Math.round(cssSize * dpr);
-  canvas.height = Math.round(cssSize * dpr);
+  const cssW = Math.min(canvas.parentElement.clientWidth - 12, 760);
+  const cssH = Math.round(cssW * 0.9);
+  canvas.style.width = cssW + 'px';
+  canvas.style.height = cssH + 'px';
+  canvas.width = Math.round(cssW * dpr);
+  canvas.height = Math.round(cssH * dpr);
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-  const w = cssSize, h = cssSize, cx = w/2, cy = h/2;
-  const labelPad = 74;
-  const radius = Math.max(70, Math.min(w, h)/2 - labelPad);
+  const w = cssW, h = cssH, cx = w/2, cy = h/2;
+  const radius = Math.min(w*0.33, h*0.34);
   ctx.clearRect(0, 0, w, h);
 
-  for(let level=1; level<=5; level++){
-    const r = radius * (level/5);
+  // background glow
+  const grd = ctx.createRadialGradient(cx, cy, 10, cx, cy, radius*1.1);
+  grd.addColorStop(0, 'rgba(102,192,244,.12)');
+  grd.addColorStop(1, 'rgba(102,192,244,0)');
+  ctx.fillStyle = grd;
+  ctx.fillRect(0, 0, w, h);
+
+  // grid
+  for(let level=1; level<=5; level++) {
+    const r = radius * level / 5;
     ctx.beginPath();
     labels.forEach((_, i) => {
-      const a = -Math.PI/2 + (i*Math.PI*2/labels.length);
+      const a = -Math.PI/2 + i * (Math.PI*2/labels.length);
       const x = cx + Math.cos(a)*r;
       const y = cy + Math.sin(a)*r;
-      if(i===0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
     });
     ctx.closePath();
-    ctx.strokeStyle = 'rgba(255,255,255,'+(0.10 + level*0.012)+')';
-    ctx.lineWidth = 1.3;
+    ctx.strokeStyle = level === 5 ? 'rgba(255,255,255,.18)' : 'rgba(255,255,255,.08)';
+    ctx.lineWidth = level === 5 ? 1.6 : 1;
     ctx.stroke();
   }
 
+  // spokes + labels
   labels.forEach((label, i) => {
-    const a = -Math.PI/2 + (i*Math.PI*2/labels.length);
+    const a = -Math.PI/2 + i * (Math.PI*2/labels.length);
     const x = cx + Math.cos(a)*radius;
     const y = cy + Math.sin(a)*radius;
     ctx.beginPath();
     ctx.moveTo(cx, cy);
     ctx.lineTo(x, y);
-    ctx.strokeStyle = 'rgba(255,255,255,.10)';
+    ctx.strokeStyle = 'rgba(255,255,255,.08)';
     ctx.lineWidth = 1;
     ctx.stroke();
 
-    const lx = cx + Math.cos(a)*(radius+24);
-    const ly = cy + Math.sin(a)*(radius+24);
-    ctx.fillStyle = '#e5eef8';
-    ctx.font = '700 12px system-ui, sans-serif';
+    const lx = cx + Math.cos(a)*(radius+32);
+    const ly = cy + Math.sin(a)*(radius+32);
+    ctx.fillStyle = '#eef7ff';
+    ctx.font = '700 15px system-ui, sans-serif';
     ctx.textAlign = Math.cos(a) > 0.25 ? 'left' : (Math.cos(a) < -0.25 ? 'right' : 'center');
     ctx.textBaseline = Math.sin(a) > 0.35 ? 'top' : (Math.sin(a) < -0.35 ? 'bottom' : 'middle');
-    const lines = wrapText(ctx, label, 86);
-    lines.forEach((line, li) => ctx.fillText(line, lx, ly + li*14));
+    wrapText(ctx, label, 120).forEach((line, li) => ctx.fillText(line, lx, ly + li*16));
   });
 
+  // polygon
   ctx.beginPath();
   labels.forEach((label, i) => {
     const v = (values[i] || 0) / 100;
-    const a = -Math.PI/2 + (i*Math.PI*2/labels.length);
+    const a = -Math.PI/2 + i * (Math.PI*2/labels.length);
     const x = cx + Math.cos(a)*radius*v;
     const y = cy + Math.sin(a)*radius*v;
-    if(i===0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
   });
   ctx.closePath();
-  ctx.fillStyle = 'rgba(102,192,244,.26)';
-  ctx.strokeStyle = '#66c0f4';
-  ctx.lineWidth = 3.5;
+  const poly = ctx.createLinearGradient(cx-radius, cy-radius, cx+radius, cy+radius);
+  poly.addColorStop(0, 'rgba(102,192,244,.38)');
+  poly.addColorStop(1, 'rgba(46,130,255,.16)');
+  ctx.fillStyle = poly;
+  ctx.strokeStyle = '#8fe6ff';
+  ctx.lineWidth = 4;
+  ctx.shadowColor = 'rgba(102,192,244,.25)';
+  ctx.shadowBlur = 16;
   ctx.fill();
   ctx.stroke();
+  ctx.shadowBlur = 0;
 
   labels.forEach((label, i) => {
     const v = (values[i] || 0) / 100;
-    const a = -Math.PI/2 + (i*Math.PI*2/labels.length);
+    const a = -Math.PI/2 + i * (Math.PI*2/labels.length);
     const x = cx + Math.cos(a)*radius*v;
     const y = cy + Math.sin(a)*radius*v;
     ctx.beginPath();
-    ctx.arc(x, y, 4.5, 0, Math.PI*2);
-    ctx.fillStyle = '#edf8ff';
+    ctx.arc(x, y, 5, 0, Math.PI*2);
+    ctx.fillStyle = '#f7fdff';
     ctx.fill();
     ctx.strokeStyle = '#66c0f4';
     ctx.lineWidth = 2;
@@ -391,110 +426,51 @@ function drawRadar(canvas, labels, values){
   });
 }
 
-function renderRadars(normalized){
+function renderRadars(normalized) {
   radarWrap.innerHTML = '';
   Object.entries(categories).forEach(([groupName, groupStats]) => {
-    const validStats = groupStats.filter(s => stats.includes(s));
-    if(!validStats.length) return;
+    const valid = groupStats.filter(s => stats.includes(s));
+    if(!valid.length) return;
     const card = document.createElement('section');
     card.className = 'radarcard';
     card.innerHTML = '<h3 class="radarname">'+groupName+'</h3><canvas class="radarcanvas"></canvas>';
     radarWrap.appendChild(card);
-    drawRadar(card.querySelector('canvas'), validStats, validStats.map(s => normalized[s] ?? 0));
+    drawPrettyRadar(card.querySelector('canvas'), valid, valid.map(s => normalized[s] ?? 0));
   });
 }
 
-function normalizeQuestionText(q){
-  return String(q).replace(/\s+/g, ' ').trim().replace(/[? ]+$/,'');
-}
-
-function buildActionText(question, direction){
-  const q = normalizeQuestionText(question);
-  if(direction === 'down') return 'Réduire : ' + q + '.';
-  return 'Renforcer : ' + q + '.';
-}
-
-function renderAdvice(normalized, analysis){
+function renderAdvice(improvements, mistakes) {
   goodList.innerHTML = '';
   avoidList.innerHTML = '';
 
-  const lowest = [...stats].sort((a,b) => (normalized[a] ?? 0) - (normalized[b] ?? 0)).slice(0, 3);
-  const pool = [];
-  lowest.forEach(stat => {
-    (analysis[stat] || []).forEach(entry => {
-      if(entry.loss <= 0.01) return;
-      const direction = entry.weight > 0 ? 'up' : 'down';
-      pool.push({
-        question: entry.question,
-        direction,
-        loss: entry.loss,
-        stat
-      });
-    });
-  });
+  const good = pickTopUnique(dedupeByPhraseAndQuestion(improvements), 'gain', 3);
+  const bad = pickTopUnique(dedupeByPhraseAndQuestion(mistakes), 'severity', 3);
 
-  pool.sort((a,b) => b.loss - a.loss);
-
-  const seen = new Set();
-  const picks = [];
-  for(const item of pool){
-    const key = item.question + '|' + item.direction;
-    if(seen.has(key)) continue;
-    seen.add(key);
-    picks.push(item);
-    if(picks.length >= 3) break;
-  }
-
-  const avoidPicks = [];
-  const goodPicks = [];
-  for(const item of picks){
-    if(item.direction === 'up') goodPicks.push(item);
-    else avoidPicks.push(item);
-  }
-
-  // ensure 3/3 with fallback from pool
-  for(const item of pool){
-    if(goodPicks.length >= 3) break;
-    const key = item.question + '|up';
-    if(item.direction === 'up' && !goodPicks.some(x => x.question === item.question)) goodPicks.push(item);
-  }
-  for(const item of pool){
-    if(avoidPicks.length >= 3) break;
-    if(item.direction === 'down' && !avoidPicks.some(x => x.question === item.question)) avoidPicks.push(item);
-  }
-
-  // generic fallback if one side is short
-  for(const item of picks){
-    if(goodPicks.length < 3 && !goodPicks.some(x => x.question === item.question)) goodPicks.push({...item, direction:'up'});
-    if(avoidPicks.length < 3 && !avoidPicks.some(x => x.question === item.question)) avoidPicks.push({...item, direction:'down'});
-  }
-
-  goodPicks.slice(0,3).forEach(item => {
+  good.forEach(item => {
     const li = document.createElement('li');
-    li.textContent = buildActionText(item.question, 'up');
+    li.textContent = item.phrase;
     goodList.appendChild(li);
   });
-
-  avoidPicks.slice(0,3).forEach(item => {
+  bad.forEach(item => {
     const li = document.createElement('li');
-    li.textContent = buildActionText(item.question, 'down');
+    li.textContent = item.phrase;
     avoidList.appendChild(li);
   });
 }
 
-function showResults(){
+function showResults() {
   const result = computeScores();
-  if(result.unanswered.length){
+  if(result.unanswered.length) {
     showScreen(result.unanswered[0]);
     alert('Il manque une réponse.');
     return;
   }
   let total = 0;
   stats.forEach(s => total += result.normalized[s]);
-  totalScore.innerHTML = total + ' <small>/ 1700</small>';
+  totalScore.innerHTML = total + ' <small>/ ' + (stats.length*100) + '</small>';
   renderRadars(result.normalized);
   renderGroupBars(result.normalized);
-  renderAdvice(result.normalized, result.analysis);
+  renderAdvice(result.improvements, result.mistakes);
 
   screens.forEach(s => s.classList.remove('active'));
   resultsScreen.classList.add('active','show');
@@ -503,33 +479,36 @@ function showResults(){
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
-document.addEventListener('change', function(e){
+document.addEventListener('change', e => {
   if(!e.target.matches('input[type="radio"]')) return;
   const screen = e.target.closest('.question-screen');
   if(!screen) return;
   setTimeout(() => {
     const idx = screens.indexOf(screen);
-    if(idx < screens.length - 1) showScreen(idx+1);
+    if(idx < screens.length - 1) showScreen(idx + 1);
   }, 120);
 });
 
 screens.forEach((screen, idx) => {
-  const prev = screen.querySelector('.prev');
-  const next = screen.querySelector('.next');
-  prev.addEventListener('click', () => { if(idx > 0) showScreen(idx-1); });
-  next.addEventListener('click', () => {
+  screen.querySelector('.prev').addEventListener('click', () => {
+    if(idx > 0) showScreen(idx - 1);
+  });
+  screen.querySelector('.next').addEventListener('click', () => {
     const qid = screen.getAttribute('data-qid');
     const checked = document.querySelector('input[name="'+qid+'"]:checked');
-    if(!checked){ alert('Choisissez une réponse.'); return; }
+    if(!checked) {
+      alert('Choisissez une réponse.');
+      return;
+    }
     if(idx === screens.length - 1) showResults();
-    else showScreen(idx+1);
+    else showScreen(idx + 1);
   });
 });
 
 document.getElementById('backToLast').addEventListener('click', () => showScreen(screens.length - 1));
 document.getElementById('restartBtn').addEventListener('click', () => window.location.reload());
 window.addEventListener('resize', () => {
-  if(resultsScreen.classList.contains('show')){
+  if(resultsScreen.classList.contains('show')) {
     const result = computeScores();
     if(!result.unanswered.length) renderRadars(result.normalized);
   }
