@@ -129,12 +129,8 @@ const STATS = ["Attaque", "Vitesse", "Urbanisme", "Charisme", "Argent", "Sociabi
 const MAX_PER_STAT = {"Attaque": 421.0, "Vitesse": 402.0, "Urbanisme": 185.0, "Charisme": 448.0, "Argent": 346.0, "Sociabilité": 319.0, "Constance": 287.0, "PV": 261.0, "Résistance": 287.0, "Poids": 312.0, "Efficacité énergétique": 389.0, "Vitesse de récupération (sommeil)": 200.0, "Mouchoirs": 141.0, "Puissance cognitive": 398.0, "altruisme": 225.0, "Sécurité": 465.0, "Confiance": 277.0, "Courage": 292.0, "Influence": 186.0, "Angoisse": 417.0};
 const CATEGORIES = {"Physique": ["Attaque", "Vitesse", "PV", "Résistance", "Poids", "Efficacité énergétique", "Vitesse de récupération (sommeil)"], "Société": ["Urbanisme", "Charisme", "Argent", "Sociabilité", "altruisme", "Sécurité", "Confiance", "Courage", "Influence"], "Autres": ["Constance", "Mouchoirs", "Puissance cognitive", "Angoisse"]};
 const TOTALMAX = 2000;
-
 const debugEl = document.getElementById('debug');
-function debug(msg){ if(debugEl) debugEl.textContent = msg; }
-window.onerror = function(message, source, lineno, colno, error){
-  debug('Erreur JS: '+message+' ligne '+lineno);
-};
+function debug(msg){ if(debugEl) debugEl.textContent = msg || ''; }
 
 function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
 const questions = shuffle(QUESTIONS);
@@ -161,20 +157,15 @@ const restartBtn=document.getElementById('restartBtn');
 const OPTIONS=[{value:1,label:'--',cls:'d1'},{value:2,label:'-',cls:'d2'},{value:3,label:'o',cls:'d3'},{value:4,label:'+',cls:'d4'},{value:5,label:'++',cls:'d5'}];
 
 function safeQuestion(index){
-  if(index < 0) index = 0;
-  if(index >= questions.length) index = questions.length - 1;
-  current = index;
-  return questions[current];
+  const clamped = Math.max(0, Math.min(index, questions.length - 1));
+  current = clamped;
+  return questions[clamped];
 }
-function updateProgress(){
-  progressText.textContent=(current+1)+' / '+questions.length;
-  progressBar.style.width=(((current+1)/questions.length)*100)+'%';
-}
+function updateProgress(){ progressText.textContent=(current+1)+' / '+questions.length; progressBar.style.width=(((current+1)/questions.length)*100)+'%'; }
 function renderQuestion(){
   const q=safeQuestion(current);
-  if(!q){ debug('Aucune question disponible'); return; }
   counter.textContent=(current+1)+' / '+questions.length;
-  qtext.textContent=q.question || '';
+  qtext.textContent=(q && q.question) ? q.question : '';
   answersEl.innerHTML='';
   OPTIONS.forEach(opt=>{
     const btn=document.createElement('button');
@@ -211,8 +202,8 @@ function computeResults(){
     if(dir.gain>0.01){
       const betterPhrase=dir.best==='left'?q.leftPhrase:q.rightPhrase;
       const oppositePhrase=dir.best==='left'?q.rightPhrase:q.leftPhrase;
-      if(betterPhrase) improvements.push({phrase:betterPhrase.trim(), score:dir.gain, question:q.question});
-      if(oppositePhrase) mistakes.push({phrase:oppositePhrase.trim(), score:dir.gain, question:q.question});
+      if(betterPhrase) improvements.push({phrase:betterPhrase.trim(), score:dir.gain, question:q.question || ''});
+      if(oppositePhrase) mistakes.push({phrase:oppositePhrase.trim(), score:dir.gain, question:q.question || ''});
     }
   }
   STATS.forEach(stat=>{ normalized[stat]=MAX_PER_STAT[stat]>0?Math.round((raw[stat]/MAX_PER_STAT[stat])*100):0; });
@@ -253,15 +244,43 @@ function wrapText(ctx, text, maxWidth){
   if(line) lines.push(line); return lines;
 }
 function drawRadar(canvas, labels, values){
-  const ctx=canvas.getContext('2d'); if(!ctx) return;
+  const ctx=canvas.getContext('2d'); if(!ctx || !labels.length) return;
+  const parentWidth = canvas.parentElement ? canvas.parentElement.clientWidth : 0;
+  const cssW = Math.max(220, Math.min((parentWidth || 0) - 12, 760));
+  const cssH = Math.max(220, Math.round(cssW * 0.9));
   const dpr=Math.max(1, window.devicePixelRatio||1);
-  const cssW=Math.min(canvas.parentElement.clientWidth-12, 760), cssH=Math.round(cssW*0.9);
-  canvas.style.width=cssW+'px'; canvas.style.height=cssH+'px'; canvas.width=Math.round(cssW*dpr); canvas.height=Math.round(cssH*dpr); ctx.setTransform(dpr,0,0,dpr,0,0);
-  const w=cssW,h=cssH,cx=w/2,cy=h/2,radius=Math.min(w*0.33,h*0.34); ctx.clearRect(0,0,w,h);
-  const glow=ctx.createRadialGradient(cx,cy,10,cx,cy,radius*1.1); glow.addColorStop(0,'rgba(102,192,244,.12)'); glow.addColorStop(1,'rgba(102,192,244,0)'); ctx.fillStyle=glow; ctx.fillRect(0,0,w,h);
-  for(let level=1;level<=5;level++){ const r=radius*level/5; ctx.beginPath(); labels.forEach((_,i)=>{ const a=-Math.PI/2+i*(Math.PI*2/labels.length),x=cx+Math.cos(a)*r,y=cy+Math.sin(a)*r; if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); }); ctx.closePath(); ctx.strokeStyle=level===5?'rgba(255,255,255,.18)':'rgba(255,255,255,.08)'; ctx.lineWidth=level===5?1.6:1; ctx.stroke(); }
-  labels.forEach((label,i)=>{ const a=-Math.PI/2+i*(Math.PI*2/labels.length),x=cx+Math.cos(a)*radius,y=cy+Math.sin(a)*radius; ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(x,y); ctx.strokeStyle='rgba(255,255,255,.08)'; ctx.lineWidth=1; ctx.stroke(); const lx=cx+Math.cos(a)*(radius+32),ly=cy+Math.sin(a)*(radius+32); ctx.fillStyle='#eef7ff'; ctx.font='700 15px system-ui, sans-serif'; ctx.textAlign=Math.cos(a)>0.25?'left':(Math.cos(a)<-0.25?'right':'center'); ctx.textBaseline=Math.sin(a)>0.35?'top':(Math.sin(a)<-0.35?'bottom':'middle'); wrapText(ctx,label,120).forEach((line,li)=>ctx.fillText(line,lx,ly+li*16)); });
-  ctx.beginPath(); labels.forEach((label,i)=>{ const v=(values[i]||0)/100,a=-Math.PI/2+i*(Math.PI*2/labels.length),x=cx+Math.cos(a)*radius*v,y=cy+Math.sin(a)*radius*v; if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); }); ctx.closePath(); const poly=ctx.createLinearGradient(cx-radius,cy-radius,cx+radius,cy+radius); poly.addColorStop(0,'rgba(102,192,244,.38)'); poly.addColorStop(1,'rgba(46,130,255,.16)'); ctx.fillStyle=poly; ctx.strokeStyle='#8fe6ff'; ctx.lineWidth=4; ctx.shadowColor='rgba(102,192,244,.25)'; ctx.shadowBlur=16; ctx.fill(); ctx.stroke(); ctx.shadowBlur=0;
+  canvas.style.width=cssW+'px';
+  canvas.style.height=cssH+'px';
+  canvas.width=Math.max(1, Math.round(cssW*dpr));
+  canvas.height=Math.max(1, Math.round(cssH*dpr));
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const w=cssW,h=cssH,cx=w/2,cy=h/2;
+  const radius=Math.max(40, Math.min(w*0.33,h*0.34));
+  ctx.clearRect(0,0,w,h);
+  const glow=ctx.createRadialGradient(cx,cy,10,cx,cy,Math.max(20, radius*1.1));
+  glow.addColorStop(0,'rgba(102,192,244,.12)'); glow.addColorStop(1,'rgba(102,192,244,0)');
+  ctx.fillStyle=glow; ctx.fillRect(0,0,w,h);
+  for(let level=1;level<=5;level++){
+    const r=radius*level/5;
+    ctx.beginPath();
+    labels.forEach((_,i)=>{ const a=-Math.PI/2+i*(Math.PI*2/labels.length),x=cx+Math.cos(a)*r,y=cy+Math.sin(a)*r; if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); });
+    ctx.closePath(); ctx.strokeStyle=level===5?'rgba(255,255,255,.18)':'rgba(255,255,255,.08)'; ctx.lineWidth=level===5?1.6:1; ctx.stroke();
+  }
+  labels.forEach((label,i)=>{
+    const a=-Math.PI/2+i*(Math.PI*2/labels.length),x=cx+Math.cos(a)*radius,y=cy+Math.sin(a)*radius;
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(x,y); ctx.strokeStyle='rgba(255,255,255,.08)'; ctx.lineWidth=1; ctx.stroke();
+    const lx=cx+Math.cos(a)*(radius+32),ly=cy+Math.sin(a)*(radius+32);
+    ctx.fillStyle='#eef7ff'; ctx.font='700 15px system-ui, sans-serif';
+    ctx.textAlign=Math.cos(a)>0.25?'left':(Math.cos(a)<-0.25?'right':'center');
+    ctx.textBaseline=Math.sin(a)>0.35?'top':(Math.sin(a)<-0.35?'bottom':'middle');
+    wrapText(ctx,label,120).forEach((line,li)=>ctx.fillText(line,lx,ly+li*16));
+  });
+  ctx.beginPath();
+  labels.forEach((label,i)=>{ const v=(values[i]||0)/100,a=-Math.PI/2+i*(Math.PI*2/labels.length),x=cx+Math.cos(a)*radius*v,y=cy+Math.sin(a)*radius*v; if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); });
+  ctx.closePath();
+  const poly=ctx.createLinearGradient(cx-radius,cy-radius,cx+radius,cy+radius);
+  poly.addColorStop(0,'rgba(102,192,244,.38)'); poly.addColorStop(1,'rgba(46,130,255,.16)');
+  ctx.fillStyle=poly; ctx.strokeStyle='#8fe6ff'; ctx.lineWidth=4; ctx.shadowColor='rgba(102,192,244,.25)'; ctx.shadowBlur=16; ctx.fill(); ctx.stroke(); ctx.shadowBlur=0;
   labels.forEach((label,i)=>{ const v=(values[i]||0)/100,a=-Math.PI/2+i*(Math.PI*2/labels.length),x=cx+Math.cos(a)*radius*v,y=cy+Math.sin(a)*radius*v; ctx.beginPath(); ctx.arc(x,y,5,0,Math.PI*2); ctx.fillStyle='#f7fdff'; ctx.fill(); ctx.strokeStyle='#66c0f4'; ctx.lineWidth=2; ctx.stroke(); });
 }
 function renderRadars(normalized){
@@ -269,7 +288,10 @@ function renderRadars(normalized){
   Object.entries(CATEGORIES).forEach(([groupName, groupStats])=>{
     const valid=groupStats.filter(s=>STATS.includes(s));
     if(!valid.length) return;
-    const card=document.createElement('section'); card.className='radarcard'; card.innerHTML='<h3 class="radarname">'+groupName+'</h3><canvas class="radarcanvas"></canvas>'; radarsWrap.appendChild(card);
+    const card=document.createElement('section');
+    card.className='radarcard';
+    card.innerHTML='<h3 class="radarname">'+groupName+'</h3><canvas class="radarcanvas"></canvas>';
+    radarsWrap.appendChild(card);
     drawRadar(card.querySelector('canvas'), valid, valid.map(s=>normalized[s]||0));
   });
 }
@@ -284,8 +306,13 @@ function showResults(){
   const result=computeResults();
   let total=0; STATS.forEach(s=>{ total+=result.normalized[s]; });
   totalScore.innerHTML=total+' <small>/ '+TOTALMAX+'</small>';
-  renderGroupBars(result.normalized); renderRadars(result.normalized); renderAdvice(result.improvements, result.mistakes);
-  questionScreen.classList.remove('active'); resultsScreen.classList.add('active','show');
+  questionScreen.classList.remove('active');
+  resultsScreen.classList.add('active','show');
+  requestAnimationFrame(function(){
+    renderGroupBars(result.normalized);
+    renderRadars(result.normalized);
+    renderAdvice(result.improvements, result.mistakes);
+  });
   progressText.textContent='Terminé'; progressBar.style.width='100%'; debug(''); window.scrollTo({top:0, behavior:'smooth'});
 }
 function backToLast(){ resultsScreen.classList.remove('active','show'); questionScreen.classList.add('active'); current=questions.length-1; updateProgress(); renderQuestion(); }
