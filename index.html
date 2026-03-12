@@ -45,6 +45,13 @@ body{min-height:100vh}
 .scorelabel{font-size:15px;font-weight:800}
 .scorevalue{font-size:clamp(28px,8vw,54px);font-weight:900}
 .scorevalue small{font-size:.38em;color:var(--muted);font-weight:700}
+.gaussWrap{margin-bottom:16px;padding:16px;border-radius:22px;background:linear-gradient(180deg, rgba(102,192,244,.08), rgba(255,255,255,.02));border:1px solid var(--line);box-shadow:inset 0 0 0 1px rgba(102,192,244,.05)}
+.gaussHead{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.gaussTitle{font-size:18px;font-weight:900;margin:0}
+.gaussSub{font-size:13px;color:var(--muted);font-weight:700}
+.gaussMeter{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--line);font-size:13px;font-weight:800;color:#dbe7f5}
+.gaussDot{width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #fff, #66c0f4 60%, #1a9fff 100%);box-shadow:0 0 14px rgba(102,192,244,.65)}
+.gaussSvg{display:block;width:100%;height:auto}
 .block{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:14px;margin-bottom:14px}
 .sectiontitle{font-size:18px;font-weight:900;margin:0 0 12px}
 .radarsCol,.groups{display:grid;grid-template-columns:1fr;gap:14px}
@@ -91,6 +98,15 @@ body{min-height:100vh}
       <div class="scorebox">
         <div class="scorelabel">Total stat</div>
         <div class="scorevalue" id="totalScore"></div>
+      </div>
+      <div class="gaussWrap">
+        <div class="gaussHead">
+          <div>
+            <h2 class="gaussTitle">Classement</h2>
+          </div>
+          <div class="gaussMeter"><span class="gaussDot"></span><span id="gaussLegend">Ton score sera affiché ici</span></div>
+        </div>
+        <div id="gaussChart"></div>
       </div>
       <div class="block">
         <h2 class="sectiontitle">Radars par catégorie</h2>
@@ -143,6 +159,8 @@ const answersEl=document.getElementById('answers');
 const questionScreen=document.getElementById('questionScreen');
 const resultsScreen=document.getElementById('resultsScreen');
 const totalScore=document.getElementById('totalScore');
+const gaussChart=document.getElementById('gaussChart');
+const gaussLegend=document.getElementById('gaussLegend');
 const radarsWrap=document.getElementById('radarsWrap');
 const groupBars=document.getElementById('groupBars');
 const goodList=document.getElementById('goodList');
@@ -225,6 +243,70 @@ function topUnique(items, n){
   }
   return out;
 }
+function renderGauss(total){
+  const w=860,h=280,padX=36,baseY=220;
+  const mean=1350;
+  const sigma=260;
+  const peak=120;
+  const usableW=w-padX*2;
+  function xFor(score){ return padX + (Math.max(0, Math.min(TOTALMAX, score)) / TOTALMAX) * usableW; }
+  function gauss(score){ return Math.exp(-Math.pow(score-mean,2)/(2*sigma*sigma)); }
+  function erf(x){
+    const sign = x < 0 ? -1 : 1;
+    x = Math.abs(x);
+    const a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741, a4 = -1.453152027, a5 = 1.061405429, p = 0.3275911;
+    const t = 1 / (1 + p * x);
+    const y = 1 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+    return sign * y;
+  }
+  function cdf(score){ return 0.5 * (1 + erf((score - mean) / (sigma * Math.sqrt(2)))); }
+  let curve=[];
+  for(let s=0;s<=TOTALMAX;s+=10){
+    const x=xFor(s);
+    const y=baseY - gauss(s)*peak;
+    curve.push(`${x.toFixed(1)},${y.toFixed(1)}`);
+  }
+  const userX=xFor(total);
+  const userY=baseY - gauss(total)*peak;
+  const meanX=xFor(mean);
+  const ranking = Math.max(1, Math.min(99, Math.round((1 - cdf(total)) * 100)));
+  const ticks = [0,500,1000,1500,2000];
+  gaussLegend.textContent=`Classement estimé : top ${ranking}%`;
+  gaussChart.innerHTML = `
+    <svg class="gaussSvg" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Classement estimé à partir du score total">
+      <defs>
+        <linearGradient id="gaussFill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="rgba(102,192,244,.38)"/>
+          <stop offset="100%" stop-color="rgba(102,192,244,0)"/>
+        </linearGradient>
+        <linearGradient id="gaussLine" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#4fb9ff"/>
+          <stop offset="50%" stop-color="#8fe6ff"/>
+          <stop offset="100%" stop-color="#4fb9ff"/>
+        </linearGradient>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="4" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <rect x="0" y="0" width="${w}" height="${h}" rx="18" fill="transparent"/>
+      <line x1="${padX}" y1="${baseY}" x2="${w-padX}" y2="${baseY}" stroke="rgba(255,255,255,.16)" stroke-width="2"/>
+      <line x1="${meanX}" y1="42" x2="${meanX}" y2="${baseY}" stroke="rgba(255,255,255,.14)" stroke-dasharray="6 6"/>
+      <polygon points="${padX},${baseY} ${curve.join(' ')} ${w-padX},${baseY}" fill="url(#gaussFill)"/>
+      <polyline points="${curve.join(' ')}" fill="none" stroke="url(#gaussLine)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+      <line x1="${userX}" y1="28" x2="${userX}" y2="${baseY}" stroke="#67df8d" stroke-width="3" filter="url(#glow)"/>
+      <circle cx="${userX}" cy="${userY}" r="9" fill="#67df8d" stroke="#ecfff3" stroke-width="3" filter="url(#glow)"/>
+      <text x="${userX}" y="20" fill="#d8ffe5" font-size="14" font-weight="900" text-anchor="middle">${total}</text>
+      <text x="${Math.min(w-padX, userX+14)}" y="56" fill="#d8ffe5" font-size="13" font-weight="800" text-anchor="start">Top ${ranking}%</text>
+      ${ticks.map(t => {
+        const x = xFor(t);
+        const anchor = t===0 ? 'start' : (t===TOTALMAX ? 'end' : 'middle');
+        return `<line x1="${x}" y1="${baseY}" x2="${x}" y2="${baseY+8}" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
+                <text x="${x}" y="246" fill="#90a0b5" font-size="12" font-weight="700" text-anchor="${anchor}">${t}</text>`;
+      }).join('')}
+    </svg>`;
+}
+
 function renderGroupBars(normalized){
   groupBars.innerHTML='';
   Object.entries(CATEGORIES).forEach(([groupName, groupStats])=>{
@@ -262,7 +344,15 @@ function makeRadarSvg(labels, values){
     parts.push(`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(255,255,255,.08)" stroke-width="1"/>`);
     const [lx,ly]=pt(a,radius+38);
     const anchor = Math.cos(a)>0.25?'start':(Math.cos(a)<-0.25?'end':'middle');
-    parts.push(`<text x="${lx}" y="${ly}" fill="#eef7ff" font-size="15" font-weight="700" text-anchor="${anchor}" dominant-baseline="middle">${String(labels[i]).replace(/&/g,'&amp;').replace(/</g,'&lt;')}</text>`);
+    const rawLabel = String(labels[i]);
+    const labelLines = rawLabel === 'Vitesse de récupération (sommeil)'
+      ? ['Vitesse de récupération', '(sommeil)']
+      : rawLabel === 'Efficacité énergétique'
+      ? ['Efficacité', 'énergétique']
+      : [rawLabel];
+    const startY = ly - ((labelLines.length - 1) * 8);
+    const safeLines = labelLines.map(line => String(line).replace(/&/g,'&amp;').replace(/</g,'&lt;'));
+    parts.push(`<text x="${lx}" y="${startY}" fill="#eef7ff" font-size="15" font-weight="700" text-anchor="${anchor}">${safeLines.map((line, idx) => `<tspan x="${lx}" dy="${idx===0 ? 0 : 16}">${line}</tspan>`).join('')}</text>`);
   }
   let poly=[];
   for(let i=0;i<labels.length;i++){ const a=-Math.PI/2+i*(Math.PI*2/labels.length), v=(values[i]||0)/100; const [x,y]=pt(a,radius*v); poly.push(`${x.toFixed(1)},${y.toFixed(1)}`); }
@@ -304,6 +394,7 @@ function showResults(){
   totalScore.innerHTML=total+' <small>/ '+TOTALMAX+'</small>';
   questionScreen.classList.remove('active');
   resultsScreen.classList.add('active','show');
+  renderGauss(total);
   renderGroupBars(result.normalized);
   renderRadars(result.normalized);
   renderAdvice(result.improvements, result.mistakes);
