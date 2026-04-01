@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test de pureté</title>
+<style>
+    :root {
+        --bg: #f3f0f0;
+        --text: #a45757;
+        --muted: #b8b0b0;
+        --accent: #d9a441;
+        --accent-soft: #f0dc95;
+        --danger: #d24d4d;
+        --danger-soft: #ff7b7b;
+        --panel: rgba(255,255,255,0.82);
+        --panel-border: rgba(180, 120, 120, 0.16);
+        --track: #e8dddd;
+        --track-dark: #242424;
+        --track-pure: #fbf2cf;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+        margin: 0;
+        font-family: "Cormorant Garamond", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+        background: var(--bg);
+        color: var(--text);
+        transition: background 700ms ease, color 700ms ease;
+        overflow-x: hidden;
+    }
+
+    body.quiz-state {
+        background: linear-gradient(180deg, #f3f0f0 0%, #ece9e9 100%);
+        color: var(--text);
+    }
+
+    body.result-pure {
+        background:
+            radial-gradient(circle at top, rgba(255, 255, 255, 0.92), transparent 38%),
+            linear-gradient(180deg, #f8fcff 0%, #cfe9ff 48%, #ffffff 100%);
+        color: #785900;
+    }
+
+    body.result-impure {
+        background:
+            radial-gradient(ellipse at top, rgba(255, 100, 10, 0.55) 0%, transparent 45%),
+            radial-gradient(ellipse at 15% 25%, rgba(200, 50, 0, 0.35) 0%, transparent 35%),
+            radial-gradient(ellipse at 85% 60%, rgba(180, 60, 0, 0.28) 0%, transparent 38%),
+            radial-gradient(ellipse at 50% 85%, rgba(255, 80, 0, 0.20) 0%, transparent 40%),
+            linear-gradient(180deg, #1a0400 0%, #3d1200 30%, #5c1f00 55%, #2e0a00 80%, #0e0200 100%);
+        color: #f7d9c4;
+    }
+
+    .app {
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 16px 12px 36px;
+    }
+
+    .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 18px;
+        opacity: 0.95;
+    }
+
+    h1 {
+        margin: 0;
+        font-size: clamp(30px, 5vw, 46px);
+        letter-spacing: 0.8px;
+        font-style: italic;
+        color: inherit;
+        text-shadow: 0 1px 0 rgba(255,255,255,0.35), 0 8px 18px rgba(0,0,0,0.08);
+    }
+
+    .progress {
+        min-width: 140px;
+        text-align: right;
+        font-size: 14px;
+        color: inherit;
+        opacity: 0.8;
+    }
+
+    .card {
+        background: var(--panel);
+        border: 1px solid var(--panel-border);
+        border-radius: 28px;
+        padding: 24px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 12px 34px rgba(0,0,0,0.08);
+        transition: background 700ms ease, border-color 700ms ease, transform 300ms ease, box-shadow 700ms ease;
+    }
+
+    body.result-impure .card {
+        background: rgba(0, 0, 0, 0.82);
+        border-color: rgba(200, 80, 10, 0.35);
+        box-shadow: 0 12px 40px rgba(200, 60, 0, 0.22), inset 0 0 0 1px rgba(255, 120, 30, 0.08);
+    }
+
+
+    .quiz-shell {
+        display: grid;
+        gap: 18px;
+    }
+
+    .question-count {
+        font-size: 14px;
+        opacity: 0.8;
+        text-align: center;
+    }
+
+    .question {
+        font-size: clamp(22px, 3.5vw, 34px);
+        line-height: 1.28;
+        font-weight: 700;
+        min-height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-wrap: balance;
+        padding: 6px 12px;
+        color: inherit;
+        transition: opacity 250ms ease, transform 250ms ease;
+        text-align: center;
+    }
+
+    .question.fade-out {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    .controls {
+        display: flex;
+        justify-content: center;
+        gap: 14px;
+        flex-wrap: wrap;
+    }
+
+    button {
+        border: none;
+        border-radius: 999px;
+        padding: 14px 24px;
+        font-size: 17px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease, background 300ms ease, color 300ms ease;
+        font-family: inherit;
+    }
+
+    button:active {
+        transform: translateY(1px) scale(0.99);
+    }
+
+    .btn-yes {
+        background: #e4b6b6;
+        color: #5f2020;
+        box-shadow: 0 10px 24px rgba(178, 90, 90, 0.15);
+    }
+
+    .btn-no {
+        background: #d4d4d4;
+        color: #4d4d4d;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    body.result-pure .btn-yes {
+        background: #f4d77a;
+        color: #705200;
+    }
+
+    body.result-pure .btn-no {
+        background: #f0e6c5;
+        color: #705200;
+    }
+
+    body.result-impure .btn-yes,
+    body.result-impure .btn-no {
+        background: #343434;
+        color: #fff;
+    }
+
+    .lead {
+        text-align: center;
+        font-size: 15px;
+        opacity: 0.78;
+        margin-top: 10px;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    .result-area {
+        margin-top: 34px;
+        display: grid;
+        gap: 22px;
+    }
+
+    .result-card {
+        padding-top: 28px;
+        padding-bottom: 28px;
+    }
+
+    .result-message {
+        text-align: center;
+        font-size: clamp(38px, 7vw, 70px);
+        font-weight: 900;
+        line-height: 1.02;
+        letter-spacing: 0.6px;
+        margin: 6px 0 8px;
+        font-style: italic;
+        font-family: "Cinzel Decorative", "Cormorant Garamond", "Palatino Linotype", Georgia, serif;
+        transition: filter 500ms ease, text-shadow 500ms ease, color 500ms ease;
+    }
+
+    .result-message.shine {
+        animation: finalGlow 1.8s ease-in-out infinite alternate;
+    }
+
+    body.result-pure .result-message {
+        color: transparent;
+        background: linear-gradient(90deg, #6f5200 0%, #f3d15d 22%, #fff5ce 50%, #d2a11b 78%, #7e5d00 100%);
+        background-size: 260% 100%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        text-shadow:
+            0 0 10px rgba(255, 210, 77, 0.55),
+            0 0 26px rgba(217, 164, 65, 0.35),
+            0 0 44px rgba(255, 235, 165, 0.18);
+        filter: saturate(1.25) brightness(1.15);
+    }
+
+    body.result-impure .result-message {
+        color: transparent;
+        background: linear-gradient(90deg, #ff2d2d 0%, #ffd0d0 22%, #ff6767 50%, #ff2d2d 78%, #ff9b9b 100%);
+        background-size: 260% 100%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        text-shadow:
+            0 0 10px rgba(255, 66, 66, 0.6),
+            0 0 26px rgba(255, 35, 35, 0.45),
+            0 0 52px rgba(255, 84, 84, 0.22);
+        filter: saturate(1.3) brightness(1.16);
+    }
+
+    @keyframes finalGlow {
+        0% { background-position: 0% 50%; filter: saturate(1.1) brightness(1.05); }
+        100% { background-position: 100% 50%; filter: saturate(1.4) brightness(1.18); }
+    }
+
+    .scoreline {
+        text-align: center;
+        font-size: 18px;
+        font-weight: 700;
+        opacity: 0.95;
+        margin-top: 6px;
+    }
+
+    .stats-card {
+        padding: 22px 20px 20px;
+    }
+
+    .stats-title {
+        text-align: center;
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        letter-spacing: 0.2px;
+    }
+
+    .chart-shell {
+        position: relative;
+        padding-top: 6px;
+        overflow: hidden;
+    }
+
+    .bars {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        align-items: end;
+        width: 100%;
+        margin: 0 auto;
+        padding: 8px 0 0;
+    }
+
+    .bar-wrap {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+
+    .bar-frame {
+        width: 100%;
+        height: min(20vw, 150px);
+        border-radius: 20px;
+        position: relative;
+        background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03));
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding: 10px 8px;
+        overflow: hidden;
+        box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+    }
+
+    body.quiz-state .bar-frame {
+        background: linear-gradient(180deg, rgba(224, 186, 186, 0.26), rgba(205, 205, 205, 0.18));
+    }
+
+    .bar-track {
+        position: relative;
+        width: clamp(14px, 28%, 26px);
+        height: 100%;
+        border-radius: 16px;
+        overflow: hidden;
+        background: var(--track);
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+    }
+
+    body.result-pure .bar-track {
+        background: var(--track-pure);
+    }
+
+    body.result-impure .bar-track {
+        background: #28140f;
+    }
+
+    .bar-fill {
+        width: 100%;
+        height: 0px;
+        border-radius: 18px 18px 8px 8px;
+        transition: height 1400ms cubic-bezier(.2,.9,.2,1), background 700ms ease, box-shadow 700ms ease;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.14);
+    }
+
+    body.quiz-state .bar-fill {
+        background: linear-gradient(180deg, #d77777, #b74b4b);
+    }
+
+    body.result-pure .bar-fill {
+        background: linear-gradient(180deg, #fff6c9 0%, #f2c64f 35%, #d39c1a 100%);
+        box-shadow:
+            0 0 14px rgba(255, 221, 99, 0.52),
+            0 10px 25px rgba(139, 104, 0, 0.22);
+    }
+
+    body.result-impure .bar-fill {
+        background: linear-gradient(180deg, #ffb66b 0%, #ff7a1a 35%, #c64500 100%);
+        box-shadow:
+            0 0 14px rgba(255, 122, 26, 0.48),
+            0 10px 25px rgba(176, 61, 0, 0.22);
+    }
+
+    .stat-label {
+        font-size: 13px;
+        text-align: center;
+        font-weight: 700;
+        opacity: 0.9;
+        min-height: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .stat-value {
+        font-size: 18px;
+        font-weight: 900;
+        text-align: center;
+        margin-top: 4px;
+    }
+
+    .hint {
+        text-align: center;
+        font-size: 13px;
+        opacity: 0.7;
+        margin-top: 10px;
+    }
+
+    .pulse {
+        animation: pulse 1.2s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulse {
+        from { transform: scale(1); }
+        to { transform: scale(1.02); }
+    }
+
+    @media (max-width: 760px) {
+        .topbar {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .progress {
+            text-align: left;
+        }
+
+        .bar-wrap {
+            min-width: 110px;
+        }
+
+        .bars {
+            justify-content: flex-start;
+            gap: 18px;
+            padding-bottom: 8px;
+        }
+    }
+</style>
+</head>
+<body class="quiz-state">
+<div class="app">
+    <div class="topbar">
+        <h1>Test de pureté</h1>
+        <div class="progress" id="progress">1 / 30</div>
+    </div>
+
+    <div class="card quiz-shell" id="quizCard">
+        <div class="question-count" id="questionCount">Question 1 sur 30</div>
+        <div class="question" id="questionText"></div>
+        <div class="controls">
+            <button class="btn-yes" id="yesBtn">Oui</button>
+            <button class="btn-no" id="noBtn">Non</button>
+        </div>
+        <div class="lead">Réponds une question à la fois.</div>
+    </div>
+
+    <div class="result-area hidden" id="resultArea">
+        <div class="card result-card">
+            <div class="result-message shine" id="resultMessage"></div>
+            <div class="scoreline" id="scoreLine"></div>
+        </div>
+
+        <div class="card stats-card">
+            <div class="stats-title">Statistiques détaillées</div>
+            <div class="chart-shell">
+                <div class="bars">
+                    <div class="bar-wrap">
+                        <div class="bar-frame"><div class="bar-fill" id="barA"></div></div>
+                        <div class="stat-label">Addiction aux substances</div>
+                        <div class="stat-value" id="valueA">0/100</div>
+                    </div>
+                    <div class="bar-wrap">
+                        <div class="bar-frame"><div class="bar-fill" id="barS"></div></div>
+                        <div class="stat-label">Sexe</div>
+                        <div class="stat-value" id="valueS">0/100</div>
+                    </div>
+                    <div class="bar-wrap">
+                        <div class="bar-frame"><div class="bar-fill" id="barM"></div></div>
+                        <div class="stat-label">Moralité</div>
+                        <div class="stat-value" id="valueM">0/100</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const questions = [
+  {
+    "q": "As-tu déjà bu de l'alcool ?",
+    "a": -5.0,
+    "s": -2.0,
+    "m": -9.0
+  },
+  {
+    "q": "Bois-tu souvent de l'alcool ?",
+    "a": -1.0,
+    "s": -7.0,
+    "m": -1.0
+  },
+  {
+    "q": "As-tu une chienne ?",
+    "a": -200.0,
+    "s": -400.0,
+    "m": -600.0
+  },
+  {
+    "q": "As-tu les cheveux noirs ?",
+    "a": -700.0,
+    "s": -500.0,
+    "m": -250.0
+  },
+  {
+    "q": "As-tu déjà consommé de la drogue ?",
+    "a": -5.0,
+    "s": -7.0,
+    "m": -9.0
+  },
+  {
+    "q": "Es-tu déjà entrée bourrée par effraction dans un lieu ?",
+    "a": -1000.0,
+    "s": -1000.0,
+    "m": -1000.0
+  },
+  {
+    "q": "Es-tu déjà tombée malade à cause de l'alcool ?",
+    "a": -863.0,
+    "s": -333.0,
+    "m": -87.0
+  },
+  {
+    "q": "As-tu déjà fait un bad trip ?",
+    "a": -45.0,
+    "s": -9.0,
+    "m": -124.0
+  },
+  {
+    "q": "As-tu déjà eu envie de boire ?",
+    "a": -1.0,
+    "s": -4.0,
+    "m": -97.0
+  },
+  {
+    "q": "As-tu déjà fait un concours de nourriture ?",
+    "a": 930.0,
+    "s": 700.0,
+    "m": 1200.0
+  },
+  {
+    "q": "As-tu déjà fait des dons à une association ?",
+    "a": 5.0,
+    "s": 7.0,
+    "m": 15.0
+  },
+  {
+    "q": "Ton père est-il parti ?",
+    "a": -300.0,
+    "s": 15.0,
+    "m": -30.0
+  },
+  {
+    "q": "As-tu un amour pour les pays scandinaves ?",
+    "a": -100.0,
+    "s": -5.0,
+    "m": -10.0
+  },
+  {
+    "q": "Ta famille est-elle de droite ?",
+    "a": -15.0,
+    "s": 10.0,
+    "m": -150.0
+  },
+  {
+    "q": "As-tu déjà pris un Doliprane à cause du contacte physique avec ton amoureux ?",
+    "a": -1.0,
+    "s": -50.0,
+    "m": -90.0
+  },
+  {
+    "q": "As-tu déjà changé la couleur de tes cheveux",
+    "a": -750.0,
+    "s": -349.0,
+    "m": -833.0
+  },
+  {
+    "q": "As-tu déjà volé ?",
+    "a": -9.0,
+    "s": -10.0,
+    "m": -99.0
+  },
+  {
+    "q": "As-tu déjà dormi avec quelqu'un ?",
+    "a": -3.0,
+    "s": -200.0,
+    "m": -55.0
+  },
+  {
+    "q": "As-tu déjà agressé quelqu'un ?",
+    "a": -5.0,
+    "s": -32.0,
+    "m": -22.0
+  },
+  {
+    "q": "Es-tu studieux ?",
+    "a": 366.0,
+    "s": 292.0,
+    "m": 782.0
+  },
+  {
+    "q": "As-tu déjà eu un rapport sexuel avec quelqu'un ?",
+    "a": -1.0,
+    "s": -100.0,
+    "m": 15.0
+  },
+  {
+    "q": "As- tu déjà eu un rapport sexuel non-protégé ?",
+    "a": -6.0,
+    "s": 150.0,
+    "m": -55.0
+  },
+  {
+    "q": "As-tu déjà pratiqué un acte sexuel oral ?",
+    "a": -300.0,
+    "s": -200.0,
+    "m": 25.0
+  },
+  {
+    "q": "As-tu déjà été à court d'argent à cause de l'alcool ou de la drogue ?",
+    "a": -88.0,
+    "s": 10.0,
+    "m": -35.0
+  },
+  {
+    "q": "As-tu déjà ri en voyant quelqu'un tomber ?",
+    "a": -10.0,
+    "s": -2.0,
+    "m": -55.0
+  },
+  {
+    "q": "As-tu déjà donné ton sang ?",
+    "a": -100.0,
+    "s": -200.0,
+    "m": -300.0
+  },
+  {
+    "q": "As-tu déjà acheté impulsivement de l'alcool ou du tabac ?",
+    "a": -100.0,
+    "s": -15.0,
+    "m": -200.0
+  },
+  {
+    "q": "As-tu déjà acheté impulsivement de la nourriture ?",
+    "a": 356.0,
+    "s": 864.0,
+    "m": 523.0
+  },
+  {
+    "q": "As-tu déjà pratiqué un acte sexuel à trois ou plus ?",
+    "a": -1.0,
+    "s": -1.0,
+    "m": -1.0
+  },
+  {
+    "q": "Es-tu catholique ?",
+    "a": 15.0,
+    "s": 200.0,
+    "m": 150.0
+  }
+];
+
+function shuffleQuestions(list) {
+    const arr = list.slice();
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
+const quizQuestions = shuffleQuestions(questions);
+const answers = [];
+
+let index = 0;
+
+const quizCard = document.getElementById('quizCard');
+const resultArea = document.getElementById('resultArea');
+const questionText = document.getElementById('questionText');
+const questionCount = document.getElementById('questionCount');
+const progress = document.getElementById('progress');
+const yesBtn = document.getElementById('yesBtn');
+const noBtn = document.getElementById('noBtn');
+const resultMessage = document.getElementById('resultMessage');
+const scoreLine = document.getElementById('scoreLine');
+
+function showQuestion() {
+    if (index >= quizQuestions.length) {
+        finishQuiz();
+        return;
+    }
+
+    questionText.classList.remove('fade-out');
+    questionText.textContent = quizQuestions[index].q;
+    questionCount.textContent = `Question ${index + 1} sur ${quizQuestions.length}`;
+    progress.textContent = `${index + 1} / ${quizQuestions.length}`;
+}
+
+function answer(choice) {
+    answers.push(choice);
+    questionText.classList.add('fade-out');
+    yesBtn.disabled = true;
+    noBtn.disabled = true;
+
+    setTimeout(() => {
+        index++;
+        yesBtn.disabled = false;
+        noBtn.disabled = false;
+        showQuestion();
+    }, 180);
+}
+
+yesBtn.addEventListener('click', () => answer('yes'));
+noBtn.addEventListener('click', () => answer('no'));
+
+function scoreQuestion(statValue, choice) {
+    if (choice === 'yes') {
+        return statValue > 0 ? statValue : 0;
+    }
+    if (choice === 'no') {
+        return statValue < 0 ? Math.abs(statValue) : 0;
+    }
+    return 0;
+}
+
+function finishQuiz() {
+    const sums = { a: 0, s: 0, m: 0 };
+    const maxes = { a: 0, s: 0, m: 0 };
+
+    quizQuestions.forEach((q, i) => {
+        maxes.a += Math.abs(q.a);
+        maxes.s += Math.abs(q.s);
+        maxes.m += Math.abs(q.m);
+
+        sums.a += scoreQuestion(q.a, answers[i]);
+        sums.s += scoreQuestion(q.s, answers[i]);
+        sums.m += scoreQuestion(q.m, answers[i]);
+    });
+
+    const normA = Math.round((sums.a / maxes.a) * 100);
+    const normS = Math.round((sums.s / maxes.s) * 100);
+    const normM = Math.round((sums.m / maxes.m) * 100);
+
+    const total = normA + normS + normM;
+    const isImpure = total < 150;
+
+    quizCard.classList.add('hidden');
+    resultArea.classList.remove('hidden');
+
+    document.body.classList.remove('result-pure', 'result-impure', 'quiz-state');
+    document.body.classList.add(isImpure ? 'result-impure' : 'result-pure');
+
+    resultMessage.textContent = isImpure ? 'Tu es impur.e' : 'Tu es pur.e';
+    scoreLine.textContent = `Score global : ${total} / 300`;
+
+    animateBars(normA, normS, normM, isImpure);
+}
+
+function animateBars(a, s, m, impure) {
+    document.getElementById('valueA').textContent = `${a}/100`;
+    document.getElementById('valueS').textContent = `${s}/100`;
+    document.getElementById('valueM').textContent = `${m}/100`;
+
+    const fills = [
+        document.getElementById('barA'),
+        document.getElementById('barS'),
+        document.getElementById('barM')
+    ];
+
+    fills.forEach(bar => {
+        bar.style.height = '0px';
+    });
+
+    requestAnimationFrame(() => {
+        setTimeout(() => {
+            const trackA = document.getElementById('barA').parentElement;
+            const trackS = document.getElementById('barS').parentElement;
+            const trackM = document.getElementById('barM').parentElement;
+            const hA = trackA.clientHeight;
+            const hS = trackS.clientHeight;
+            const hM = trackM.clientHeight;
+            document.getElementById('barA').style.height = `${(a / 100) * hA}px`;
+            document.getElementById('barS').style.height = `${(s / 100) * hS}px`;
+            document.getElementById('barM').style.height = `${(m / 100) * hM}px`;
+        }, 120);
+    });
+
+    if (impure) {
+        document.getElementById('resultMessage').classList.add('pulse');
+    }
+}
+
+showQuestion();
+</script>
+</body>
+</html>
